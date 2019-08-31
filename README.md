@@ -1,44 +1,71 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Decrypilito
 
-## Available Scripts
+The board game Decrypto is awesome.
 
-In the project directory, you can run:
+But when you are not in the same place, this little web version can help you play.
 
-### `npm start`
+### Requirements
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+* People divided into 2 teams.
+* People in at least 2+ locations (if 1 location, just buy/use the boardgame).
+* Each location should have internet access and a screen.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+### Create or Join a game
 
-### `npm test`
+The lobby will allow you to create a new game, or join an existing game.
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```
+- Lobby (lists available games)
+  - Active Games
+    - Game #1 "microfilm" (in progress)
+    - Game #2 "monopod" (waiting to start)
+  - Create new game
+  - Recent Games
+    - Game "turtleegg" ended 25 min ago, black team won
+    - Game "flapjack" ended 45 min ago, white team won
+```
 
-### `npm run build`
+## Playing the game
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Setup the game
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+1. You will join a game
+1. You will pick a team (white or black)
+1. You may assign a team name
+1. When ready, someone will start the game
+1. Must confirm (no going back)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Joining a started game
 
-### `npm run eject`
+1. You will join a game
+1. You will pick a team (white or black)
+1. Must confirm (no going back)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Playing a game
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. After the game starts, you will see your words
+1. You will be able
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+#### Turn Start: Encryptor (both teams)
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+1. When ready for your turn, click "start turn"
+1. Must confirm (no going back)
+1. .... ???? send text message to encryptor / tell others to turn around ????? ....
+1. Encryptor types in 3 clues, in order
+1. Must confirm ready
 
-## Learn More
+#### Turn Continue: Decryptors (one team at a time)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. Display clues
+1. Decryptors on opposing team guess order
+1. Decryptors on own team guess order
+1. Must confirm ready
+1. Results appear (interception?)
+1. Clues logged into appropriate slots (???animation???)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Ending a game
+
+1. When end conditions are met, the game is over
+1. Results are shown
+1. Play again? | Lobby
+
