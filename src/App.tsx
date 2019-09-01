@@ -2,23 +2,38 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+import 'antd/dist/antd.css';
+//import './index.css';
+import { Layout } from 'antd';
+import Router from './Router';
+
+const { Header, Footer, Content } = Layout;
+
+
+
+
 const App: React.FC = () => {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Layout>
+        <Header>
+          <img src="/logo-marching.jpg" className="App-logo" alt="logo" />
+          <p className="Header-desc">
+            Decryptalito - A variation on
+            <a
+              href="https://boardgamegeek.com/boardgame/225694/decrypto"
+              rel="noopener"
+              >Decrypto</a>,
+            allowing web-based access and remote teams.
+          </p>
+        </Header>
+        <Content>
+          <Router />
+        </Content>
+        <Footer>
+          <p className="Footer-desc">This is a fun project.  Don't sue me.</p>
+        </Footer>
+      </Layout>
     </div>
   );
 }
