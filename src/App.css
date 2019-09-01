@@ -22,6 +22,10 @@
   font-size: 1em;
 }
 
+.ant-typography a.ant-btn-primary {
+  color: #fff;
+}
+
 /*
 .App-logo {
   animation: App-logo-spin infinite 20s linear;

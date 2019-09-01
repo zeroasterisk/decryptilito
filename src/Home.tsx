@@ -1,9 +1,80 @@
 import React from 'react';
+import {  Card, Row, Col, PageHeader, Typography, List, Avatar } from 'antd';
+import Btn from './Btn';
 
-const Stub: React.FC = () => {
+const { Paragraph } = Typography;
+
+const Home: React.FC = () => {
+  const features = [
+    {
+      title: 'You need 2 teams',
+      desc: 'This is on you... each team should have 2+ people',
+      icon: 'usergroup-add',
+    },
+    {
+      title: 'You need 2+ devices',
+      desc: 'Each team needs their own device, laptop, etc. (more=ok)',
+      icon: 'laptop',
+    },
+    {
+      title: 'You need to communicate with your team',
+      desc: 'If your team is not in the same room, you need some way to collaborate with your team (IM, phone, whatever)',
+      icon: 'phone',
+    },
+  ];
   return (
-    <div>Stub... TODO: build me</div>
+    <PageHeader title="Decryptilito Homepage">
+      <div className="wrap">
+        <div className="content">
+          <Paragraph>
+            Decryptilito is a <i>little</i> web-based copy of <a
+              href="https://boardgamegeek.com/boardgame/225694/decrypto"
+              rel="noopener"
+              >Decrypto</a>.
+          </Paragraph>
+          <Row gutter={16}>
+            <Col sm={24} md={12}>
+              <Card
+                title="Get Started"
+                extra={
+                  <Btn href="/lobby" type="primary" size="large" icon="play-square">Play Now</Btn>
+                }
+                >
+                <List
+                    itemLayout="horizontal"
+                    dataSource={features}
+                    renderItem={item => (
+                      <List.Item>
+                        <List.Item.Meta
+                          avatar={<Avatar {...item} />}
+                          title={item.title}
+                          description={item.desc}
+                        />
+                      </List.Item>
+                    )}
+                  />
+              </Card>
+            </Col>
+            <Col sm={24} md={12}>
+              <Card
+                title="Find out more"
+                extra={
+                  <Btn href="/about" type="link" size="large" icon="question">About</Btn>
+                }
+                >
+                <p>
+                  This is a <i>fun</i> project by <a
+                    href="https://github.com/zeroasterisk"
+                    rel="noopener"
+                    >Alan Blount (zeroasterisk)</a>.
+                </p>
+              </Card>
+            </Col>
+          </Row>
+        </div>
+      </div>
+    </PageHeader>
   );
 };
 
-export default Stub;
+export default Home;

@@ -9,9 +9,6 @@ import Router from './Router';
 
 const { Header, Footer, Content } = Layout;
 
-
-
-
 const App: React.FC = () => {
   return (
     <div className="App">
@@ -19,8 +16,7 @@ const App: React.FC = () => {
         <Header>
           <img src="/logo-marching.jpg" className="App-logo" alt="logo" />
           <p className="Header-desc">
-            Decryptalito - A variation on
-            <a
+            Decryptalito - A variation on <a
               href="https://boardgamegeek.com/boardgame/225694/decrypto"
               rel="noopener"
               >Decrypto</a>,

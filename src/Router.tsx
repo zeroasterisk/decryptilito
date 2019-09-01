@@ -15,10 +15,13 @@ const routes = {
     '/lobby': () => <Lobby />,
     '/game/:game_id': ({game_id}: {game_id: string}) => <GameEntry game_id={game_id} />,
     '/game/:game_id/:team_id': ({game_id, team_id}: {game_id: string, team_id: string}) => <Game game_id={game_id} team_id={team_id} />,
+    // gotcha - storybook routes to this url :/
+    '/iframe.html': () => <Home />,
 };
 
 const Router: React.FC = () => {
     const routeResult = useRoutes(routes);
+    console.log('Router', routeResult, routes);
 
     return routeResult || <NotFoundPage />;
 };
