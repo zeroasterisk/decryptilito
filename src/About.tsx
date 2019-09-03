@@ -1,45 +1,41 @@
-import React from "react";
-import { Menu, Icon, Row, Col, Typography, PageHeader } from "antd";
-import AboutGameHowToPlay from "./AboutGameHowToPlay";
-import AboutTech from "./AboutTech";
+import React from 'react';
 
-import { useRoutes, A, usePath } from "hookrouter";
-const { Paragraph, Title } = Typography;
+import { Icon, Menu, PageHeader } from 'antd';
+import { A, usePath, useRoutes } from 'hookrouter';
+
+import AboutGameHowToPlay from './AboutGameHowToPlay';
+import AboutOverview from './AboutOverview';
+import AboutTech from './AboutTech';
 
 const routes = {
-  "/game": () => <AboutGameHowToPlay />,
-  "/tech": () => <AboutTech />
+  '/game': () => <AboutGameHowToPlay />,
+  '/tech': () => <AboutTech />,
 };
 
-const handleClick = r => {
-  console.log(r);
+// hackery to get the menu tabs to like hooksrouter
+const getSelectedRoute = path => {
+  if (path === '/about/game') return 'game';
+  if (path === '/about/tech') return 'tech';
+  return 'overview';
 };
 
 const AboutMenu: React.FC = () => {
-  // hackery to get the menu tabs to like hooksrouter
-  const getSelectedRoute = () => {
-    // const path = usePath();
-    // if (path == '/about/game') return 'game';
-    // if (path == '/about/tech') return 'tech';
-    return "overview";
-  };
   return (
-    <Menu
-      onClick={handleClick}
-      selectedKeys={[getSelectedRoute()]}
-      mode="horizontal"
-    >
+    <Menu selectedKeys={[getSelectedRoute(usePath())]} mode="horizontal">
       <Menu.Item key="overview">
-        <Icon type="loading" />
-        Overview
+        <A href="/about">
+          <Icon type="loading" /> Overview
+        </A>
       </Menu.Item>
       <Menu.Item key="game">
-        <Icon type="loading" />
-        Playing the Game
+        <A href="/about/game">
+          <Icon type="loading" /> Playing the Game
+        </A>
       </Menu.Item>
       <Menu.Item key="tech">
-        <Icon type="loading" />
-        About the Tech
+        <A href="/about/tech">
+          <Icon type="loading" /> About the Tech
+        </A>
       </Menu.Item>
     </Menu>
   );
@@ -51,7 +47,7 @@ const About: React.FC = () => {
   return (
     <PageHeader title="Decryptilito About Page">
       <AboutMenu />
-      {routeResult}
+      {routeResult || <AboutOverview />}
     </PageHeader>
   );
 };

@@ -1,30 +1,20 @@
-import React from "react";
 import {
-  Icon,
-  Card,
-  Row,
   Col,
-  PageHeader,
-  Typography,
+  Input,
+  InputNumber,
+  Row,
+  Skeleton,
   Tooltip,
-  List,
-  Avatar,
-  Skeleton
-} from "antd";
-import { InputNumber, Input } from "antd";
-import {
-  teamName,
-  teamOppositeName,
-  getTeamData,
-  getTurnData
-} from "./gameEngine";
-const { Title, Text } = Typography;
-const InputGroup = Input.Group;
+  Typography,
+} from 'antd';
+import React from 'react';
+import { teamName, teamOppositeName } from './gameEngine';
+const { Text } = Typography;
 
 const GameClue: React.FC = props => {
   const { turn_number, active_turn_number, active_turn_phase } = props.data;
   // active_turn_phase: "prepare", // prepare, encrypt, guess_order_white_team, guess_order_black_team
-  if (turn_number == active_turn_number && active_turn_phase == "encrypt") {
+  if (turn_number === active_turn_number && active_turn_phase === 'encrypt') {
     return <GameClueEditable {...props} />;
   }
   if (turn_number < active_turn_number) {
@@ -38,18 +28,19 @@ const GameClueUnrevield: React.FC = () => {
 };
 const GameClueRevield: React.FC = props => {
   const {
-    team = "blackTeam",
-    team_ui = "blackTeam",
+    team = 'blackTeam',
+    team_ui = 'blackTeam',
     clue_number = 1,
     clues = [],
     guessedOrderSelf = [],
     guessedOrderOpponent = [],
-    correctOrder = []
+    correctOrder = [],
   } = props;
-  const clue = clues[clue_number - 1] || "";
+  const clue = clues[clue_number - 1] || '';
   // TODO need to determine if we are displaying our info or the opponnent
-  const orderSelf = guessedOrderSelf[clue_number - 1] || 0;
-  const orderActual = correctOrder[clue_number - 1] || 0;
+  const valueOrderSelf = guessedOrderSelf[clue_number - 1] || 0;
+  const valueOrderOpponent = guessedOrderOpponent[clue_number - 1] || 0;
+  const valueOrderCorrect = correctOrder[clue_number - 1] || 0;
   return (
     <Row>
       <Tooltip title="Given GameClue">
@@ -59,17 +50,27 @@ const GameClueRevield: React.FC = props => {
       </Tooltip>
       <Tooltip title={`Guessed Order for ${teamName(team_ui)}`}>
         <Col xs={2} className="Order">
-          <Text>{orderSelf}</Text>
+          <Text
+            delete={valueOrderSelf !== valueOrderCorrect}
+            disabled={valueOrderSelf !== valueOrderCorrect}
+          >
+            {valueOrderSelf}
+          </Text>
         </Col>
       </Tooltip>
       <Tooltip title={`Guessed Order for ${teamOppositeName(team_ui)}`}>
         <Col xs={2} className="Order teamOpposite">
-          <Text>{orderSelf}</Text>
+          <Text
+            delete={valueOrderOpponent !== valueOrderCorrect}
+            disabled={valueOrderOpponent !== valueOrderCorrect}
+          >
+            {valueOrderOpponent}
+          </Text>
         </Col>
       </Tooltip>
       <Tooltip title={`Correct Order for ${teamName(team_ui)}`}>
         <Col xs={2} className="Order">
-          <Text>{orderActual}</Text>
+          <Text strong>{valueOrderCorrect}</Text>
         </Col>
       </Tooltip>
     </Row>
@@ -79,16 +80,16 @@ const GameClueEditable: React.FC = () => {
   return (
     <Row>
       <Col xs={16}>
-        <Input style={{ width: "100%" }} />
+        <Input style={{ width: '100%' }} />
       </Col>
       <Col xs={4}>
-        <InputNumber min={1} max={4} style={{ width: "100%" }} />
+        <InputNumber min={1} max={4} style={{ width: '100%' }} />
       </Col>
       <Col xs={4}>
         <InputNumber
           min={1}
           max={4}
-          style={{ width: "100%" }}
+          style={{ width: '100%' }}
           readonly
           disabled
         />

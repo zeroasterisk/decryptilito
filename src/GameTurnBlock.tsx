@@ -1,38 +1,26 @@
-import React from "react";
-import {
-  Icon,
-  Card,
-  Row,
-  Col,
-  PageHeader,
-  Typography,
-  Tooltip,
-  List,
-  Avatar,
-  Skeleton
-} from "antd";
-import { InputNumber, Input } from "antd";
+import { Card, Col, Icon, Row, Tooltip } from 'antd';
+import React from 'react';
 
 import {
   GameClueEditable,
   GameClueRevield,
-  GameClueUnrevield
-} from "./GameClue";
+  GameClueUnrevield,
+} from './GameClue';
 
 import {
+  getTeamData,
+  getTurnData,
   teamName,
   teamOppositeName,
-  getTeamData,
-  getTurnData
-} from "./gameEngine";
+} from './gameEngine';
 
 const GameTurnBlock: React.FC = props => {
   const { turn_number, data } = props;
   const { active_turn_number, active_turn_phase } = data;
   const classActive =
-    turn_number == active_turn_number ? "GameTurnBlockActive" : "";
+    turn_number === active_turn_number ? 'GameTurnBlockActive' : '';
   // active_turn_phase: "prepare", // prepare, encrypt, guess_order_white_team, guess_order_black_team
-  if (turn_number == active_turn_number && active_turn_phase == "encrypt") {
+  if (turn_number === active_turn_number && active_turn_phase === 'encrypt') {
     return <GameTurnBlockActive {...props} />;
   }
   if (turn_number < active_turn_number) {
@@ -43,14 +31,14 @@ const GameTurnBlock: React.FC = props => {
 };
 const GameTurnBlockPast: React.FC = props => {
   const {
-    team = "blackTeam",
-    team_ui = "blackTeam",
+    team = 'blackTeam',
+    team_ui = 'blackTeam',
     turn_number = 1,
-    data
+    data,
   } = props;
   const { active_turn_number, active_turn_phase } = data;
   const classActive =
-    turn_number == active_turn_number ? "GameTurnBlockActive" : "";
+    turn_number === active_turn_number ? 'GameTurnBlockActive' : '';
   const turnData = getTurnData(props, turn_number);
   return (
     <Card
@@ -93,7 +81,7 @@ const GameTurnBlockFuture: React.FC = props => {
   const { turn_number, data } = props;
   const { active_turn_number, active_turn_phase } = data;
   const classActive =
-    turn_number == active_turn_number ? "GameTurnBlockActive" : "";
+    turn_number === active_turn_number ? 'GameTurnBlockActive' : '';
   return (
     <Card size="small" className={classActive} style={{ maxWidth: 400 }}>
       <Row className="GameTurnBlocksHeader">
@@ -115,7 +103,7 @@ const GameTurnBlockActive: React.FC = props => {
   const { turn_number, data } = props;
   const { active_turn_number, active_turn_phase } = data;
   const classActive =
-    turn_number == active_turn_number ? "GameTurnBlockActive" : "";
+    turn_number === active_turn_number ? 'GameTurnBlockActive' : '';
   return (
     <Card size="small" className={classActive} style={{ maxWidth: 400 }}>
       <Row className="GameTurnBlocksHeader">
@@ -140,5 +128,5 @@ export {
   GameTurnBlock,
   GameTurnBlockActive,
   GameTurnBlockPast,
-  GameTurnBlockFuture
+  GameTurnBlockFuture,
 };

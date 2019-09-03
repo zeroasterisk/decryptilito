@@ -1,33 +1,16 @@
-import React from "react";
-import {
-  Icon,
-  Card,
-  Row,
-  Col,
-  PageHeader,
-  Typography,
-  Tooltip,
-  List,
-  Avatar,
-  Skeleton
-} from "antd";
-import { InputNumber, Input } from "antd";
-import "./Game.css";
-import GameTurnBlock from "./GameTurnBlock";
+import { Card, Col, Input, List, Row, Typography } from 'antd';
+import React from 'react';
+import './Game.css';
+import GameTurnBlock from './GameTurnBlock';
 
-import {
-  teamName,
-  teamOppositeName,
-  getTeamData,
-  getTurnData
-} from "./gameEngine";
+import { getTeamData } from './gameEngine';
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 const InputGroup = Input.Group;
 
 const Words: React.FC = props => {
   const teamData = getTeamData(props);
-  const words = teamData.words.map((word, i) => {
+  const words = teamData.words.map((word: string, i: number) => {
     return { index: i + 1, title: word };
   });
   return (
@@ -35,7 +18,7 @@ const Words: React.FC = props => {
       <List
         grid={{ gutter: 16, column: 4 }}
         dataSource={words}
-        renderItem={item => (
+        renderItem={(item: { title: string }) => (
           <List.Item>
             <Card className="Word">{item.title}</Card>
           </List.Item>
@@ -46,7 +29,7 @@ const Words: React.FC = props => {
 };
 const TeamName: React.FC = props => {
   const teamData = getTeamData(props);
-  const { teamColor = "", teamName = "", teamMemberNames = "" } = teamData;
+  const { teamColor = '', teamName = '', teamMemberNames = '' } = teamData;
   return (
     <div>
       <InputGroup size="large">

@@ -1,10 +1,12 @@
-import React from "react";
-import { Typography, List, Avatar } from "antd";
+import { Avatar, List, Typography } from 'antd';
+import React from 'react';
+import aboutSteps from './about_steps';
+
 const { Title } = Typography;
 
 const HowToPlaySection: React.FC = ({
   steps,
-  title
+  title,
 }: {
   steps: [object];
   title: string;
@@ -32,71 +34,25 @@ const HowToPlaySection: React.FC = ({
 };
 
 const HowToPlay: React.FC = () => {
-  const steps_setup = [
-    {
-      title: "You need 2 teams",
-      desc: "This is on you... each team should have 2+ people",
-      icon: "usergroup-add"
-    },
-    {
-      title: "You need 2+ devices",
-      desc: "Each team needs their own device, laptop, etc. (more=ok)",
-      icon: "laptop"
-    },
-    {
-      title: "You need to communicate with your team",
-      desc:
-        "If your team is not in the same room, you need some way to collaborate with your team (IM, phone, whatever)",
-      icon: "phone"
-    }
-  ];
-  const steps_lobby = [
-    {
-      title: "TODO",
-      desc: "TODO",
-      icon: "loading"
-    }
-  ];
-  const steps_encryptor = [
-    {
-      title: "TODO",
-      desc: "TODO",
-      icon: "loading"
-    }
-  ];
-  const steps_decryptors = [
-    {
-      title: "TODO",
-      desc: "TODO",
-      icon: "loading"
-    }
-  ];
-  const steps_winning = [
-    {
-      title: "TODO",
-      desc: "TODO",
-      icon: "loading"
-    }
-  ];
   return (
     <div className="wrap">
       <div className="content">
-        <HowToPlaySection title="Setup" steps={steps_setup} />
+        <HowToPlaySection title="Setup" steps={aboutSteps.setup} />
         <HowToPlaySection
           title="Join or Create a game in the Lobby"
-          steps={steps_lobby}
+          steps={aboutSteps.lobby}
         />
         <HowToPlaySection
           title="Gameplay: Encryptor (clue giver)"
-          steps={steps_encryptor}
+          steps={aboutSteps.encryptor}
         />
         <HowToPlaySection
           title="Gameplay: Decryptors (clue guessers)"
-          steps={steps_decryptors}
+          steps={aboutSteps.decryptors}
         />
         <HowToPlaySection
           title="Gameplay: Scoring / Winning"
-          steps={steps_winning}
+          steps={aboutSteps.winning}
         />
       </div>
     </div>
