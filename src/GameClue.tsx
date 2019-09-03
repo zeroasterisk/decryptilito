@@ -1,5 +1,6 @@
 import {
   Col,
+  Icon,
   Input,
   InputNumber,
   Row,
@@ -15,7 +16,7 @@ const GameClue: React.FC = props => {
   const { turn_number, active_turn_number, active_turn_phase } = props.data;
   // active_turn_phase: "prepare", // prepare, encrypt, guess_order_white_team, guess_order_black_team
   if (turn_number === active_turn_number && active_turn_phase === 'encrypt') {
-    return <GameClueEditable {...props} />;
+    return <GameClueEditGuess {...props} />;
   }
   if (turn_number < active_turn_number) {
     return <GameClueRevield {...props} />;
@@ -24,8 +25,28 @@ const GameClue: React.FC = props => {
   return <GameClueUnrevield {...props} />;
 };
 const GameClueUnrevield: React.FC = () => {
-  return <Skeleton title={false} paragraph={{ rows: 1 }} />;
+  return <Skeleton title={false} paragraph={{ rows: 1, width: '100%' }} />;
 };
+
+const GameClueRevielClue: React.FC = props => {
+  const {
+    team = 'blackTeam',
+    team_ui = 'blackTeam',
+    clue_number = 1,
+    clues = [],
+  } = props;
+  const clue = clues[clue_number - 1] || '';
+  return (
+    <Row>
+      <Tooltip title="Given GameClue">
+        <Col xs={18}>
+          <Text>{clue}</Text>
+        </Col>
+      </Tooltip>
+    </Row>
+  );
+};
+
 const GameClueRevield: React.FC = props => {
   const {
     team = 'blackTeam',
@@ -76,20 +97,20 @@ const GameClueRevield: React.FC = props => {
     </Row>
   );
 };
-const GameClueEditable: React.FC = () => {
+const GameClueEditClue: React.FC = props => {
+  const { clue_number, correctOrder } = props;
+  const valueCorrect = correctOrder[clue_number - 1];
   return (
     <Row>
       <Col xs={16}>
         <Input style={{ width: '100%' }} />
       </Col>
       <Col xs={4}>
-        <InputNumber min={1} max={4} style={{ width: '100%' }} />
-      </Col>
-      <Col xs={4}>
         <InputNumber
           min={1}
           max={4}
           style={{ width: '100%' }}
+          value={valueCorrect}
           readonly
           disabled
         />
@@ -98,5 +119,28 @@ const GameClueEditable: React.FC = () => {
   );
 };
 
+// TODO need to be able to guess for my team and also for the opposing team
+const GameClueEditGuess: React.FC = props => {
+  const { clue_number, clues, correctOrder } = props;
+  const clue = clues[clue_number - 1];
+  const valueCorrect = correctOrder[clue_number - 1];
+  return (
+    <Row>
+      <Col xs={18}>
+        <Text>{clue}</Text>
+      </Col>
+      <Col xs={4}>
+        <InputNumber min={1} max={4} style={{ width: '100%' }} />
+      </Col>
+    </Row>
+  );
+};
+
 export default GameClue;
-export { GameClueRevield, GameClueUnrevield, GameClueEditable };
+export {
+  GameClueRevield,
+  GameClueUnrevield,
+  GameClueEditClue,
+  GameClueRevielClue,
+  GameClueEditGuess,
+};
