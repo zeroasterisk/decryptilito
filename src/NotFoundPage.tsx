@@ -1,7 +1,7 @@
-import React from 'react';
-import { Result } from 'antd';
-import {usePath} from 'hookrouter';
-import Btn from './Btn';
+import React from "react";
+import { Result } from "antd";
+import { usePath } from "hookrouter";
+import Btn from "./Btn";
 
 const NotFoundPage: React.FC = () => {
   const path = usePath();

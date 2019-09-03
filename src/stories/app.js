@@ -7,7 +7,7 @@ import { linkTo } from '@storybook/addon-links';
 import App from '../App.tsx';
 import {navigate} from 'hookrouter';
 
-import mockData from '../mock_data';
+import mockData from './mock_data';
 
 storiesOf('App', module)
   .add('basic', () => {

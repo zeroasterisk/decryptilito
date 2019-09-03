@@ -1,0 +1,31 @@
+.GameTurnBlocksHeader .OrderGuess {
+  text-align: center;
+}
+.GameTurnBlocksHeader .OrderActual {
+  text-align: center;
+}
+.GameTurnBlock .Order{
+  text-align: center;
+}
+.Word {
+  text-align: center;
+  font-weight: bold;
+}
+
+.whiteTeam,
+.blackTeam .teamOpposite,
+.blackTeam .teamOpposite .ant-typography {
+  background-color: #eee;
+  color: #333;
+}
+
+.blackTeam,
+.blackTeam .ant-typography,
+.blackTeam .ant-card,
+.blackTeam .ant-card-body,
+.whiteTeam .teamOpposite,
+.whiteTeam .teamOpposite .ant-typography {
+  background-color: #333;
+  color: #eee;
+}
+/* TODO copy dark theme css for input forms, etc */

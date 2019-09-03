@@ -1,21 +1,19 @@
-import React from 'react';
-import { Menu, Icon, Row, Col, Typography, PageHeader } from 'antd';
-import AboutGameHowToPlay from './AboutGameHowToPlay';
-import AboutTech from './AboutTech';
+import React from "react";
+import { Menu, Icon, Row, Col, Typography, PageHeader } from "antd";
+import AboutGameHowToPlay from "./AboutGameHowToPlay";
+import AboutTech from "./AboutTech";
 
-import {useRoutes, A, usePath} from 'hookrouter';
+import { useRoutes, A, usePath } from "hookrouter";
 const { Paragraph, Title } = Typography;
 
 const routes = {
-    '/game': () => <AboutGameHowToPlay />,
-    '/tech': () => <AboutTech />,
+  "/game": () => <AboutGameHowToPlay />,
+  "/tech": () => <AboutTech />
 };
 
-const handleClick = (r) => {
+const handleClick = r => {
   console.log(r);
 };
-
-
 
 const AboutMenu: React.FC = () => {
   // hackery to get the menu tabs to like hooksrouter
@@ -23,10 +21,14 @@ const AboutMenu: React.FC = () => {
     // const path = usePath();
     // if (path == '/about/game') return 'game';
     // if (path == '/about/tech') return 'tech';
-    return 'overview';
-  }
+    return "overview";
+  };
   return (
-    <Menu onClick={handleClick} selectedKeys={[getSelectedRoute()]} mode="horizontal">
+    <Menu
+      onClick={handleClick}
+      selectedKeys={[getSelectedRoute()]}
+      mode="horizontal"
+    >
       <Menu.Item key="overview">
         <Icon type="loading" />
         Overview
@@ -42,7 +44,6 @@ const AboutMenu: React.FC = () => {
     </Menu>
   );
 };
-
 
 const About: React.FC = () => {
   const routeResult = useRoutes(routes);
