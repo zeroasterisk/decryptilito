@@ -1,10 +1,12 @@
-const mockData = {
+import GameData from '../gameData.d';
+
+const mockData = new GameData({
   // based on UI state (may be able to toggle this)
   team_ui: 'blackTeam',
   // based on logged in user
   team: 'blackTeam',
   // which turn block is active
-  active_turn_number: 2,
+  activeTurnNumber: 2,
   active_turn_phase: 'prepare', // prepare, encrypt, guess_order_white_team, guess_order_black_team
   // team data
   whiteTeam: {
@@ -40,15 +42,15 @@ const mockData = {
     words: ['shoe', 'car', 'plane', 'boat'],
     turns: [
       {
-        phase: 'complete',
-        encryptorName: 'Jerry',
         clues: ['tires', 'gunnel', 'tail'],
         correctOrder: [2, 4, 3],
-        guessedOrderSelf: [2, 4, 3],
+        encryptorName: 'Jerry',
         guessedOrderOpponent: [3, 4, 2],
+        guessedOrderSelf: [2, 4, 3],
+        phase: 'complete',
       },
     ],
   },
-};
+});
 
 export default mockData;

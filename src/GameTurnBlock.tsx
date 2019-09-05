@@ -1,9 +1,9 @@
-import { Button, Card, Col, Icon, Row, Typography, Tooltip } from 'antd';
+import { Button, Card, Col, Icon, Row, Tooltip, Typography } from 'antd';
 import React from 'react';
 
 import {
-  GameClueEditGuess,
   GameClueEditClue,
+  GameClueEditGuess,
   GameClueRevielClue,
   GameClueRevield,
   GameClueUnrevield,
@@ -18,14 +18,13 @@ import {
 const { Text } = Typography;
 
 const GameTurnBlock: React.FC = props => {
-  const { turn_number, active_turn_number, active_turn_phase } = props;
+  const { turn_number, activeTurnNumber } = props;
   const classActive =
-    turn_number === active_turn_number ? 'GameTurnBlockActive' : '';
-  // active_turn_phase: "prepare", // prepare, encrypt, guess_order_white_team, guess_order_black_team
-  if (turn_number === active_turn_number) {
+    turn_number === activeTurnNumber ? 'GameTurnBlockActive' : '';
+  if (turn_number === activeTurnNumber) {
     return <GameTurnBlockActiveEncryptor {...props} />;
   }
-  if (turn_number < active_turn_number) {
+  if (turn_number < activeTurnNumber) {
     return <GameTurnBlockPast {...props} />;
   }
   // TODO consider while typing...?

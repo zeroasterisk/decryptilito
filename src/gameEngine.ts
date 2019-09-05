@@ -17,7 +17,7 @@ const getTeamData = props => {
 const getTurnData = (props, turn_number) => {
   // TODO what team am I on
   const { team } = props;
-  const turns = props[team]['turns'];
+  const turns = props[team].turns;
   if (turns.length > turn_number - 1) {
     return turns[turn_number - 1];
   }
@@ -35,7 +35,7 @@ const getTurnData = (props, turn_number) => {
 const getRandomOrder = () => {
   const order = [];
   while (order.length < 3) {
-    let index = Math.floor(Math.random() * 4);
+    const index = Math.floor(Math.random() * 4);
     if (index >= 1 && !order.includes(index)) {
       order.push(index);
     }
@@ -46,8 +46,8 @@ const getRandomOrder = () => {
 // TODO make this more rhobust
 const getNextEncryptor = props => {
   const { team } = props;
-  const teamMemberNames = props[team]['teamMembers'].map(({ name }) => name);
-  const turnNameFreqCount = props[team]['turns'].reduce((acc, turn) => {
+  const teamMemberNames = props[team].teamMembers.map(({ name }) => name);
+  const turnNameFreqCount = props[team].turns.reduce((acc, turn) => {
     if (acc[turn.encryptorName]) {
       acc[turn.encryptorName] = 1;
     } else {
@@ -70,4 +70,4 @@ const getNextEncryptor = props => {
     .shift();
 };
 
-export { teamName, teamOppositeName, getTeamData, getTurnData };
+export { teamName, teamOppositeName, getTeamData, getTurnData, getRandomOrder };

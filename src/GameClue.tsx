@@ -13,12 +13,12 @@ import { teamName, teamOppositeName } from './gameEngine';
 const { Text } = Typography;
 
 const GameClue: React.FC = props => {
-  const { turn_number, active_turn_number, active_turn_phase } = props.data;
+  const { turn_number, activeTurnNumber, active_turn_phase } = props.data;
   // active_turn_phase: "prepare", // prepare, encrypt, guess_order_white_team, guess_order_black_team
-  if (turn_number === active_turn_number && active_turn_phase === 'encrypt') {
+  if (turn_number === activeTurnNumber && active_turn_phase === 'encrypt') {
     return <GameClueEditGuess {...props} />;
   }
-  if (turn_number < active_turn_number) {
+  if (turn_number < activeTurnNumber) {
     return <GameClueRevield {...props} />;
   }
   // TODO consider while typing...?

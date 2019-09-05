@@ -12,9 +12,9 @@ storiesOf('Game', module)
   .add('basic', () => {
     return <Game {...mockData} />;
   })
-  .add('turn 2, prepare', () => {
+  .add('turn 2, black team, prepare', () => {
     const turn2data = {
-      active_turn_number: 2,
+      activeTurnNumber: 2,
       active_turn_phase: 'prepare',
     };
     return <Game {...mockData} {...turn2data} />;
@@ -22,7 +22,7 @@ storiesOf('Game', module)
   .add('turn 2, encrypt', () => {
     const turn2data = {
       // game data
-      active_turn_number: 2,
+      activeTurnNumber: 2,
       active_turn_phase: 'encrypt',
     };
     return <Game {...mockData} {...turn2data} />;
