@@ -1,11 +1,31 @@
 import { expect } from 'chai';
-import { GameData } from './gameData';
+import { GameData, GameStatus, TeamColor, TurnStatus } from '../gameData';
+import mockGameData from '../mock/mockGameData';
 
 describe('GameData', () => {
   const gameDataInputBasic = {
     id: 'abcdefg1234567',
-    status: 'ACTIVE',
-    turns: [],
+    status: GameStatus.ACTIVE,
+    turns: [
+      {
+        id: 1,
+        status: TurnStatus.PREPARE,
+        whiteTeam: {
+          encryptor: { name: 'Luna', id: '1111' },
+          correctOrder: [1, 2, 3],
+          clues: [],
+          guessedOrderOpponent: [],
+          guessedOrderSelf: [],
+        },
+        blackTeam: {
+          encryptor: { name: 'Jerry', id: '4444' },
+          correctOrder: [1, 2, 3],
+          clues: [],
+          guessedOrderOpponent: [],
+          guessedOrderSelf: [],
+        },
+      },
+    ],
     activeTurnNumber: 1,
     whiteTeam: {
       teamColor: 'white',
@@ -35,7 +55,7 @@ describe('GameData', () => {
     // console.log(game);
     expect(game.id).to.equal('abcdefg1234567');
     expect(game.status).to.equal('ACTIVE');
-    expect(game.turns).to.deep.equal([]);
+    expect(game.turns).to.deep.equal(gameDataInputBasic.turns);
     expect(game.activeTurnNumber).to.equal(1);
     expect(game.whiteTeam).to.deep.equal(gameDataInputBasic.whiteTeam);
     expect(game.blackTeam).to.deep.equal(gameDataInputBasic.blackTeam);
@@ -70,5 +90,16 @@ describe('GameData', () => {
       words: [],
       turns: [],
     });
+  });
+  it('should work with mockGameData, for stories', () => {
+    const game = new GameData({ ...mockGameData });
+    // todo is instance of...
+    expect(game.id).to.equal('mockdata123');
+    expect(game.status).to.equal('ACTIVE');
+    expect(game.turns).to.deep.equal(mockGameData.turns);
+    expect(game.activeTurnNumber).to.equal(2);
+    expect(game.whiteTeam).to.deep.equal(mockGameData.whiteTeam);
+    expect(game.blackTeam).to.deep.equal(mockGameData.blackTeam);
+    expect(game.validate()).to.equal(true);
   });
 });

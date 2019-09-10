@@ -1,34 +1,78 @@
-const teamName = name => {
-  if (name === 'whiteTeam') return 'White Team';
-  if (name === 'blackTeam') return 'Black Team';
+import {
+  GameData,
+  GameStatus,
+  TeamColor,
+  TeamKey,
+  TeamMember,
+  TurnData,
+  TurnStatus,
+} from './gameData';
+import { UserData } from './userData';
+
+const teamName = (name: TeamKey) => {
+  if (name === TeamKey.whiteTeam) return 'White Team';
+  if (name === TeamKey.blackTeam) return 'Black Team';
   return '???? Team';
 };
-const teamOppositeName = name => {
-  if (name === 'whiteTeam') return teamName('blackTeam');
-  if (name === 'blackTeam') return teamName('whiteTeam');
+const teamOppositeName = (name: TeamKey) => {
+  if (name === TeamKey.whiteTeam) return teamName(TeamKey.blackTeam);
+  if (name === TeamKey.blackTeam) return teamName(TeamKey.whiteTeam);
   return '???? Team';
 };
 
-const getTeamData = props => {
-  // TODO what team am I on
-  const { team } = props;
-  return props[team];
+const getTeamData = ({ game, user }: { game: GameData; user: UserData }) => {
+  const { myTeam } = user;
+  return game[myTeam];
 };
-const getTurnData = (props, turn_number) => {
-  // TODO what team am I on
-  const { team } = props;
-  const turns = props[team].turns;
-  if (turns.length > turn_number - 1) {
-    return turns[turn_number - 1];
+const getTurnData = ({ game }: { game: GameData }, turnNumber: number) => {
+  const { turns } = game;
+  if (turns.length >= turnNumber - 1) {
+    return turns[turnNumber - 1];
   }
   // return default turn
   return {
-    phase: 'prompt',
-    encryptorName: getNextEncryptor(props),
-    clues: ['', '', ''],
-    correctOrder: getRandomOrder(),
-    guessedOrderSelf: [],
-    guessedOrderOpponent: [],
+    id: turnNumber,
+    status: TurnStatus.DONE,
+    whiteTeam: {
+      encryptor: getNextEncryptor(TeamKey.whiteTeam, game),
+      clues: ['', '', ''],
+      correctOrder: getRandomOrder(),
+      guessedOrderSelf: [],
+      guessedOrderOpponent: [],
+    },
+    blackTeam: {
+      encryptor: getNextEncryptor(TeamKey.blackTeam, game),
+      clues: ['', '', ''],
+      correctOrder: getRandomOrder(),
+      guessedOrderSelf: [],
+      guessedOrderOpponent: [],
+    },
+  };
+};
+
+const createNextTurn = (props: GameData) => {
+  const { turns } = props;
+  const turn = {
+    id: turns.length + 1,
+    status: TurnStatus.PREPARE,
+    whiteTeam: {
+      encryptor: {},
+      correctOrder: getRandomOrder(),
+      clues: ['', '', ''],
+      guessedOrderOpponent: [],
+      guessedOrderSelf: [],
+      interception: false,
+      miscommunication: false,
+    },
+    blackTeam: {
+      encryptor: {},
+      correctOrder: getRandomOrder(),
+      clues: ['', '', ''],
+      guessedOrderOpponent: [],
+      guessedOrderSelf: [],
+      interception: false,
+      miscommunication: false,
+    },
   };
 };
 
@@ -44,30 +88,44 @@ const getRandomOrder = () => {
 };
 
 // TODO make this more rhobust
-const getNextEncryptor = props => {
-  const { team } = props;
-  const teamMemberNames = props[team].teamMembers.map(({ name }) => name);
-  const turnNameFreqCount = props[team].turns.reduce((acc, turn) => {
-    if (acc[turn.encryptorName]) {
-      acc[turn.encryptorName] = 1;
+const getNextEncryptor = (myTeam: TeamKey, game: GameData) => {
+  const { turns } = game;
+  if (!(myTeam && game[myTeam])) throw Error(`Invalid team data [${myTeam}]`);
+  const teamMembers = game[myTeam].teamMembers;
+  // { encryptorId: countTurns }
+  const turnMemberIdFreqCount = turns.reduce((acc: object, turn: TurnData) => {
+    const encryptorIdTemp = turn[myTeam].encryptor.id;
+    if (acc[encryptorIdTemp]) {
+      acc[encryptorIdTemp] = 1;
     } else {
-      acc[turn.encryptorName] += 1;
+      acc[encryptorIdTemp] += 1;
     }
     return acc;
   }, {});
-  // first, if any name is not in turnNameFreqCount, lets do that
-  const missingMemberNames = teamMemberNames.filter(
-    x => !Object.keys(turnNameFreqCount).includes(x),
+  // first, if any name is not in turnMemberIdFreqCount, lets do that
+  const missingTeamMembers = teamMembers.filter(
+    (member: TeamMember) =>
+      !Object.keys(turnMemberIdFreqCount).includes(member.id),
   );
-  if (missingMemberNames.length > 0) {
-    return missingMemberNames.pop();
+  if (missingTeamMembers.length > 0) {
+    return missingTeamMembers.pop();
   }
   // finally, return the least found name
-  return Object.keys(turnNameFreqCount)
+  const encryptorId = Object.keys(turnMemberIdFreqCount)
     .sort((a, b) => {
-      return turnNameFreqCount[a] - turnNameFreqCount[b];
+      return turnMemberIdFreqCount[a] - turnMemberIdFreqCount[b];
     })
     .shift();
+  return teamMembers
+    .filter((member: TeamMember) => member.id === encryptorId)
+    .pop();
 };
 
-export { teamName, teamOppositeName, getTeamData, getTurnData, getRandomOrder };
+export {
+  teamName,
+  teamOppositeName,
+  getTeamData,
+  getTurnData,
+  getRandomOrder,
+  getNextEncryptor,
+};

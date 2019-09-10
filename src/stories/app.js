@@ -7,7 +7,7 @@ import { storiesOf } from '@storybook/react';
 import App from '../App.tsx';
 import { navigate } from 'hookrouter';
 
-import mockData from './mock_data';
+import mockGameData from '../mock/mockGameData';
 
 storiesOf('App', module)
   .add('basic', () => {

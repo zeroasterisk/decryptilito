@@ -1,24 +1,28 @@
 import {
-  validateSync,
-  ValidationError,
-  Contains,
+  // Contains,
+  // IsDate,
   IsEnum,
   IsInt,
   Length,
-  IsDate,
-  Min,
   Max,
+  Min,
+  validateSync,
+  ValidationError,
 } from 'class-validator';
 
 // https://github.com/typestack/class-validator
 
 // export as namespace GameData;
 
-export enum TeamColor {
+enum TeamKey {
+  blackTeam = 'blackTeam',
+  whiteTeam = 'whiteTeam',
+}
+enum TeamColor {
   BLACK = 'BLACK',
   WHITE = 'WHITE',
 }
-export enum GameStatus {
+enum GameStatus {
   ENTRY = 'ENTRY',
   ACTIVE = 'ACTIVE',
   COMPLETE = 'COMPLETE',
@@ -27,7 +31,7 @@ export enum GameStatus {
 
 // this should cover all phases of a single turn (including pauses)
 // NOTE: turn is global, so each combination must be accounted for
-export enum TurnStatus {
+enum TurnStatus {
   // get the encryptor setup
   PREPARE = 'PREPARE',
   // encryptor is putting in clues
@@ -61,18 +65,33 @@ interface TeamMember {
 
 interface TurnTeamData {
   encryptor: TeamMember;
-  correctOrder: [number];
-  clues: [string];
-  guessedOrderOpponent: [number];
-  guessedOrderSelf: [number];
+  correctOrder: number[];
+  clues: string[];
+  guessedOrderOpponent: number[];
+  guessedOrderSelf: number[];
   interception: boolean;
   miscommunication: boolean;
 }
-interface TurnData {
+interface TurnDataInput {
   id: number;
   status: TurnStatus;
   whiteTeam: TurnTeamData;
   blackTeam: TurnTeamData;
+}
+class TurnData {
+  @IsInt()
+  @Min(0)
+  @Max(10)
+  public id: number;
+  public status: TurnStatus;
+  public whiteTeam: TurnTeamData;
+  public blackTeam: TurnTeamData;
+  constructor(data: TurnDataInput) {
+    this.id = data.id || 0;
+    this.status = data.status || TurnStatus.PREPARE;
+    this.whiteTeam = data.whiteTeam || {};
+    this.blackTeam = data.blackTeam || {};
+  }
 }
 
 interface TeamData {
@@ -82,9 +101,9 @@ interface TeamData {
   // TODO, omit in favor of CSV stringify from teamMembers
   teamMemberNames: string;
 
-  teamMembers: [TeamMember];
-  words: [string]; // should be exactly 4
-  turns: [TurnData];
+  teamMembers: TeamMember[];
+  words: string[]; // should be exactly 4
+  turns: TurnData[];
 }
 
 const factoryTeamData = (team: TeamColor) => {
@@ -102,7 +121,7 @@ interface GameDataInput {
   status: GameStatus;
   // which turn number: 0-10
   activeTurnNumber: number;
-  turns: [TurnData];
+  turns: TurnData[];
   // team data for each team
   whiteTeam: TeamData;
   blackTeam: TeamData;
@@ -119,7 +138,7 @@ class GameData {
   @Min(0)
   @Max(10)
   public activeTurnNumber: number;
-  public turns: [TurnData];
+  public turns: TurnData[];
   // team data for each team
   public whiteTeam: TeamData;
   public blackTeam: TeamData;
@@ -129,7 +148,7 @@ class GameData {
     this.id = data.id || this.makeId();
     this.status = data.status || 'ENTRY';
     this.activeTurnNumber = data.activeTurnNumber || 0;
-    this.turns = data.turns || [];
+    this.turns = (data.turns && data.turns.map(x => new TurnData(x))) || [];
     this.whiteTeam = data.whiteTeam || factoryTeamData(TeamColor.WHITE);
     this.blackTeam = data.blackTeam || factoryTeamData(TeamColor.BLACK);
     this.errors = [];
@@ -166,8 +185,11 @@ class GameData {
 
 export {
   GameData,
+  TurnData,
+  TurnTeamData,
   TeamMember,
   // enums
+  TeamKey,
   TeamColor,
   TurnStatus,
   GameStatus,

@@ -6,18 +6,18 @@ import { storiesOf } from '@storybook/react';
 
 import Game from '../Game.tsx';
 
-import mockData from './mock_data';
+import mockGameData from '../mock/mockGameData';
 
 storiesOf('Game', module)
   .add('basic', () => {
-    return <Game {...mockData} />;
+    return <Game game={mockGameData} />;
   })
   .add('turn 2, black team, prepare', () => {
     const turn2data = {
       activeTurnNumber: 2,
       active_turn_phase: 'prepare',
     };
-    return <Game {...mockData} {...turn2data} />;
+    return <Game game={mockGameData} {...turn2data} />;
   })
   .add('turn 2, encrypt', () => {
     const turn2data = {
@@ -25,5 +25,5 @@ storiesOf('Game', module)
       activeTurnNumber: 2,
       active_turn_phase: 'encrypt',
     };
-    return <Game {...mockData} {...turn2data} />;
+    return <Game game={mockGameData} {...turn2data} />;
   });

@@ -16,20 +16,23 @@ import {
   GameTurnBlockActiveDecryptors,
 } from '../GameTurnBlock.tsx';
 
-import mockData from './mock_data';
+import mockGameData from '../mock/mockGameData';
+const myData = { myTeam: 'blackTeam', my_user: { name: 'aaaa bbbb' } };
 
 storiesOf('GameTurnBlock', module)
   // After a turn is over
   .add('Past', () => {
-    return <GameTurnBlockPast turn_number={1} {...mockData} />;
+    return <GameTurnBlockPast turn_number={1} {...myData} {...mockGameData} />;
   })
   // Before a turn is begun
   .add('Future', () => {
-    return <GameTurnBlockFuture turn_number={3} {...mockData} />;
+    return (
+      <GameTurnBlockFuture turn_number={3} {...myData} {...mockGameData} />
+    );
   })
   // Current turn
   .add('Active:prepare, before oder given to encryptor', () => {
-    const thisData = cloneDeep(mockData);
+    const thisData = cloneDeep(mockGameData);
     thisData.blackTeam.turns.push({
       phase: 'prepare',
       encryptorName: 'Eggbert',
@@ -38,10 +41,12 @@ storiesOf('GameTurnBlock', module)
       guessedOrderSelf: [],
       guessedOrderOpponent: [],
     });
-    return <GameTurnBlockActivePrepare turn_number={2} {...thisData} />;
+    return (
+      <GameTurnBlockActivePrepare turn_number={2} {...myData} {...thisData} />
+    );
   })
   .add('Active:encryptor, order given to encryptor', () => {
-    const thisData = cloneDeep(mockData);
+    const thisData = cloneDeep(mockGameData);
     thisData.blackTeam.turns.push({
       phase: 'encrypt',
       encryptorName: 'Eggbert',
@@ -51,12 +56,14 @@ storiesOf('GameTurnBlock', module)
       guessedOrderSelf: [],
       guessedOrderOpponent: [],
     });
-    return <GameTurnBlockActiveEncryptor turn_number={2} {...thisData} />;
+    return (
+      <GameTurnBlockActiveEncryptor turn_number={2} {...myData} {...thisData} />
+    );
   })
   .add(
     'Active:awaitingDecryption, waiting on both encryptors to finish',
     () => {
-      const thisData = cloneDeep(mockData);
+      const thisData = cloneDeep(mockGameData);
       thisData.blackTeam.turns.push({
         phase: 'awaitingDecryption',
         encryptorName: 'Eggbert',
@@ -67,12 +74,16 @@ storiesOf('GameTurnBlock', module)
         guessedOrderOpponent: [],
       });
       return (
-        <GameTurnBlockActiveAwaitingDecryption turn_number={2} {...thisData} />
+        <GameTurnBlockActiveAwaitingDecryption
+          turn_number={2}
+          {...myData}
+          {...thisData}
+        />
       );
     },
   )
   .add('Active:decryptors, black team guessing white', () => {
-    const thisData = cloneDeep(mockData);
+    const thisData = cloneDeep(mockGameData);
     thisData.blackTeam.turns.push({
       phase: 'decrypt',
       encryptorName: 'Eggbert',
@@ -83,10 +94,16 @@ storiesOf('GameTurnBlock', module)
       guessedOrderOpponent: [],
     });
     thisData.team_ui = 'whiteTeam';
-    return <GameTurnBlockActiveDecryptors turn_number={2} {...thisData} />;
+    return (
+      <GameTurnBlockActiveDecryptors
+        turn_number={2}
+        {...myData}
+        {...thisData}
+      />
+    );
   })
   .add('Active:decryptors, black team guessing black', () => {
-    const thisData = cloneDeep(mockData);
+    const thisData = cloneDeep(mockGameData);
     thisData.blackTeam.turns.push({
       phase: 'decrypt',
       encryptorName: 'Eggbert',
@@ -97,5 +114,11 @@ storiesOf('GameTurnBlock', module)
       guessedOrderOpponent: [],
     });
     thisData.team_ui = 'blackTeam';
-    return <GameTurnBlockActiveDecryptors turn_number={2} {...thisData} />;
+    return (
+      <GameTurnBlockActiveDecryptors
+        turn_number={2}
+        {...myData}
+        {...thisData}
+      />
+    );
   });
