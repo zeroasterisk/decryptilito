@@ -1,26 +1,26 @@
-import { Button, Card, Col, Icon, Row, Tooltip, Typography } from 'antd';
 import React from 'react';
+
+import { Button, Card, Icon, Progress, Tooltip, Typography } from 'antd';
 
 import {
   GameClueEditClue,
-  GameClueEditGuess,
-  GameClueRevielClue,
+  GameClueEditOpponentGuess,
+  GameClueEditOwnGuess,
+  GameClueHeader,
   GameClueRevield,
+  GameClueShowOnlyClue,
   GameClueUnrevield,
 } from './GameClue';
 
-import {
-  getTeamData,
-  getTurnData,
-  teamName,
-  teamOppositeName,
-} from './gameEngine';
+import { GameData, TeamKey, TurnStatus } from './gameData';
+import { UserData } from './userData';
+
+import { getTurnData, teamName, teamOppositeName } from './gameEngine';
+
 const { Text } = Typography;
 
 const GameTurnBlock: React.FC = props => {
   const { turn_number, activeTurnNumber } = props;
-  const classActive =
-    turn_number === activeTurnNumber ? 'GameTurnBlockActive' : '';
   if (turn_number === activeTurnNumber) {
     return <GameTurnBlockActiveEncryptor {...props} />;
   }
@@ -32,54 +32,54 @@ const GameTurnBlock: React.FC = props => {
 };
 
 // After a turn is over
-const GameTurnBlockPast: React.FC = props => {
-  const { team = 'blackTeam', team_ui = 'blackTeam', turn_number = 1 } = props;
-  const turnData = getTurnData(props, turn_number);
+const GameTurnBlockPast: React.FC = ({
+  team,
+  turn_number,
+  game,
+  user,
+}: {
+  team: TeamKey;
+  turn_number: number;
+  game: GameData;
+  user: UserData;
+}) => {
+  const turnData = getTurnData(game, turn_number);
+  const myTeam = user.myTeam; // TODO we should allow rendering the other team too
+  const showTeam = team || myTeam;
+  const turnTeamData = turnData[showTeam];
+  const clueProps = { ...turnTeamData, ...{ showTeam } };
   return (
     <Card
       size="small"
       className={`GameTurnBlock GameTurnBlockPast`}
       style={{ maxWidth: 400 }}
     >
-      <Row className="GameTurnBlocksHeader">
-        <Col xs={18}>
+      <GameClueHeader showTeam={showTeam}>
+        <div>
           #{turn_number}
           &nbsp;
-          <Text disabled>
-            encryptor:
-            {turnData.encryptorName}
-          </Text>
-        </Col>
-        <Tooltip title={`Guessed Order for ${teamName(team_ui)}`}>
-          <Col xs={2} className="Order">
-            <Icon type="question-circle" />
-          </Col>
-        </Tooltip>
-        <Tooltip title={`Guessed Order for ${teamOppositeName(team_ui)}`}>
-          <Col xs={2} className="Order teamOpposite">
-            <Icon type="question-circle" />
-          </Col>
-        </Tooltip>
-        <Tooltip title={`Correct Order for ${teamName(team_ui)}`}>
-          <Col xs={2} className="Order">
-            <Icon type="check-circle" />
-          </Col>
-        </Tooltip>
-      </Row>
-      <GameClueRevield clue_number={1} {...props} {...turnData} />
-      <GameClueRevield clue_number={2} {...props} {...turnData} />
-      <GameClueRevield clue_number={3} {...props} {...turnData} />
+          <Text disabled>encryptor: {turnTeamData.encryptor.name}</Text>
+        </div>
+      </GameClueHeader>
+      <GameClueRevield clue_number={1} {...clueProps} />
+      <GameClueRevield clue_number={2} {...clueProps} />
+      <GameClueRevield clue_number={3} {...clueProps} />
     </Card>
   );
 };
 
-const GameTurnBlockFuture: React.FC = props => {
-  const { turn_number, data } = props;
+const GameTurnBlockFuture: React.FC = ({
+  turn_number,
+  game,
+}: {
+  turn_number: number;
+  game: GameData;
+}) => {
   return (
     <Card size="small" style={{ maxWidth: 400 }}>
-      <Row className="GameTurnBlocksHeader">
-        <Col xs={18}>#{turn_number}</Col>
-      </Row>
+      <GameClueHeader showTeam={showTeam}>
+        <div>#{turn_number}</div>
+      </GameClueHeader>
       <GameClueUnrevield {...props} />
       <GameClueUnrevield {...props} />
       <GameClueUnrevield {...props} />
@@ -87,9 +87,21 @@ const GameTurnBlockFuture: React.FC = props => {
   );
 };
 
-const GameTurnBlockActivePrepare: React.FC = props => {
-  const { turn_number, data } = props;
-  const turnData = getTurnData(props, turn_number);
+const GameTurnBlockActivePrepare: React.FC = ({
+  team,
+  turn_number,
+  game,
+  user,
+}: {
+  team: TeamKey;
+  turn_number: number;
+  game: GameData;
+  user: UserData;
+}) => {
+  const turnData = getTurnData(game, turn_number);
+  const myTeam = user.myTeam; // TODO we should allow rendering the other team too
+  const showTeam = team || myTeam;
+  const turnTeamData = turnData[showTeam];
   return (
     <Card
       size="small"
@@ -99,11 +111,11 @@ const GameTurnBlockActivePrepare: React.FC = props => {
           <strong>(rest of team avert eyes)</strong>
           <Icon type="lock" />
           <br />
-          Encryptor: {turnData.encryptorName}
+          Encryptor: {turnTeamData.encryptor.name}
         </div>
       }
       actions={[
-        <Button type="primary">
+        <Button key="ready" type="primary">
           Show the Correct Order
           <Icon type="right" />
         </Button>,
@@ -117,9 +129,52 @@ const GameTurnBlockActivePrepare: React.FC = props => {
   );
 };
 
-const GameTurnBlockActiveEncryptor: React.FC = props => {
-  const { turn_number, data } = props;
-  const turnData = getTurnData(props, turn_number);
+const timeoutSeconds2Percent = (seconds: number) =>
+  Math.floor((seconds / 30) * 100);
+const timeoutPercent2Seconds = (percent: number) =>
+  Math.min(30, Math.ceil((percent * 30) / 100));
+const timeoutSeconds2Status = (seconds: number) => {
+  if (seconds < 10) return 'exception';
+  if (seconds > 20) return 'success';
+  return 'normal';
+};
+const TimeoutClock: React.FC = ({
+  timeoutSecondsRemaining,
+}: {
+  timeoutSecondsRemaining: number;
+}) => {
+  return (
+    <div className="TimeoutClock">
+      <Tooltip title={`Only ${timeoutSecondsRemaining} seconds left...`}>
+        <Progress
+          percent={timeoutSeconds2Percent(timeoutSecondsRemaining)}
+          status={timeoutSeconds2Status(timeoutSecondsRemaining)}
+          format={percent => `${timeoutPercent2Seconds(percent)} sec`}
+        />
+      </Tooltip>
+    </div>
+  );
+};
+
+const GameTurnBlockActiveEncryptor: React.FC = ({
+  team,
+  turn_number,
+  game,
+  user,
+}: {
+  team: TeamKey;
+  turn_number: number;
+  game: GameData;
+  user: UserData;
+}) => {
+  const turnData = getTurnData(game, turn_number);
+  const myTeam = user.myTeam; // TODO we should allow rendering the other team too
+  const showTeam = team || myTeam;
+  const turnTeamData = turnData[showTeam];
+  const clueProps = {
+    ...turnTeamData,
+    ...{ showTeam, showCorrectOrder: true },
+  };
   return (
     <Card
       size="small"
@@ -129,108 +184,259 @@ const GameTurnBlockActiveEncryptor: React.FC = props => {
           <strong>(rest of team avert eyes)</strong>
           <Icon type="lock" />
           <br />
-          Encryptor: {turnData.encryptorName}
+          Encryptor: {turnTeamData.encryptor.name}
         </div>
       }
       actions={[
-        <Button type="secondary">
+        <Button key="hide" type="secondary">
           Hide Order
           <Icon type="lock" />
         </Button>,
-        <Button type="primary">
+        <Button key="submit" type="primary">
           Submit Clues
           <Icon type="right" />
         </Button>,
       ]}
       style={{ maxWidth: 400 }}
     >
-      <Row className="GameTurnBlocksHeader">
-        <Col xs={18}>
+      <GameClueHeader showTeam={showTeam}>
+        <div>
           #{turn_number}
           &nbsp;
           <Text disabled>(provide clues)</Text>
-        </Col>
-        <Tooltip title="Correct Order">
-          <Col xs={3} className="Order">
-            <Icon type="check-circle" />
-          </Col>
-        </Tooltip>
-      </Row>
-      <GameClueEditClue clue_number={1} {...props} {...turnData} />
-      <GameClueEditClue clue_number={2} {...props} {...turnData} />
-      <GameClueEditClue clue_number={3} {...props} {...turnData} />
-    </Card>
-  );
-};
-
-const GameTurnBlockActiveAwaitingDecryption: React.FC = props => {
-  const { turn_number, data } = props;
-  const turnData = getTurnData(props, turn_number);
-  return (
-    <Card
-      size="small"
-      title={
-        <div>
-          Awaiting Decryption <Icon type="loading" />
-          <br />
-          Encryptor: {turnData.encryptorName}
         </div>
-      }
-      style={{ maxWidth: 400 }}
-    >
-      <Row className="GameTurnBlocksHeader">
-        <Col xs={18}>
-          #{turn_number}
-          &nbsp;
-          <Text disabled>(both teams must complete clues)</Text>
-        </Col>
-      </Row>
-      <GameClueRevielClue clue_number={1} {...props} {...turnData} />
-      <GameClueRevielClue clue_number={2} {...props} {...turnData} />
-      <GameClueRevielClue clue_number={3} {...props} {...turnData} />
+      </GameClueHeader>
+      <GameClueEditClue clue_number={1} {...clueProps} />
+      <GameClueEditClue clue_number={2} {...clueProps} />
+      <GameClueEditClue clue_number={3} {...clueProps} />
+      {turnData.timeoutSecondsRemaining > 0 ? (
+        <TimeoutClock
+          timeoutSecondsRemaining={turnData.timeoutSecondsRemaining}
+        />
+      ) : (
+        ''
+      )}
     </Card>
   );
 };
 
-const GameTurnBlockActiveDecryptors: React.FC = props => {
-  const { team = 'blackTeam', team_ui = 'blackTeam', turn_number = 1 } = props;
-  const turnData = getTurnData(props, turn_number);
+// my team has submitted clues, but the opposing team has not yet...
+const GameTurnBlockActiveEncryptedWaiting: React.FC = ({
+  team,
+  turn_number,
+  game,
+  user,
+}: {
+  team: TeamKey;
+  turn_number: number;
+  game: GameData;
+  user: UserData;
+}) => {
+  const turnData = getTurnData(game, turn_number);
+  const myTeam = user.myTeam; // TODO we should allow rendering the other team too
+  const showTeam = team || myTeam;
+  const turnTeamData = turnData[showTeam];
+  const clueProps = {
+    ...turnTeamData,
+    ...{ showTeam, showCorrectOrder: false },
+  };
   return (
     <Card
       size="small"
       title={
         <div>
-          Guess Order for {teamName(team_ui)}
+          Encryption&nbsp;
+          <strong>(rest of team avert eyes)</strong>
+          <Icon type="lock" />
           <br />
-          Decryptors: {turnData.decryptorNames}
+          Encryptor: {turnTeamData.encryptor.name}
         </div>
       }
       actions={[
-        <Button type="primary">
-          Submit Order Guesses
-          <Icon type="right" />
+        // TODO consider allowing a team to go back and edit...?
+        <Button key="waiting" type="dashed" diabled>
+          Waiting on {teamOppositeName(showTeam)}
+          <Icon type="loading" />
         </Button>,
       ]}
       style={{ maxWidth: 400 }}
     >
-      <Row className="GameTurnBlocksHeader">
-        <Col xs={18}>
+      <GameClueHeader showTeam={showTeam}>
+        <div>
           #{turn_number}
           &nbsp;
+          <Text disabled>(provide clues)</Text>
+        </div>
+      </GameClueHeader>
+      <GameClueShowOnlyClue clue_number={1} {...clueProps} {...turnData} />
+      <GameClueShowOnlyClue clue_number={2} {...clueProps} {...turnData} />
+      <GameClueShowOnlyClue clue_number={3} {...clueProps} {...turnData} />
+      {turnData.timeoutSecondsRemaining > 0 ? (
+        <TimeoutClock
+          timeoutSecondsRemaining={turnData.timeoutSecondsRemaining}
+        />
+      ) : (
+        ''
+      )}
+    </Card>
+  );
+};
+
+// guessing order (opponent's clues, or own clues)
+const GameTurnBlockActiveDecryptors: React.FC = ({
+  turn_number,
+  game,
+  user,
+}: {
+  turn_number: number;
+  game: GameData;
+  user: UserData;
+}) => {
+  const { debug } = game;
+  // TODO should we allow rendering the other team intentionally?
+  const turnData = getTurnData(game, turn_number);
+  // what team am I on (logged in user)
+  const myTeam = user.myTeam;
+  const showTeam = myTeam;
+  // which team clues are we showing?
+  const isWhiteTeamClues =
+    turnData.status === TurnStatus.DECRYPT_WHITE_CLUES ||
+    turnData.status === TurnStatus.DECRYPT_WHITE_CLUES_PARTIAL;
+  const cluesTeam = isWhiteTeamClues ? TeamKey.whiteTeam : TeamKey.blackTeam;
+  // we always get clues for the cluesTeam
+  const cluesTeamTurnData = turnData[cluesTeam];
+
+  // logic to control UI
+  const myTeamCluesAreShown = myTeam === cluesTeam;
+  // has opponent guessed already?
+  const opposingTeamHasGuessed = myTeamCluesAreShown
+    ? cluesTeamTurnData.guessedOrderOpponentSubmitted
+    : cluesTeamTurnData.guessedOrderSelfSubmitted;
+  // have we guessed already?
+  const ownTeamHasGuessed = myTeamCluesAreShown
+    ? cluesTeamTurnData.guessedOrderSelfSubmitted
+    : cluesTeamTurnData.guessedOrderOpponentSubmitted;
+  // disable editing if guessing team has already submitted
+  const disabled = ownTeamHasGuessed;
+  // we always get decryptors for the guessingTeam (if same as clues team, omit encryptor)
+  // TODO verify this always works
+  // const decryptorNames = getDecryptorNames(game, turn_number, showTeam, myTeam);
+  const decryptorNames = 'TODO GET NAMES';
+  const clueProps = {
+    ...{
+      cluesTeam,
+      myTeamCluesAreShown,
+      disabled,
+    },
+    ...cluesTeamTurnData,
+  };
+  return (
+    <Card
+      size="small"
+      title={
+        <div>
+          {myTeamCluesAreShown ? (
+            <div className="GuessingwnClues">
+              <strong>{teamName(myTeam)} </strong>
+              guessing our own Order.
+              <br />
+              Decryptors: {decryptorNames}
+            </div>
+          ) : (
+            <div className="GuessingwnClues">
+              <strong>{teamName(myTeam)} </strong>
+              guessing
+              <strong> {teamName(cluesTeam)} </strong>
+              Order.
+              <br />
+              Decryptors: {decryptorNames}
+            </div>
+          )}
+        </div>
+      }
+      actions={
+        disabled
+          ? [
+              // TODO consider allowing a team to go back and edit...?
+              <Button key="waiting" type="dashed" diabled>
+                Waiting on {teamOppositeName(showTeam)}
+                <Icon type="loading" />
+              </Button>,
+            ]
+          : [
+              <Button key="submit" type="primary">
+                Submit Order Guesses
+                <Icon type="right" />
+              </Button>,
+            ]
+      }
+      style={{ maxWidth: 400 }}
+    >
+      <GameClueHeader showTeam={showTeam}>
+        <div>
+          #{turn_number}
+          &nbsp;
+          <Text disabled>Encryptor: {cluesTeamTurnData.encryptor.name}</Text>
+        </div>
+      </GameClueHeader>
+      {myTeamCluesAreShown ? (
+        <div>
+          <GameClueEditOwnGuess clue_number={1} {...clueProps} {...turnData} />
+          <GameClueEditOwnGuess clue_number={2} {...clueProps} {...turnData} />
+          <GameClueEditOwnGuess clue_number={3} {...clueProps} {...turnData} />
+        </div>
+      ) : (
+        <div>
+          <GameClueEditOpponentGuess
+            clue_number={1}
+            {...clueProps}
+            {...turnData}
+          />
+          <GameClueEditOpponentGuess
+            clue_number={2}
+            {...clueProps}
+            {...turnData}
+          />
+          <GameClueEditOpponentGuess
+            clue_number={3}
+            {...clueProps}
+            {...turnData}
+          />
+        </div>
+      )}
+      {opposingTeamHasGuessed ? (
+        <div>
           <Text disabled>
-            encryptor:
-            {turnData.encryptorName}
+            <Icon type="loading" /> The {teamOppositeName(myTeam)} is ready.
           </Text>
-        </Col>
-        <Tooltip title={`Guessed Order for ${teamName(team_ui)}`}>
-          <Col xs={4} className="Order">
-            <Icon type="question-circle" />
-          </Col>
-        </Tooltip>
-      </Row>
-      <GameClueEditGuess clue_number={1} {...props} {...turnData} />
-      <GameClueEditGuess clue_number={2} {...props} {...turnData} />
-      <GameClueEditGuess clue_number={3} {...props} {...turnData} />
+        </div>
+      ) : (
+        ''
+      )}
+      {debug ? (
+        <div className="debug">
+          <small>
+            <Text disabled>
+              myTeam: {myTeam}
+              <br />
+              cluesTeam: {cluesTeam}
+              <br />
+              {myTeamCluesAreShown ? "my team's clues" : "opponent's clues"}
+              <br />
+              {opposingTeamHasGuessed
+                ? 'opponent has guessed, waiting on me'
+                : ''}
+              <br />
+              {ownTeamHasGuessed ? 'we have guessed, waiting on opponent' : ''}
+              <br />
+              {disabled ? 'inputs disabled' : ''}
+              <br />
+            </Text>
+          </small>
+        </div>
+      ) : (
+        ''
+      )}
     </Card>
   );
 };
@@ -241,7 +447,7 @@ export {
   GameTurnBlock,
   GameTurnBlockActivePrepare,
   GameTurnBlockActiveEncryptor,
-  GameTurnBlockActiveAwaitingDecryption,
+  GameTurnBlockActiveEncryptedWaiting,
   GameTurnBlockActiveDecryptors,
   GameTurnBlockPast,
   GameTurnBlockFuture,

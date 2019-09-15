@@ -59,7 +59,7 @@ describe('GameEngine turn utilities', () => {
   });
   it('getTurnData gets current turn data', () => {
     const game = new GameData({ ...mockGameData });
-    const turn = getTurnData({ game }, 1);
+    const turn = getTurnData(game, 1);
     expect(turn).to.be.a('object');
     expect(turn).to.equal(game.turns[0]);
   });

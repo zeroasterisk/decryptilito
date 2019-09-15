@@ -36,17 +36,14 @@ enum TurnStatus {
   PREPARE = 'PREPARE',
   // encryptor is putting in clues
   ENCRYPT = 'ENCRYPT',
-  // encryptor is done putting in clues, waiting on the other team
-  WHITE_ENCRYPTED_WAITING_ON_BLACK = 'WHITE_ENCRYPTED_WAITING_ON_BLACK',
-  BLACK_ENCRYPTED_WAITING_ON_WHITE = 'BLACK_ENCRYPTED_WAITING_ON_WHITE',
-  // white reads out clues, black team guesses
-  BLACK_DECRYPT_WHITE_CLUES = 'BLACK_DECRYPT_WHITE_CLUES',
-  // white reads out clues, white team guesses
-  WHITE_DECRYPT_WHITE_CLUES = 'WHITE_DECRYPT_WHITE_CLUES',
-  // black reads out clues, white team guesses
-  WHITE_DECRYPT_BLACK_CLUES = 'WHITE_DECRYPT_BLACK_CLUES',
-  // black reads out clues, black team guesses
-  BLACK_DECRYPT_BLACK_CLUES = 'BLACK_DECRYPT_BLACK_CLUES',
+  ENCRYPT_PARTIAL = 'ENCRYPT_PARTIAL',
+  // decryptors are guessing at order (one team at a time)
+  DECRYPT_WHITE_CLUES = 'DECRYPT_WHITE_CLUES',
+  DECRYPT_WHITE_CLUES_PARTIAL = 'DECRYPT_WHITE_CLUES_PARTIAL',
+  SCORING_WHITE = 'SCORING_WHITE',
+  DECRYPT_BLACK_CLUES = 'DECRYPT_BLACK_CLUES',
+  DECRYPT_BLACK_CLUES_PARTIAL = 'DECRYPT_BLACK_CLUES_PARTIAL',
+  SCORING_BLACK = 'SCORING_BLACK',
   // done
   DONE = 'DONE',
 }
@@ -66,15 +63,20 @@ interface TeamMember {
 interface TurnTeamData {
   encryptor: TeamMember;
   correctOrder: number[];
+  correctOrderHidden: boolean; // only matter while encrypting
   clues: string[];
+  cluesSubmitted: boolean;
   guessedOrderOpponent: number[];
+  guessedOrderOpponentSubmitted: boolean;
   guessedOrderSelf: number[];
+  guessedOrderSelfSubmitted: boolean;
   interception: boolean;
   miscommunication: boolean;
 }
 interface TurnDataInput {
   id: number;
   status: TurnStatus;
+  timeoutSecondsRemaining: number;
   whiteTeam: TurnTeamData;
   blackTeam: TurnTeamData;
 }
@@ -84,11 +86,13 @@ class TurnData {
   @Max(10)
   public id: number;
   public status: TurnStatus;
+  public timeoutSecondsRemaining: number;
   public whiteTeam: TurnTeamData;
   public blackTeam: TurnTeamData;
   constructor(data: TurnDataInput) {
     this.id = data.id || 0;
     this.status = data.status || TurnStatus.PREPARE;
+    this.timeoutSecondsRemaining = data.timeoutSecondsRemaining || 0;
     this.whiteTeam = data.whiteTeam || {};
     this.blackTeam = data.blackTeam || {};
   }
@@ -169,6 +173,7 @@ class GameData {
   public validate() {
     this.errors = validateSync(this, { validationError: { target: false } });
     if (this.errors.length > 0) {
+      // TODO switch to better logging
       console.error(this.errors);
     }
     return this.errors.length === 0;

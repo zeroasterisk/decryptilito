@@ -1,10 +1,14 @@
-.GameTurnBlocksHeader .OrderGuess {
+.GameTurnCluesHeader .OrderGuess {
   text-align: center;
 }
-.GameTurnBlocksHeader .OrderActual {
+.GameTurnCluesHeader .OrderActual {
   text-align: center;
 }
-.GameTurnBlock .Order{
+.Order.teamOpposite {
+  opacity: 0.6;
+}
+.GameTurnCluesHeader .Order,
+.GameTurnClues .Order {
   text-align: center;
 }
 .Word {
@@ -28,4 +32,10 @@
   background-color: #333;
   color: #eee;
 }
+
+.TimeoutClock {
+  padding: 10px;
+  /* text-align: center; */
+}
+
 /* TODO copy dark theme css for input forms, etc */

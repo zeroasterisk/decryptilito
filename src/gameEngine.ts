@@ -1,7 +1,5 @@
 import {
   GameData,
-  GameStatus,
-  TeamColor,
   TeamKey,
   TeamMember,
   TurnData,
@@ -14,18 +12,21 @@ const teamName = (name: TeamKey) => {
   if (name === TeamKey.blackTeam) return 'Black Team';
   return '???? Team';
 };
-const teamOppositeName = (name: TeamKey) => {
-  if (name === TeamKey.whiteTeam) return teamName(TeamKey.blackTeam);
-  if (name === TeamKey.blackTeam) return teamName(TeamKey.whiteTeam);
-  return '???? Team';
-};
+const teamOpposite = (name: TeamKey) =>
+  name === TeamKey.whiteTeam ? TeamKey.blackTeam : TeamKey.whiteTeam;
+const teamOppositeName = (name: TeamKey) => teamName(teamOpposite(name));
 
 const getTeamData = ({ game, user }: { game: GameData; user: UserData }) => {
   const { myTeam } = user;
   return game[myTeam];
 };
-const getTurnData = ({ game }: { game: GameData }, turnNumber: number) => {
+const getTurnData = (game: GameData, turnNumber: number) => {
   const { turns } = game;
+  if (!(turns && turns.length)) {
+    // TODO switch to better logging
+    console.error('Unable to get Turns from Game', game);
+    throw new Error('Unable to get Turn data from Game');
+  }
   if (turns.length >= turnNumber - 1) {
     return turns[turnNumber - 1];
   }
@@ -50,6 +51,7 @@ const getTurnData = ({ game }: { game: GameData }, turnNumber: number) => {
   };
 };
 
+/*
 const createNextTurn = (props: GameData) => {
   const { turns } = props;
   const turn = {
@@ -75,6 +77,7 @@ const createNextTurn = (props: GameData) => {
     },
   };
 };
+*/
 
 const getRandomOrder = () => {
   const order = [];
@@ -123,6 +126,7 @@ const getNextEncryptor = (myTeam: TeamKey, game: GameData) => {
 
 export {
   teamName,
+  teamOpposite,
   teamOppositeName,
   getTeamData,
   getTurnData,
