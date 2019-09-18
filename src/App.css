@@ -13,8 +13,13 @@
   float: left;
   margin-left: 20px;
   color: #ccc;
-
 }
+.AppHeader .UserAuthAvatar {
+  float: right;
+  min-width: 200px;
+  text-align: right;
+}
+
 .Footer-desc {
   position: relative;
   margin-left: 20px;

@@ -7,13 +7,15 @@ import Router from './Router';
 
 import { Layout } from 'antd';
 
+import UserAuthAvatarLoader from './UserAuthAvatarLoader';
+
 const { Header, Footer, Content } = Layout;
 
 const App: React.FC = () => {
   return (
     <div className="App">
       <Layout>
-        <Header>
+        <Header className="AppHeader">
           <img src="/logo-marching.jpg" className="App-logo" alt="logo" />
           <p className="Header-desc">
             Decryptalito - A variation on{' '}
@@ -25,6 +27,7 @@ const App: React.FC = () => {
             </a>
             , allowing web-based access and remote teams.
           </p>
+          <UserAuthAvatarLoader />
         </Header>
         <Content>
           <Router />

@@ -6,7 +6,7 @@ import { storiesOf } from '@storybook/react';
 // import { action } from '@storybook/addon-actions';
 // import { linkTo } from '@storybook/addon-links';
 
-import Game from '../Game.tsx';
+import Game from '../Game';
 import { TeamKey, TurnStatus } from '../gameData';
 
 import mockGameData from '../mock/mockGameData';
