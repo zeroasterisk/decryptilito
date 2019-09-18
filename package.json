@@ -18,7 +18,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "tsc && react-scripts test",
     "lint": "tslint -c tslint.json 'src/**/*.ts*'",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 9009 -s public",
@@ -43,6 +43,7 @@
     "@storybook/addon-actions": "^5.1.11",
     "@storybook/addon-links": "^5.1.11",
     "@storybook/react": "^5.1.11",
+    "@types/hookrouter": "^2.2.1",
     "chai": "^4.2.0",
     "husky": "^3.0.5",
     "prettier": "^1.18.2",
@@ -51,7 +52,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged"
+      "pre-commit": "tsc && pretty-quick --staged"
     }
   }
 }
