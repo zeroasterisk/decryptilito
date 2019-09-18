@@ -4,13 +4,17 @@ import aboutSteps from './about_steps';
 
 const { Title } = Typography;
 
-const HowToPlaySection: React.FC = ({
-  steps,
-  title,
-}: {
-  steps: [object];
+type StepsProps = {
+  title?: string;
+  desc?: string;
+  icon?: string;
+};
+type StepsSectionProps = {
+  steps: StepsProps[];
   title: string;
-}) => {
+};
+
+const HowToPlaySection: React.FC<StepsSectionProps> = ({ steps, title }) => {
   return (
     <div className="wrap">
       <div className="content">

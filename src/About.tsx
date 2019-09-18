@@ -13,7 +13,7 @@ const routes = {
 };
 
 // hackery to get the menu tabs to like hooksrouter
-const getSelectedRoute = path => {
+const getSelectedRoute = (path: string) => {
   if (path === '/about/game') return 'game';
   if (path === '/about/tech') return 'tech';
   return 'overview';

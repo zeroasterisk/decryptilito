@@ -14,6 +14,13 @@ import {
 
 import { TeamKey } from './gameData';
 
+interface UserDataInput {
+  id: string;
+  name: string;
+  myTeam: TeamKey;
+  errors?: ValidationError[];
+}
+
 class UserData {
   // game id (for saving)
   @Length(10, 20)
@@ -21,12 +28,12 @@ class UserData {
   public name: string;
   @IsEnum(TeamKey)
   public myTeam: TeamKey;
-  public errors: ValidationError[];
+  public errors?: ValidationError[];
 
   constructor(data: UserDataInput) {
     this.id = data.id || this.makeId();
     this.name = data.name || 'Unnamed';
-    this.myTeam = data.myTeam || '';
+    this.myTeam = data.myTeam;
     this.errors = [];
   }
 

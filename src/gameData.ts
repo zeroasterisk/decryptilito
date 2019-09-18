@@ -53,33 +53,34 @@ enum TurnStatus {
 //     public team: TeamColor;
 // }
 
-interface TeamMember {
+export interface TeamMember {
   // public details about each team member
   name: string;
   id: string;
   // TODO store more from firebase?
 }
 
-interface TurnTeamData {
+export interface TurnTeamData {
   encryptor: TeamMember;
   correctOrder: number[];
-  correctOrderHidden: boolean; // only matter while encrypting
+  correctOrderHidden?: boolean; // only matter while encrypting
   clues: string[];
-  cluesSubmitted: boolean;
+  cluesSubmitted?: boolean;
   guessedOrderOpponent: number[];
-  guessedOrderOpponentSubmitted: boolean;
+  guessedOrderOpponentSubmitted?: boolean;
   guessedOrderSelf: number[];
-  guessedOrderSelfSubmitted: boolean;
-  interception: boolean;
-  miscommunication: boolean;
+  guessedOrderSelfSubmitted?: boolean;
+  interception?: boolean;
+  miscommunication?: boolean;
 }
-interface TurnDataInput {
+export interface TurnDataInput {
   id: number;
   status: TurnStatus;
   timeoutSecondsRemaining: number;
   whiteTeam: TurnTeamData;
   blackTeam: TurnTeamData;
 }
+
 class TurnData {
   @IsInt()
   @Min(0)
@@ -107,7 +108,6 @@ interface TeamData {
 
   teamMembers: TeamMember[];
   words: string[]; // should be exactly 4
-  turns: TurnData[];
 }
 
 const factoryTeamData = (team: TeamColor) => {
@@ -147,6 +147,7 @@ class GameData {
   public whiteTeam: TeamData;
   public blackTeam: TeamData;
   public errors: ValidationError[];
+  public debug: boolean;
 
   constructor(data: GameDataInput) {
     this.id = data.id || this.makeId();
@@ -156,6 +157,7 @@ class GameData {
     this.whiteTeam = data.whiteTeam || factoryTeamData(TeamColor.WHITE);
     this.blackTeam = data.blackTeam || factoryTeamData(TeamColor.BLACK);
     this.errors = [];
+    this.debug = false;
   }
 
   public makeId() {
@@ -191,8 +193,6 @@ class GameData {
 export {
   GameData,
   TurnData,
-  TurnTeamData,
-  TeamMember,
   // enums
   TeamKey,
   TeamColor,

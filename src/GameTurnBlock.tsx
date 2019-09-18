@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Button, Card, Icon, Progress, Tooltip, Typography } from 'antd';
+import { Button, Card, Icon, Typography } from 'antd';
 
 import {
   GameClueEditClue,
@@ -12,6 +12,8 @@ import {
   GameClueUnreveiled,
 } from './GameClue';
 
+import TimeoutClock from './TimeoutClock';
+
 import { GameData, TeamKey, TurnStatus } from './gameData';
 import { UserData } from './userData';
 
@@ -19,18 +21,18 @@ import { getTurnData, teamName, teamOppositeName } from './gameEngine';
 
 const { Text } = Typography;
 
-const GameTurnBlock: React.FC = ({
-  team,
+type GameTurnBlockProps = {
+  game: GameData;
+  turn_number: number;
+  user: UserData;
+};
+
+const GameTurnBlock: React.FC<GameTurnBlockProps> = ({
   turn_number,
   game,
   user,
-}: {
-  team: TeamKey;
-  turn_number: number;
-  game: GameData;
-  user: UserData;
 }) => {
-  const props = { game, user, team, turn_number };
+  const props = { game, user, turn_number };
   const { activeTurnNumber } = game;
   if (turn_number < activeTurnNumber) {
     return <GameTurnBlockPast {...props} />;
@@ -61,22 +63,19 @@ const GameTurnBlock: React.FC = ({
 };
 
 // After a turn is over
-const GameTurnBlockPast: React.FC = ({
-  team,
+const GameTurnBlockPast: React.FC<GameTurnBlockProps> = ({
   turn_number,
   game,
   user,
-}: {
-  team: TeamKey;
-  turn_number: number;
-  game: GameData;
-  user: UserData;
 }) => {
   const turnData = getTurnData(game, turn_number);
   const myTeam = user.myTeam; // TODO we should allow rendering the other team too
-  const showTeam = team || myTeam;
+  const showTeam = myTeam;
   const turnTeamData = turnData[showTeam];
-  const clueProps = { ...turnTeamData, ...{ showTeam } };
+  const clueProps = {
+    turnTeamData,
+    showTeam,
+  };
   return (
     <Card
       size="small"
@@ -97,19 +96,13 @@ const GameTurnBlockPast: React.FC = ({
   );
 };
 
-const GameTurnBlockFuture: React.FC = ({
-  team,
+const GameTurnBlockFuture: React.FC<GameTurnBlockProps> = ({
   turn_number,
   game,
   user,
-}: {
-  team: TeamKey;
-  turn_number: number;
-  game: GameData;
-  user: UserData;
 }) => {
   const myTeam = user.myTeam; // TODO we should allow rendering the other team too
-  const showTeam = team || myTeam;
+  const showTeam = myTeam;
   return (
     <Card
       size="small"
@@ -126,20 +119,14 @@ const GameTurnBlockFuture: React.FC = ({
   );
 };
 
-const GameTurnBlockActivePrepare: React.FC = ({
-  team,
+const GameTurnBlockActivePrepare: React.FC<GameTurnBlockProps> = ({
   turn_number,
   game,
   user,
-}: {
-  team: TeamKey;
-  turn_number: number;
-  game: GameData;
-  user: UserData;
 }) => {
   const turnData = getTurnData(game, turn_number);
   const myTeam = user.myTeam; // TODO we should allow rendering the other team too
-  const showTeam = team || myTeam;
+  const showTeam = myTeam;
   const turnTeamData = turnData[showTeam];
   return (
     <Card
@@ -168,51 +155,18 @@ const GameTurnBlockActivePrepare: React.FC = ({
   );
 };
 
-const timeoutSeconds2Percent = (seconds: number) =>
-  Math.floor((seconds / 30) * 100);
-const timeoutPercent2Seconds = (percent: number) =>
-  Math.min(30, Math.ceil((percent * 30) / 100));
-const timeoutSeconds2Status = (seconds: number) => {
-  if (seconds < 10) return 'exception';
-  if (seconds > 20) return 'success';
-  return 'normal';
-};
-const TimeoutClock: React.FC = ({
-  timeoutSecondsRemaining,
-}: {
-  timeoutSecondsRemaining: number;
-}) => {
-  return (
-    <div className="TimeoutClock">
-      <Tooltip title={`Only ${timeoutSecondsRemaining} seconds left...`}>
-        <Progress
-          percent={timeoutSeconds2Percent(timeoutSecondsRemaining)}
-          status={timeoutSeconds2Status(timeoutSecondsRemaining)}
-          format={percent => `${timeoutPercent2Seconds(percent)} sec`}
-        />
-      </Tooltip>
-    </div>
-  );
-};
-
-const GameTurnBlockActiveEncryptor: React.FC = ({
-  team,
+const GameTurnBlockActiveEncryptor: React.FC<GameTurnBlockProps> = ({
   turn_number,
   game,
   user,
-}: {
-  team: TeamKey;
-  turn_number: number;
-  game: GameData;
-  user: UserData;
 }) => {
   const turnData = getTurnData(game, turn_number);
   const myTeam = user.myTeam; // TODO we should allow rendering the other team too
-  const showTeam = team || myTeam;
+  const showTeam = myTeam;
   const turnTeamData = turnData[showTeam];
   const clueProps = {
-    ...turnTeamData,
-    ...{ showTeam, showCorrectOrder: true },
+    turnTeamData,
+    showTeam,
   };
   return (
     <Card
@@ -227,7 +181,7 @@ const GameTurnBlockActiveEncryptor: React.FC = ({
         </div>
       }
       actions={[
-        <Button key="hide" type="secondary">
+        <Button key="hide" type="dashed">
           Hide Order
           <Icon type="lock" />
         </Button>,
@@ -260,24 +214,18 @@ const GameTurnBlockActiveEncryptor: React.FC = ({
 };
 
 // my team has submitted clues, but the opposing team has not yet...
-const GameTurnBlockActiveEncryptedWaiting: React.FC = ({
-  team,
+const GameTurnBlockActiveEncryptedWaiting: React.FC<GameTurnBlockProps> = ({
   turn_number,
   game,
   user,
-}: {
-  team: TeamKey;
-  turn_number: number;
-  game: GameData;
-  user: UserData;
 }) => {
   const turnData = getTurnData(game, turn_number);
   const myTeam = user.myTeam; // TODO we should allow rendering the other team too
-  const showTeam = team || myTeam;
+  const showTeam = myTeam;
   const turnTeamData = turnData[showTeam];
   const clueProps = {
-    ...turnTeamData,
-    ...{ showTeam, showCorrectOrder: false },
+    turnTeamData,
+    showTeam,
   };
   return (
     <Card
@@ -293,7 +241,7 @@ const GameTurnBlockActiveEncryptedWaiting: React.FC = ({
       }
       actions={[
         // TODO consider allowing a team to go back and edit...?
-        <Button key="waiting" type="dashed" diabled>
+        <Button key="waiting" type="dashed" disabled>
           Waiting on {teamOppositeName(showTeam)}
           <Icon type="loading" />
         </Button>,
@@ -322,7 +270,7 @@ const GameTurnBlockActiveEncryptedWaiting: React.FC = ({
 };
 
 // guessing order (opponent's clues, or own clues)
-const GameTurnBlockActiveDecryptors: React.FC = ({
+const GameTurnBlockActiveDecryptors: React.FC<GameTurnBlockProps> = ({
   turn_number,
   game,
   user,
@@ -343,7 +291,7 @@ const GameTurnBlockActiveDecryptors: React.FC = ({
     turnData.status === TurnStatus.DECRYPT_WHITE_CLUES_PARTIAL;
   const cluesTeam = isWhiteTeamClues ? TeamKey.whiteTeam : TeamKey.blackTeam;
   // we always get clues for the cluesTeam
-  const cluesTeamTurnData = turnData[cluesTeam];
+  const cluesTeamTurnData = turnData[cluesTeam]; // {{{}}}
 
   // logic to control UI
   const myTeamCluesAreShown = myTeam === cluesTeam;
@@ -362,12 +310,9 @@ const GameTurnBlockActiveDecryptors: React.FC = ({
   // const decryptorNames = getDecryptorNames(game, turn_number, showTeam, myTeam);
   const decryptorNames = 'TODO GET NAMES';
   const clueProps = {
-    ...{
-      cluesTeam,
-      myTeamCluesAreShown,
-      disabled,
-    },
-    ...cluesTeamTurnData,
+    showTeam,
+    turnTeamData: cluesTeamTurnData,
+    disabled,
   };
   return (
     <Card
@@ -397,7 +342,7 @@ const GameTurnBlockActiveDecryptors: React.FC = ({
         disabled
           ? [
               // TODO consider allowing a team to go back and edit...?
-              <Button key="waiting" type="dashed" diabled>
+              <Button key="waiting" type="dashed" disabled>
                 Waiting on {teamOppositeName(showTeam)}
                 <Icon type="loading" />
               </Button>,
@@ -415,32 +360,23 @@ const GameTurnBlockActiveDecryptors: React.FC = ({
         <div>
           #{turn_number}
           &nbsp;
-          <Text disabled>Encryptor: {cluesTeamTurnData.encryptor.name}</Text>
+          <Text disabled>
+            Encryptor:{' '}
+            {cluesTeamTurnData.encryptor && cluesTeamTurnData.encryptor.name}
+          </Text>
         </div>
       </GameClueHeader>
       {myTeamCluesAreShown ? (
         <div>
-          <GameClueEditOwnGuess clue_number={1} {...clueProps} {...turnData} />
-          <GameClueEditOwnGuess clue_number={2} {...clueProps} {...turnData} />
-          <GameClueEditOwnGuess clue_number={3} {...clueProps} {...turnData} />
+          <GameClueEditOwnGuess clue_number={1} {...clueProps} />
+          <GameClueEditOwnGuess clue_number={2} {...clueProps} />
+          <GameClueEditOwnGuess clue_number={3} {...clueProps} />
         </div>
       ) : (
         <div>
-          <GameClueEditOpponentGuess
-            clue_number={1}
-            {...clueProps}
-            {...turnData}
-          />
-          <GameClueEditOpponentGuess
-            clue_number={2}
-            {...clueProps}
-            {...turnData}
-          />
-          <GameClueEditOpponentGuess
-            clue_number={3}
-            {...clueProps}
-            {...turnData}
-          />
+          <GameClueEditOpponentGuess clue_number={1} {...clueProps} />
+          <GameClueEditOpponentGuess clue_number={2} {...clueProps} />
+          <GameClueEditOpponentGuess clue_number={3} {...clueProps} />
         </div>
       )}
       {opposingTeamHasGuessed ? (

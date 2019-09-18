@@ -11,7 +11,7 @@ import {
   Typography,
 } from 'antd';
 
-import { TeamKey } from './gameData';
+import { TeamKey, TurnTeamData } from './gameData';
 import { teamName, teamOppositeName } from './gameEngine';
 
 const { Text } = Typography;
@@ -21,13 +21,26 @@ const GameClueUnreveiled: React.FC = () => {
   return <Skeleton title={false} paragraph={{ rows: 1, width: '100%' }} />;
 };
 
-const ColClue: React.FC = ({ clue, children }) => (
+type ColClueProps = {
+  clue?: string;
+};
+const ColClue: React.FC<ColClueProps> = ({ clue, children }) => (
   <Tooltip title="Given GameClue">
     <Col xs={15}>{clue ? <Text>{clue}</Text> : children}</Col>
   </Tooltip>
 );
 
-const ColOpponentGuess: React.FC = ({ future, lock, children, showTeam }) => (
+type ColOpponentGuessProps = {
+  future?: boolean;
+  lock?: boolean;
+  showTeam: TeamKey;
+};
+const ColOpponentGuess: React.FC<ColOpponentGuessProps> = ({
+  future,
+  lock,
+  children,
+  showTeam,
+}) => (
   <Tooltip title={`Guessed Order for ${teamName(showTeam)}`}>
     <Col xs={3} className="Order teamOwn">
       {future || lock ? (
@@ -41,7 +54,15 @@ const ColOpponentGuess: React.FC = ({ future, lock, children, showTeam }) => (
   </Tooltip>
 );
 
-const ColOwnGuess: React.FC = ({ future, children, showTeam }) => (
+type ColOwnGuessProps = {
+  future?: boolean;
+  showTeam: TeamKey;
+};
+const ColOwnGuess: React.FC<ColOwnGuessProps> = ({
+  future,
+  children,
+  showTeam,
+}) => (
   <Tooltip title={`Guessed Order for ${teamOppositeName(showTeam)}`}>
     <Col xs={3} className="Order teamOpposite">
       {future ? (
@@ -55,7 +76,15 @@ const ColOwnGuess: React.FC = ({ future, children, showTeam }) => (
   </Tooltip>
 );
 
-const ColCorrect: React.FC = ({ lock, children, showTeam }) => (
+type ColCorrectProps = {
+  lock?: boolean;
+  showTeam: TeamKey;
+};
+const ColCorrect: React.FC<ColCorrectProps> = ({
+  lock,
+  children,
+  showTeam,
+}) => (
   <Tooltip title={`Correct Order for ${teamName(showTeam)}`}>
     <Col xs={3} className="Order">
       {lock ? (
@@ -69,13 +98,11 @@ const ColCorrect: React.FC = ({ lock, children, showTeam }) => (
   </Tooltip>
 );
 
-const OrderSelect: React.FC = ({
-  disabled,
-  value,
-}: {
-  disabled: boolean;
+type OrderSelectProps = {
+  disabled?: boolean;
   value: number;
-}) => {
+};
+const OrderSelect: React.FC<OrderSelectProps> = ({ disabled, value }) => {
   // TODO consider reducing options to omit already guessed numbers
   //      until then, we will just have to validate before submit...
   if (disabled) {
@@ -83,7 +110,7 @@ const OrderSelect: React.FC = ({
       <Input
         style={{ width: '100%', textAlign: 'center' }}
         size="small"
-        disabled={disabled}
+        disabled={!!disabled}
         value={value || '?'}
       />
     );
@@ -109,7 +136,14 @@ const OrderSelect: React.FC = ({
   );
 };
 
-const GameClueHeader: React.FC = ({ children, showTeam }) => (
+type GameClueHeaderProps = {
+  showTeam: TeamKey;
+};
+
+const GameClueHeader: React.FC<GameClueHeaderProps> = ({
+  children,
+  showTeam,
+}) => (
   <Row gutter={8} className="GameTurnCluesHeader">
     <Col xs={15}>{children}</Col>
     <Tooltip title={`Guessed Order for ${teamName(showTeam)}`}>
@@ -130,15 +164,23 @@ const GameClueHeader: React.FC = ({ children, showTeam }) => (
   </Row>
 );
 
-const GameClueReveiled: React.FC = props => {
-  const {
-    showTeam = 'blackTeam',
-    clue_number = 1,
+type GameClueProps = {
+  showTeam: TeamKey;
+  clue_number: number;
+  turnTeamData: TurnTeamData;
+  disabled?: boolean;
+};
+
+const GameClueReveiled: React.FC<GameClueProps> = ({
+  showTeam = TeamKey.blackTeam,
+  clue_number = 1,
+  turnTeamData: {
     clues = [],
     guessedOrderSelf = [],
     guessedOrderOpponent = [],
     correctOrder = [],
-  } = props;
+  },
+}) => {
   const clue = clues[clue_number - 1] || '';
   // TODO need to determine if we are displaying our info or the opponnent
   const valueOrderSelf = guessedOrderSelf[clue_number - 1] || 0;
@@ -163,24 +205,16 @@ const GameClueReveiled: React.FC = props => {
           {valueOrderOpponent}
         </Text>
       </ColOwnGuess>
-      <ColCorrect>
+      <ColCorrect showTeam={showTeam}>
         <Text strong>{valueOrderCorrect}</Text>
       </ColCorrect>
     </Row>
   );
 };
-const GameClueEditClue: React.FC = ({
-  clues,
+const GameClueEditClue: React.FC<GameClueProps> = ({
   clue_number,
-  correctOrder,
-  correctOrderHidden,
   showTeam,
-}: {
-  clues: string[];
-  clue_number: number;
-  correctOrder: number[];
-  correctOrderHidden: boolean;
-  showTeam: TeamKey;
+  turnTeamData: { clues = [], correctOrder = [], correctOrderHidden = false },
 }) => {
   const valueOrderCorrect = correctOrder[clue_number - 1] || 0;
   const clue = clues[clue_number - 1];
@@ -191,21 +225,17 @@ const GameClueEditClue: React.FC = ({
       </ColClue>
       <ColOpponentGuess showTeam={showTeam} future />
       <ColOwnGuess showTeam={showTeam} future />
-      <ColCorrect lock={correctOrderHidden}>
+      <ColCorrect showTeam={showTeam} lock={correctOrderHidden}>
         <Text strong>{valueOrderCorrect}</Text>
       </ColCorrect>
     </Row>
   );
 };
 
-const GameClueShowOnlyClue: React.FC = ({
-  clues,
+const GameClueShowOnlyClue: React.FC<GameClueProps> = ({
   clue_number,
   showTeam,
-}: {
-  clues: string[];
-  clue_number: number;
-  showTeam: TeamKey;
+  turnTeamData: { clues = [] },
 }) => {
   const clue = clues[clue_number - 1];
   return (
@@ -213,24 +243,17 @@ const GameClueShowOnlyClue: React.FC = ({
       <ColClue clue={clue} />
       <ColOpponentGuess showTeam={showTeam} future />
       <ColOwnGuess showTeam={showTeam} future />
-      <ColCorrect lock />
+      <ColCorrect showTeam={showTeam} lock />
     </Row>
   );
 };
 
 // TODO need to be able to guess for my team and also for the opposing team
-const GameClueEditOpponentGuess: React.FC = ({
-  clues,
+const GameClueEditOpponentGuess: React.FC<GameClueProps> = ({
   clue_number,
-  guessedOrderOpponent,
   showTeam,
   disabled,
-}: {
-  clues: string[];
-  clue_number: number;
-  guessedOrderOpponent: number[];
-  showTeam: TeamKey;
-  disabled: boolean;
+  turnTeamData: { clues = [], guessedOrderOpponent = [] },
 }) => {
   const clue = clues[clue_number - 1];
   const value = guessedOrderOpponent[clue_number - 1];
@@ -241,23 +264,16 @@ const GameClueEditOpponentGuess: React.FC = ({
         <OrderSelect value={value} disabled={disabled} />
       </ColOpponentGuess>
       <ColOwnGuess showTeam={showTeam} future />
-      <ColCorrect lock />
+      <ColCorrect showTeam={showTeam} lock />
     </Row>
   );
 };
 
-const GameClueEditOwnGuess: React.FC = ({
-  clues,
+const GameClueEditOwnGuess: React.FC<GameClueProps> = ({
   clue_number,
-  guessedOrderSelf,
   showTeam,
   disabled,
-}: {
-  clues: string[];
-  clue_number: number;
-  guessedOrderSelf: number[];
-  showTeam: TeamKey;
-  disabled: boolean;
+  turnTeamData: { clues = [], guessedOrderSelf = [] },
 }) => {
   const clue = clues[clue_number - 1];
   const value = guessedOrderSelf[clue_number - 1];
@@ -268,7 +284,7 @@ const GameClueEditOwnGuess: React.FC = ({
       <ColOwnGuess showTeam={showTeam}>
         <OrderSelect value={value} disabled={disabled} />
       </ColOwnGuess>
-      <ColCorrect lock />
+      <ColCorrect showTeam={showTeam} lock />
     </Row>
   );
 };

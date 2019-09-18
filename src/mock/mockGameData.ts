@@ -5,7 +5,6 @@ const mockData = new GameData({
   status: GameStatus.ACTIVE,
   // which turn block is active, finished turn #1, about to start turn #2
   activeTurnNumber: 2,
-  active_turn_phase: 'prepare', // prepare, encrypt, guess_order_white_team, guess_order_black_team
   turns: [
     {
       id: 1,

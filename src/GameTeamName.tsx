@@ -11,13 +11,11 @@ const { Title } = Typography;
 const InputGroup = Input.Group;
 
 // TODO consider making this read only, with a Modal to edit
-const GameTeamName: React.FC = ({
-  game,
-  user,
-}: {
+type GameTeamNameProps = {
   game: GameData;
   user: UserData;
-}) => {
+};
+const GameTeamName: React.FC<GameTeamNameProps> = ({ game, user }) => {
   const teamData = getTeamData({ game, user });
   return (
     <div>

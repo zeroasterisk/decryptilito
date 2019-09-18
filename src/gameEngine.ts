@@ -1,5 +1,6 @@
 import {
   GameData,
+  TeamColor,
   TeamKey,
   TeamMember,
   TurnData,
@@ -7,9 +8,11 @@ import {
 } from './gameData';
 import { UserData } from './userData';
 
-const teamName = (name: TeamKey) => {
+const teamName = (name: TeamKey | TeamColor) => {
   if (name === TeamKey.whiteTeam) return 'White Team';
+  if (name === TeamColor.WHITE) return 'White Team';
   if (name === TeamKey.blackTeam) return 'Black Team';
+  if (name === TeamColor.BLACK) return 'Black Team';
   return '???? Team';
 };
 const teamOpposite = (name: TeamKey) =>
@@ -30,25 +33,28 @@ const getTurnData = (game: GameData, turnNumber: number) => {
   if (turns.length >= turnNumber - 1) {
     return turns[turnNumber - 1];
   }
+  // TODO switch to better logging
+  console.error('Invalid Game Turn Number', game);
+  throw new Error('Invalid Game Turn Number');
   // return default turn
-  return {
-    id: turnNumber,
-    status: TurnStatus.DONE,
-    whiteTeam: {
-      encryptor: getNextEncryptor(TeamKey.whiteTeam, game),
-      clues: ['', '', ''],
-      correctOrder: getRandomOrder(),
-      guessedOrderSelf: [],
-      guessedOrderOpponent: [],
-    },
-    blackTeam: {
-      encryptor: getNextEncryptor(TeamKey.blackTeam, game),
-      clues: ['', '', ''],
-      correctOrder: getRandomOrder(),
-      guessedOrderSelf: [],
-      guessedOrderOpponent: [],
-    },
-  };
+  // return {
+  //   id: turnNumber,
+  //   status: TurnStatus.DONE,
+  //   whiteTeam: {
+  //     encryptor: getNextEncryptor(TeamKey.whiteTeam, game),
+  //     clues: ['', '', ''],
+  //     correctOrder: getRandomOrder(),
+  //     guessedOrderSelf: [],
+  //     guessedOrderOpponent: [],
+  //   },
+  //   blackTeam: {
+  //     encryptor: getNextEncryptor(TeamKey.blackTeam, game),
+  //     clues: ['', '', ''],
+  //     correctOrder: getRandomOrder(),
+  //     guessedOrderSelf: [],
+  //     guessedOrderOpponent: [],
+  //   },
+  // };
 };
 
 /*
@@ -80,7 +86,7 @@ const createNextTurn = (props: GameData) => {
 */
 
 const getRandomOrder = () => {
-  const order = [];
+  const order: number[] = [];
   while (order.length < 3) {
     const index = Math.floor(Math.random() * 4);
     if (index >= 1 && !order.includes(index)) {
@@ -91,20 +97,26 @@ const getRandomOrder = () => {
 };
 
 // TODO make this more rhobust
+interface StringNumberMap {
+  [s: string]: number;
+}
 const getNextEncryptor = (myTeam: TeamKey, game: GameData) => {
   const { turns } = game;
   if (!(myTeam && game[myTeam])) throw Error(`Invalid team data [${myTeam}]`);
   const teamMembers = game[myTeam].teamMembers;
   // { encryptorId: countTurns }
-  const turnMemberIdFreqCount = turns.reduce((acc: object, turn: TurnData) => {
-    const encryptorIdTemp = turn[myTeam].encryptor.id;
-    if (acc[encryptorIdTemp]) {
-      acc[encryptorIdTemp] = 1;
-    } else {
-      acc[encryptorIdTemp] += 1;
-    }
-    return acc;
-  }, {});
+  const turnMemberIdFreqCount = turns.reduce(
+    (acc: StringNumberMap, turn: TurnData) => {
+      const encryptorIdTemp: string = turn[myTeam].encryptor.id;
+      if (encryptorIdTemp in acc) {
+        acc[encryptorIdTemp] += 1;
+      } else {
+        acc[encryptorIdTemp] = 1;
+      }
+      return acc;
+    },
+    {},
+  );
   // first, if any name is not in turnMemberIdFreqCount, lets do that
   const missingTeamMembers = teamMembers.filter(
     (member: TeamMember) =>
@@ -115,7 +127,7 @@ const getNextEncryptor = (myTeam: TeamKey, game: GameData) => {
   }
   // finally, return the least found name
   const encryptorId = Object.keys(turnMemberIdFreqCount)
-    .sort((a, b) => {
+    .sort((a: string, b: string) => {
       return turnMemberIdFreqCount[a] - turnMemberIdFreqCount[b];
     })
     .shift();
