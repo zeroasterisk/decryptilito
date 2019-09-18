@@ -17,7 +17,7 @@ import { teamName, teamOppositeName } from './gameEngine';
 const { Text } = Typography;
 const { Option } = Select;
 
-const GameClueUnrevield: React.FC = () => {
+const GameClueUnreveiled: React.FC = () => {
   return <Skeleton title={false} paragraph={{ rows: 1, width: '100%' }} />;
 };
 
@@ -130,7 +130,7 @@ const GameClueHeader: React.FC = ({ children, showTeam }) => (
   </Row>
 );
 
-const GameClueRevield: React.FC = props => {
+const GameClueReveiled: React.FC = props => {
   const {
     showTeam = 'blackTeam',
     clue_number = 1,
@@ -275,8 +275,8 @@ const GameClueEditOwnGuess: React.FC = ({
 
 export {
   GameClueHeader,
-  GameClueRevield,
-  GameClueUnrevield,
+  GameClueReveiled,
+  GameClueUnreveiled,
   GameClueEditClue,
   GameClueShowOnlyClue,
   GameClueEditOpponentGuess,

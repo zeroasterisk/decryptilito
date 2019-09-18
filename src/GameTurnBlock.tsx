@@ -7,9 +7,9 @@ import {
   GameClueEditOpponentGuess,
   GameClueEditOwnGuess,
   GameClueHeader,
-  GameClueRevield,
+  GameClueReveiled,
   GameClueShowOnlyClue,
-  GameClueUnrevield,
+  GameClueUnreveiled,
 } from './GameClue';
 
 import { GameData, TeamKey, TurnStatus } from './gameData';
@@ -19,16 +19,45 @@ import { getTurnData, teamName, teamOppositeName } from './gameEngine';
 
 const { Text } = Typography;
 
-const GameTurnBlock: React.FC = props => {
-  const { turn_number, activeTurnNumber } = props;
-  if (turn_number === activeTurnNumber) {
-    return <GameTurnBlockActiveEncryptor {...props} />;
-  }
+const GameTurnBlock: React.FC = ({
+  team,
+  turn_number,
+  game,
+  user,
+}: {
+  team: TeamKey;
+  turn_number: number;
+  game: GameData;
+  user: UserData;
+}) => {
+  const props = { game, user, team, turn_number };
+  const { activeTurnNumber } = game;
   if (turn_number < activeTurnNumber) {
     return <GameTurnBlockPast {...props} />;
   }
-  // TODO consider while typing...?
-  return <GameTurnBlockFuture {...props} />;
+  if (turn_number > activeTurnNumber) {
+    return <GameTurnBlockFuture {...props} />;
+  }
+  const turnData = getTurnData(game, turn_number);
+  const status = turnData.status;
+  if (status === TurnStatus.PREPARE) {
+    return <GameTurnBlockActivePrepare {...props} />;
+  }
+  if (status === TurnStatus.ENCRYPT || status === TurnStatus.ENCRYPT_PARTIAL) {
+    return <GameTurnBlockActiveEncryptor {...props} />;
+  }
+  if (
+    status === TurnStatus.DECRYPT_WHITE_CLUES ||
+    status === TurnStatus.DECRYPT_WHITE_CLUES_PARTIAL ||
+    status === TurnStatus.DECRYPT_BLACK_CLUES ||
+    status === TurnStatus.DECRYPT_BLACK_CLUES_PARTIAL
+  ) {
+    return <GameTurnBlockActiveDecryptors {...props} />;
+  }
+  // SCORING_WHITE = 'SCORING_WHITE',
+  // SCORING_BLACK = 'SCORING_BLACK',
+  // DONE = 'DONE',
+  return <p>Error, unknown GameTurnBlock status {status}</p>;
 };
 
 // After a turn is over
@@ -61,28 +90,38 @@ const GameTurnBlockPast: React.FC = ({
           <Text disabled>encryptor: {turnTeamData.encryptor.name}</Text>
         </div>
       </GameClueHeader>
-      <GameClueRevield clue_number={1} {...clueProps} />
-      <GameClueRevield clue_number={2} {...clueProps} />
-      <GameClueRevield clue_number={3} {...clueProps} />
+      <GameClueReveiled clue_number={1} {...clueProps} />
+      <GameClueReveiled clue_number={2} {...clueProps} />
+      <GameClueReveiled clue_number={3} {...clueProps} />
     </Card>
   );
 };
 
 const GameTurnBlockFuture: React.FC = ({
+  team,
   turn_number,
   game,
+  user,
 }: {
+  team: TeamKey;
   turn_number: number;
   game: GameData;
+  user: UserData;
 }) => {
+  const myTeam = user.myTeam; // TODO we should allow rendering the other team too
+  const showTeam = team || myTeam;
   return (
-    <Card size="small" style={{ maxWidth: 400 }}>
+    <Card
+      size="small"
+      className={`GameTurnBlock GameTurnBlockFuture`}
+      style={{ maxWidth: 400 }}
+    >
       <GameClueHeader showTeam={showTeam}>
         <div>#{turn_number}</div>
       </GameClueHeader>
-      <GameClueUnrevield {...props} />
-      <GameClueUnrevield {...props} />
-      <GameClueUnrevield {...props} />
+      <GameClueUnreveiled />
+      <GameClueUnreveiled />
+      <GameClueUnreveiled />
     </Card>
   );
 };

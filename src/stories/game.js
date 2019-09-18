@@ -1,29 +1,23 @@
 import React from 'react';
 
+import { cloneDeep } from 'lodash';
+
 import { storiesOf } from '@storybook/react';
 // import { action } from '@storybook/addon-actions';
 // import { linkTo } from '@storybook/addon-links';
 
 import Game from '../Game.tsx';
+import { TeamKey, TurnStatus } from '../gameData';
 
 import mockGameData from '../mock/mockGameData';
+import mockUserData from '../mock/mockUserData';
 
 storiesOf('Game', module)
-  .add('basic', () => {
-    return <Game game={mockGameData} />;
-  })
   .add('turn 2, black team, prepare', () => {
-    const turn2data = {
-      activeTurnNumber: 2,
-      active_turn_phase: 'prepare',
-    };
-    return <Game game={mockGameData} {...turn2data} />;
+    return <Game user={mockUserData} game={mockGameData} />;
   })
   .add('turn 2, encrypt', () => {
-    const turn2data = {
-      // game data
-      activeTurnNumber: 2,
-      active_turn_phase: 'encrypt',
-    };
-    return <Game game={mockGameData} {...turn2data} />;
+    const thisData = cloneDeep(mockGameData);
+    thisData.turns[1].status = TurnStatus.ENCRYPT;
+    return <Game user={mockUserData} game={thisData} />;
   });

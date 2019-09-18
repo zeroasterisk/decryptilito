@@ -1,9 +1,11 @@
-import { Card, Col, Input, List, Row, Typography } from 'antd';
+import { Card, Col, Input, List, Row, Typography, Tooltip } from 'antd';
 import React from 'react';
 import './Game.css';
 import GameTurnBlock from './GameTurnBlock';
 
 import { getTeamData } from './gameEngine';
+
+import GameTeamName from './GameTeamName';
 
 const { Title } = Typography;
 const InputGroup = Input.Group;
@@ -27,30 +29,8 @@ const Words: React.FC = props => {
     </div>
   );
 };
-const TeamName: React.FC = props => {
-  const teamData = getTeamData(props);
-  const { teamColor = '', teamName = '', teamMemberNames = '' } = teamData;
-  return (
-    <div>
-      <InputGroup size="large">
-        <Row gutter={8}>
-          <Col span={8}>
-            <Title level={2}>{teamColor} team</Title>
-          </Col>
-          <Col span={8}>
-            <Input placeholder="name of team" value={teamName} />
-          </Col>
-          <Col span={8}>
-            <Input
-              placeholder="names of people on team"
-              value={teamMemberNames}
-            />
-          </Col>
-        </Row>
-      </InputGroup>
-    </div>
-  );
-};
+
+// TODO make this dynamic
 const GameTurnBlocks: React.FC = props => {
   return (
     <div>
@@ -62,14 +42,13 @@ const GameTurnBlocks: React.FC = props => {
   );
 };
 
-const Game: React.FC = props => {
-  const teamData = getTeamData(props);
-  const { teamColor } = teamData;
+const Game: React.FC = ({ game, user }: { game: GameData; user: UserData }) => {
+  const teamData = getTeamData({ game, user });
   return (
-    <div className={`Game ${teamColor}Team`}>
-      <TeamName {...props} />
-      <Words {...props} />
-      <GameTurnBlocks {...props} />
+    <div className={`Game ${teamData.teamColor}Team`}>
+      <GameTeamName game={game} user={user} />
+      <Words game={game} user={user} />
+      <GameTurnBlocks game={game} user={user} />
       <h4>TODO: build this out</h4>
       <pre>
         - GameClues (unrevieled, editable, revieled) - OrderGuess (unrevieled,

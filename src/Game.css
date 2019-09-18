@@ -11,26 +11,44 @@
 .GameTurnClues .Order {
   text-align: center;
 }
+.GameTurnCluesHeader .ant-col,
+.GameTurnClues .ant-col {
+  /* TODO fix this, align middle */
+  vertical-align: middle;
+  min-height: 2.8em;
+}
+.GameTurnBlockFuture .GameTurnCluesHeader .Order {
+  display: none;
+}
+
 .Word {
   text-align: center;
   font-weight: bold;
 }
 
-.whiteTeam,
-.blackTeam .teamOpposite,
-.blackTeam .teamOpposite .ant-typography {
+.WHITETeam,
+.BLACKTeam .teamOpposite,
+.BLACKTeam .teamOpposite .ant-typography {
   background-color: #eee;
   color: #333;
 }
 
-.blackTeam,
-.blackTeam .ant-typography,
-.blackTeam .ant-card,
-.blackTeam .ant-card-body,
-.whiteTeam .teamOpposite,
-.whiteTeam .teamOpposite .ant-typography {
+.BLACKTeam,
+.BLACKTeam .ant-typography,
+.BLACKTeam .ant-card,
+.BLACKTeam .ant-card-body,
+.BLACKTeam .ant-card-head-title,
+.WHITETeam .teamOpposite,
+.WHITETeam .teamOpposite .ant-typography {
   background-color: #333;
   color: #eee;
+}
+.BLACKTeam .ant-card-actions {
+  background-color: #444;
+  color: #eee;
+}
+.BLACKTeam .ant-skeleton-content .ant-skeleton-paragraph > li {
+  background-color: #444;
 }
 
 .TimeoutClock {

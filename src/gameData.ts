@@ -100,7 +100,7 @@ class TurnData {
 
 interface TeamData {
   // team data storage block
-  team: TeamColor;
+  teamColor: TeamColor;
   teamName: string;
   // TODO, omit in favor of CSV stringify from teamMembers
   teamMemberNames: string;

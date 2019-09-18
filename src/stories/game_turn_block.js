@@ -66,7 +66,6 @@ storiesOf('GameTurnBlock (on blackTeam)', module)
 
   // encryptor active
   .add('Active:ENCRYPT, order given to encryptor', () => {
-    //{{{}}}
     const thisData = cloneDeep(mockGameData);
     thisData.turns[1].status = TurnStatus.ENCRYPT;
     thisData.turns[1].blackTeam.clues = ['', '', ''];
