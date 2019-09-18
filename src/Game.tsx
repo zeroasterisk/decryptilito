@@ -1,14 +1,13 @@
-import { Card, Col, Input, List, Row, Typography, Tooltip } from 'antd';
 import React from 'react';
+
+import { Card, List } from 'antd';
+
 import './Game.css';
+
+import GameTeamName from './GameTeamName';
 import GameTurnBlock from './GameTurnBlock';
 
 import { getTeamData } from './gameEngine';
-
-import GameTeamName from './GameTeamName';
-
-const { Title } = Typography;
-const InputGroup = Input.Group;
 
 const Words: React.FC = props => {
   const teamData = getTeamData(props);

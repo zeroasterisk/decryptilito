@@ -8,10 +8,11 @@
   ],
   "jsRules": {},
   "rules": {
-    "object-literal-sort-keys": false,
     "interface-name": false,
+    "jsx-boolean-value": false,
     "jsx-no-lambda": false,
-    "jsx-boolean-value": false
+    "no-console": false,
+    "object-literal-sort-keys": false
   },
   "rulesDirectory": []
 }
