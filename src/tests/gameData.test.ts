@@ -31,6 +31,7 @@ describe('GameData', () => {
           guessedOrderSelf: [],
           guessedOrderSelfSubmitted: false,
         },
+        errors: [],
       },
     ],
     activeTurnNumber: 1,

@@ -17,7 +17,8 @@ import TimeoutClock from './TimeoutClock';
 import { GameData, TeamKey, TurnStatus } from './gameData';
 import { UserData } from './userData';
 
-import { getTurnData, teamName, teamOppositeName } from './gameEngine';
+import { teamName, teamOppositeName } from './gameEngine';
+import { getTurnData } from './turnEngine';
 
 const { Text } = Typography;
 

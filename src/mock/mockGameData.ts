@@ -34,6 +34,7 @@ const mockData = new GameData({
         interception: false,
         miscommunication: false,
       },
+      errors: [],
     },
     {
       id: 2,
@@ -63,6 +64,7 @@ const mockData = new GameData({
         interception: false,
         miscommunication: false,
       },
+      errors: [],
     },
   ],
   // team data
