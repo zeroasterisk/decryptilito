@@ -1,31 +1,73 @@
 import { expect } from 'chai';
+import { cloneDeep } from 'lodash';
 
-import { GameData, TeamKey, TurnData } from '../gameData';
-import { UserData } from '../userData';
+import { GameData, TurnData } from '../gameData';
+// import { UserData } from '../userData';
 
 import mockGameData from '../mock/mockGameData';
-import mockUserData from '../mock/mockUserData';
-
-import { getTeamData, teamName, teamOppositeName } from '../gameEngine';
+// import mockUserData from '../mock/mockUserData';
 
 import {
   createNextTurn,
   getNextEncryptor,
   getRandomOrder,
   getTurnData,
+  scoreTurn,
 } from '../turnEngine';
 
 describe('TurnEngine turn utilities', () => {
   it('getTurnData gets current turn data', () => {
-    const game = new GameData({ ...mockGameData });
+    const game = new GameData(cloneDeep(mockGameData));
     const turn = getTurnData(game, 1);
     expect(turn).to.be.a('object');
     expect(turn).to.equal(game.turns[0]);
   });
 });
 describe('TurnEngine turn scoring utilities', () => {
-  it('scoreTurn returns turn data adding interception or miscommunication', () => {
-    expect('stub').to.equal('stub');
+  it('scoreTurn returns turn data without changes if none needed', () => {
+    const game = new GameData(cloneDeep(mockGameData));
+    const turn = getTurnData(game, 1);
+    const turnScored = scoreTurn({ ...turn });
+    expect(turnScored).to.deep.equal(turn);
+  });
+  it('scoreTurn gets interception for blackTeam guessing the whiteTeam order', () => {
+    const game = new GameData(cloneDeep(mockGameData));
+    const turn = getTurnData(game, 1);
+    expect(turn.blackTeam.interception).to.equal(false);
+    expect(turn.whiteTeam.interception).to.equal(false);
+    expect(turn.blackTeam.miscommunication).to.equal(false);
+    expect(turn.whiteTeam.miscommunication).to.equal(false);
+    turn.whiteTeam.correctOrder = [1, 2, 3];
+    turn.blackTeam.guessedOrderOpponent = [1, 2, 3];
+    const turnScored = scoreTurn({ ...turn });
+    expect(turnScored.blackTeam.interception).to.equal(true);
+  });
+  it('scoreTurn gets interception for whiteTeam guessing the blackTeam order', () => {
+    const game = new GameData(cloneDeep(mockGameData));
+    const turn = getTurnData(game, 1);
+    expect(turn.blackTeam.interception).to.equal(false);
+    expect(turn.whiteTeam.interception).to.equal(false);
+    expect(turn.blackTeam.miscommunication).to.equal(false);
+    expect(turn.whiteTeam.miscommunication).to.equal(false);
+    turn.blackTeam.correctOrder = [1, 2, 3];
+    turn.whiteTeam.guessedOrderOpponent = [1, 2, 3];
+    const turnScored = scoreTurn({ ...turn });
+    expect(turnScored.whiteTeam.interception).to.equal(true);
+  });
+  it('scoreTurn gets miscommunication for guessing your own teams order, wrong', () => {
+    const game = new GameData(cloneDeep(mockGameData));
+    const turn = getTurnData(game, 1);
+    expect(turn.blackTeam.interception).to.equal(false);
+    expect(turn.whiteTeam.interception).to.equal(false);
+    expect(turn.blackTeam.miscommunication).to.equal(false);
+    expect(turn.whiteTeam.miscommunication).to.equal(false);
+    turn.whiteTeam.correctOrder = [1, 2, 3];
+    turn.whiteTeam.guessedOrderSelf = [1, 2, 4];
+    turn.blackTeam.correctOrder = [1, 2, 3];
+    turn.blackTeam.guessedOrderSelf = [1, 2, 4];
+    const turnScored = scoreTurn({ ...turn });
+    expect(turnScored.blackTeam.miscommunication).to.equal(true);
+    expect(turnScored.whiteTeam.miscommunication).to.equal(true);
   });
 });
 describe('TurnEngine turn phase calculation utilities', () => {
@@ -53,14 +95,14 @@ describe('TurnEngine create next turn', () => {
     expect(new Set(order).size).to.equal(3);
   });
   it('getNextEncryptor gets the next "turn order" encryptor who has "least answers"', () => {
-    const game = new GameData({ ...mockGameData });
+    const game = new GameData(cloneDeep(mockGameData));
     const member = getNextEncryptor('blackTeam', game);
     expect(member).to.be.a('object');
     expect(member.id).to.equal('6666');
     expect(member.name).to.equal('Eggbert');
   });
   it('createNextTurn gets a new, blank, next turn data', () => {
-    const game = new GameData({ ...mockGameData });
+    const game = new GameData(cloneDeep(mockGameData));
     const turnData = createNextTurn(game);
     expect(turnData).to.be.a('object');
     // gets a random encryptor
