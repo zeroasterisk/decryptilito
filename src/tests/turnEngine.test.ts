@@ -27,7 +27,7 @@ describe('TurnEngine turn scoring utilities', () => {
   it('scoreTurn returns turn data without changes if none needed', () => {
     const game = new GameData(cloneDeep(mockGameData));
     const turn = getTurnData(game, 1);
-    const turnScored = scoreTurn({ ...turn });
+    const turnScored = scoreTurn(turn);
     expect(turnScored).to.deep.equal(turn);
   });
   it('scoreTurn gets interception for blackTeam guessing the whiteTeam order', () => {
@@ -39,7 +39,7 @@ describe('TurnEngine turn scoring utilities', () => {
     expect(turn.whiteTeam.miscommunication).to.equal(false);
     turn.whiteTeam.correctOrder = [1, 2, 3];
     turn.blackTeam.guessedOrderOpponent = [1, 2, 3];
-    const turnScored = scoreTurn({ ...turn });
+    const turnScored = scoreTurn(turn);
     expect(turnScored.blackTeam.interception).to.equal(true);
   });
   it('scoreTurn gets interception for whiteTeam guessing the blackTeam order', () => {
@@ -50,9 +50,16 @@ describe('TurnEngine turn scoring utilities', () => {
     expect(turn.blackTeam.miscommunication).to.equal(false);
     expect(turn.whiteTeam.miscommunication).to.equal(false);
     turn.blackTeam.correctOrder = [1, 2, 3];
-    turn.whiteTeam.guessedOrderOpponent = [1, 2, 3];
-    const turnScored = scoreTurn({ ...turn });
-    expect(turnScored.whiteTeam.interception).to.equal(true);
+    turn.blackTeam.guessedOrderOpponent = [1, 2, 4]; // guessed white wrong
+    turn.blackTeam.guessedOrderSelf = [1, 2, 3];
+    turn.whiteTeam.correctOrder = [1, 2, 3];
+    turn.whiteTeam.guessedOrderOpponent = [1, 2, 3]; // guessed black correctly
+    turn.whiteTeam.guessedOrderSelf = [1, 2, 3];
+    const turnScored = scoreTurn(turn);
+    expect(turnScored.blackTeam.interception).to.equal(false);
+    expect(turnScored.whiteTeam.interception).to.equal(true); // <-- this
+    expect(turnScored.blackTeam.miscommunication).to.equal(false);
+    expect(turnScored.whiteTeam.miscommunication).to.equal(false);
   });
   it('scoreTurn gets miscommunication for guessing your own teams order, wrong', () => {
     const game = new GameData(cloneDeep(mockGameData));
@@ -65,9 +72,11 @@ describe('TurnEngine turn scoring utilities', () => {
     turn.whiteTeam.guessedOrderSelf = [1, 2, 4];
     turn.blackTeam.correctOrder = [1, 2, 3];
     turn.blackTeam.guessedOrderSelf = [1, 2, 4];
-    const turnScored = scoreTurn({ ...turn });
-    expect(turnScored.blackTeam.miscommunication).to.equal(true);
-    expect(turnScored.whiteTeam.miscommunication).to.equal(true);
+    const turnScored = scoreTurn(turn);
+    expect(turnScored.blackTeam.interception).to.equal(false);
+    expect(turnScored.whiteTeam.interception).to.equal(false);
+    expect(turnScored.blackTeam.miscommunication).to.equal(true); // <-- this
+    expect(turnScored.whiteTeam.miscommunication).to.equal(true); // <-- this
   });
 });
 describe('TurnEngine turn phase calculation utilities', () => {
