@@ -1,13 +1,14 @@
 import { expect } from 'chai';
 import { cloneDeep } from 'lodash';
 
-import { GameData, TurnData } from '../gameData';
+import { GameData, TurnData, TurnStatus } from '../gameData';
 // import { UserData } from '../userData';
 
 import mockGameData from '../mock/mockGameData';
 // import mockUserData from '../mock/mockUserData';
 
 import {
+  calculateTurnStatus,
   createNextTurn,
   getNextEncryptor,
   getRandomOrder,
@@ -80,9 +81,19 @@ describe('TurnEngine turn scoring utilities', () => {
   });
 });
 describe('TurnEngine turn phase calculation utilities', () => {
-  it('getTurnPhase returns turn phase based on details', () => {
-    expect('stub').to.equal('stub');
+  it('calculateTurnStatus returns turn status DONE if all submitted', () => {
+    const game = new GameData(cloneDeep(mockGameData));
+    const turn = getTurnData(game, 1);
+    expect(calculateTurnStatus(turn)).to.equal(TurnStatus.DONE);
+    turn.status = TurnStatus.PREPARE;
+    expect(calculateTurnStatus(turn)).to.equal(TurnStatus.DONE);
   });
+  it('calculateTurnStatus returns turn status PREPARE if no clues', () => {
+    const game = new GameData(cloneDeep(mockGameData));
+    const turn = getTurnData(game, 2);
+    expect(calculateTurnStatus(turn)).to.equal(TurnStatus.PREPARE);
+  });
+  // TODO fill in more status calculations here
 });
 describe('TurnEngine create next turn', () => {
   it('getRandomOrder creates 3 random numbers between 1-4', () => {

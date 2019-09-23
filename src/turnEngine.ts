@@ -127,7 +127,78 @@ const scoreTurn = (turn: TurnData) => {
   return turn;
 };
 
+const calculateTurnStatus = (turn: TurnData) => {
+  // all submitted = DONE
+  if (
+    turn.whiteTeam.guessedOrderSelfSubmitted &&
+    turn.whiteTeam.guessedOrderOpponentSubmitted &&
+    turn.blackTeam.guessedOrderSelfSubmitted &&
+    turn.blackTeam.guessedOrderOpponentSubmitted
+  ) {
+    return TurnStatus.DONE;
+  }
+  const enteredCluesBothTeams = [
+    ...turn.whiteTeam.clues,
+    ...turn.blackTeam.clues,
+  ].filter(x => x.length > 0);
+  const submittedClues = [
+    turn.whiteTeam.cluesSubmitted,
+    turn.blackTeam.cluesSubmitted,
+  ].filter(x => x);
+  // no clues, we are in PREPARE -- or ENcryptor have not yet started :/
+  if (enteredCluesBothTeams.length === 0) {
+    return TurnStatus.PREPARE;
+  }
+  // some clues entered, we are in ENCRYPT_PARTIAL
+  if (enteredCluesBothTeams.length > 0 && submittedClues.length === 1) {
+    return TurnStatus.ENCRYPT_PARTIAL;
+  }
+  if (enteredCluesBothTeams.length > 0 && submittedClues.length === 0) {
+    return TurnStatus.ENCRYPT;
+  }
+
+  // whiteTeam decrypt
+  const submittedGuessWhite = [
+    turn.blackTeam.guessedOrderOpponentSubmitted,
+    turn.whiteTeam.guessedOrderSelfSubmitted,
+  ].filter(x => x);
+  if (submittedGuessWhite.length === 0) {
+    return TurnStatus.DECRYPT_WHITE_CLUES;
+  }
+  if (submittedGuessWhite.length === 1) {
+    return TurnStatus.DECRYPT_WHITE_CLUES_PARTIAL;
+  }
+  if (
+    submittedGuessWhite.length === 2 &&
+    turn.status in
+      [TurnStatus.DECRYPT_WHITE_CLUES, TurnStatus.DECRYPT_WHITE_CLUES_PARTIAL]
+  ) {
+    return TurnStatus.SCORING_WHITE;
+  }
+
+  // blackTeam decrypt
+  const submittedGuessBlack = [
+    turn.blackTeam.guessedOrderOpponentSubmitted,
+    turn.blackTeam.guessedOrderSelfSubmitted,
+  ].filter(x => x);
+  if (submittedGuessBlack.length === 0) {
+    return TurnStatus.DECRYPT_BLACK_CLUES;
+  }
+  if (submittedGuessBlack.length === 1) {
+    return TurnStatus.DECRYPT_BLACK_CLUES_PARTIAL;
+  }
+  if (
+    submittedGuessBlack.length === 2 &&
+    turn.status in
+      [TurnStatus.DECRYPT_BLACK_CLUES, TurnStatus.DECRYPT_BLACK_CLUES_PARTIAL]
+  ) {
+    return TurnStatus.SCORING_BLACK;
+  }
+  return 'NOPE';
+};
+
 export {
+  calculateTurnStatus,
   createNextTurn,
   getTurnData,
   getRandomOrder,
