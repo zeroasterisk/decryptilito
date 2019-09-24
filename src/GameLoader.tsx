@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { GameData } from './gameData';
+// import { GameData } from './gameData';
 import { UserData } from './userData';
 
 import Game from './Game';
@@ -11,6 +11,12 @@ type GameLoaderProps = {
   user?: UserData;
 };
 const GameLoader: React.FC<GameLoaderProps> = ({ game_id, team_id, user }) => {
+  if (!game_id) {
+    return <p>GameLoader.Lobby not yet built</p>;
+  }
+  if (!team_id) {
+    return <p>GameLoader.GameEntry not yet built</p>;
+  }
   // TODO load data from game_id and team_id info...
   return <p>GameLoader not yet built</p>;
   // return (<Game user={user} game={game} game={game} />);

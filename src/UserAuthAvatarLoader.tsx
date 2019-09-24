@@ -1,25 +1,30 @@
 import React from 'react';
 
-import firebase from 'firebase';
+import {
+  FirebaseClass,
+  FirebaseContext /* withFirebase */,
+} from './components/firebase';
 
-import { useAuthState } from 'react-firebase-hooks/auth';
+import { AuthStateHook, useAuthState } from 'react-firebase-hooks/auth';
 
 import UserAuthAvatar from './UserAuthAvatar';
 
-type UserAuthAvatarLoaderProps = {};
-const UserAuthAvatarLoader: React.FC<UserAuthAvatarLoaderProps> = () => {
+interface UserAuthAvatarLoadedProps {
+  firebase: FirebaseClass;
+}
+const UserAuthAvatarLoaded: React.FC<UserAuthAvatarLoadedProps> = ({
+  firebase,
+}) => {
   const login = () => {
     // firebase.auth().signInWithEmailAndPassword('test@test.com', 'password');
   };
   const logout = () => {
-    firebase.auth().signOut();
+    firebase.auth.signOut();
   };
-  // const { user, initialising, error } = useAuthState(firebase);
-  const { user, initialising, error } = {
-    user: undefined,
-    initialising: true,
-    error: undefined,
-  };
+  const [user, initialising, error]: AuthStateHook = useAuthState(
+    firebase.auth,
+  );
+  console.log({ user, initialising, error }, firebase);
   return (
     <UserAuthAvatar
       {...{
@@ -33,4 +38,13 @@ const UserAuthAvatarLoader: React.FC<UserAuthAvatarLoaderProps> = () => {
   );
 };
 
+interface UserAuthAvatarLoaderProps {}
+const UserAuthAvatarLoader: React.FC<UserAuthAvatarLoaderProps> = props => (
+  <FirebaseContext.Consumer>
+    {(firebase: FirebaseClass | null) =>
+      firebase ? <UserAuthAvatarLoaded firebase={firebase} {...props} /> : '!!!'
+    }
+  </FirebaseContext.Consumer>
+);
+//
 export default UserAuthAvatarLoader;
