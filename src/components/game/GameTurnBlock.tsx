@@ -1,3 +1,7 @@
+/**
+ * One of the most complex parts of the game, is what you can do on a turn.
+ * This component has each state-of-turn identified and a variation of UI for it.
+ */
 import React from 'react';
 
 import { Button, Card, Icon, Typography } from 'antd';
@@ -22,12 +26,15 @@ import { getTurnData } from '../../logic/turnEngine';
 
 const { Text } = Typography;
 
+/**
+ * The GameTurnBlocks is our main component.
+ * It is really a status-router for the variations which are setup as their own sub-components.
+ */
 interface GameTurnBlockProps {
   game: GameData;
   turn_number: number;
   user: UserData;
 }
-
 const GameTurnBlock: React.FC<GameTurnBlockProps> = ({
   turn_number,
   game,
