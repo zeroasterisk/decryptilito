@@ -4,17 +4,17 @@
   "private": true,
   "dependencies": {
     "@types/jest": "24.0.18",
-    "@types/node": "12.7.3",
-    "@types/react": "16.9.2",
-    "@types/react-dom": "16.9.0",
-    "antd": "^3.22.2",
-    "class-validator": "^0.10.0",
-    "firebase": "^6.6.2",
+    "@types/node": "12.7.8",
+    "@types/react": "16.9.3",
+    "@types/react-dom": "16.9.1",
+    "antd": "^3.23.4",
+    "class-validator": "^0.10.1",
+    "firebase": "^7.0.0",
     "hookrouter": "^1.2.3",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
+    "react": "^16.10.0",
+    "react-dom": "^16.10.0",
     "react-firebase-hooks": "^2.1.0",
-    "react-scripts": "3.1.1"
+    "react-scripts": "3.1.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -41,15 +41,16 @@
     ]
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^5.1.11",
-    "@storybook/addon-links": "^5.1.11",
-    "@storybook/react": "^5.1.11",
+    "@storybook/addon-actions": "^5.2.1",
+    "@storybook/addon-links": "^5.2.1",
+    "@storybook/react": "^5.2.1",
     "@types/hookrouter": "^2.2.1",
     "chai": "^4.2.0",
-    "husky": "^3.0.5",
+    "husky": "^3.0.7",
     "prettier": "^1.18.2",
     "pretty-quick": "^1.11.1",
-    "typescript": "^3.6.2"
+    "typescript": "^3.6.3",
+    "webpack": "^4.41.0"
   },
   "husky": {
     "hooks": {
