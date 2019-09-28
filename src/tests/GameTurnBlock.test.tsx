@@ -2,8 +2,6 @@
 // for more, see https://medium.com/storybookjs/component-story-format-66f4c32366df
 import '@testing-library/jest-dom/extend-expect';
 
-import React from 'react';
-
 import { render } from '@testing-library/react';
 
 import { future, past } from '../stories/GameTurnBlock.stories';
