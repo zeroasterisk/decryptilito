@@ -2,19 +2,19 @@ import React from 'react';
 
 import { Col, Input, Row, Tooltip, Typography } from 'antd';
 
-import { GameData } from './gameData';
-import { UserData } from './userData';
+import { GameData } from '../../logic/gameData';
+import { UserData } from '../../logic/userData';
 
-import { getTeamData, teamName } from './gameEngine';
+import { getTeamData, teamName } from '../../logic/gameEngine';
 
 const { Title } = Typography;
 const InputGroup = Input.Group;
 
 // TODO consider making this read only, with a Modal to edit
-type GameTeamNameProps = {
+interface GameTeamNameProps {
   game: GameData;
   user: UserData;
-};
+}
 const GameTeamName: React.FC<GameTeamNameProps> = ({ game, user }) => {
   const teamData = getTeamData({ game, user });
   return (

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { TeamKey } from '../gameData';
-import { UserData } from '../userData';
+import { TeamKey } from '../logic/gameData';
+import { UserData } from '../logic/userData';
 
 describe('UserData', () => {
   const userDataInputBasic = {

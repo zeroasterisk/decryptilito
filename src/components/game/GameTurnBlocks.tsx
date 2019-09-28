@@ -1,14 +1,14 @@
 import React from 'react';
 import GameTurnBlock from './GameTurnBlock';
 
-import { GameData } from './gameData';
-import { UserData } from './userData';
+import { GameData } from '../../logic/gameData';
+import { UserData } from '../../logic/userData';
 
-type GameProps = {
+interface GameProps {
   // after fetching the game data...
   game: GameData;
   user: UserData;
-};
+}
 // TODO make this dynamic
 const GameTurnBlocks: React.FC<GameProps> = props => {
   return (

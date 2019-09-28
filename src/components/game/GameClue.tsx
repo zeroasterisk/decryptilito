@@ -11,8 +11,8 @@ import {
   Typography,
 } from 'antd';
 
-import { TeamKey, TurnTeamData } from './gameData';
-import { teamName, teamOppositeName } from './gameEngine';
+import { TeamKey, TurnTeamData } from '../../logic/gameData';
+import { teamName, teamOppositeName } from '../../logic/gameEngine';
 
 const { Text } = Typography;
 const { Option } = Select;

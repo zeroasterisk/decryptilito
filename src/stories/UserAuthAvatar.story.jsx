@@ -6,7 +6,7 @@ import { storiesOf } from '@storybook/react';
 // import { action } from '@storybook/addon-actions';
 // import { linkTo } from '@storybook/addon-links';
 
-import UserAuthAvatar from '../UserAuthAvatar';
+import UserAuthAvatar from '../components/app/UserAuthAvatar';
 
 import mockUserData from '../mock/mockUserData';
 

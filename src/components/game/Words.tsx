@@ -2,16 +2,16 @@ import React from 'react';
 
 import { Card, List } from 'antd';
 
-import { GameData } from './gameData';
-import { UserData } from './userData';
+import { GameData } from '../../logic/gameData';
+import { UserData } from '../../logic/userData';
 
-import { getTeamData } from './gameEngine';
+import { getTeamData } from '../../logic/gameEngine';
 
-type GameProps = {
+interface GameProps {
   // after fetching the game data...
   game: GameData;
   user: UserData;
-};
+}
 
 const Words: React.FC<GameProps> = props => {
   const teamData = getTeamData(props);

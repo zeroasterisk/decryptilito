@@ -1,12 +1,12 @@
 import { expect } from 'chai';
 
-import { GameData, TeamKey } from '../gameData';
-import { UserData } from '../userData';
+import { GameData, TeamKey } from '../logic/gameData';
+import { UserData } from '../logic/userData';
+
+import { getTeamData, teamName, teamOppositeName } from '../logic/gameEngine';
 
 import mockGameData from '../mock/mockGameData';
 import mockUserData from '../mock/mockUserData';
-
-import { getTeamData, teamName, teamOppositeName } from '../gameEngine';
 
 describe('GameEngine turn utilities', () => {
   it('teamName returns a friendly version of the team name', () => {

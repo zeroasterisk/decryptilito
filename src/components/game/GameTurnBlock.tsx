@@ -12,21 +12,21 @@ import {
   GameClueUnreveiled,
 } from './GameClue';
 
-import TimeoutClock from './TimeoutClock';
+import TimeoutClock from '../timeout/TimeoutClock';
 
-import { GameData, TeamKey, TurnStatus } from './gameData';
-import { UserData } from './userData';
+import { GameData, TeamKey, TurnStatus } from '../../logic/gameData';
+import { UserData } from '../../logic/userData';
 
-import { teamName, teamOppositeName } from './gameEngine';
-import { getTurnData } from './turnEngine';
+import { teamName, teamOppositeName } from '../../logic/gameEngine';
+import { getTurnData } from '../../logic/turnEngine';
 
 const { Text } = Typography;
 
-type GameTurnBlockProps = {
+interface GameTurnBlockProps {
   game: GameData;
   turn_number: number;
   user: UserData;
-};
+}
 
 const GameTurnBlock: React.FC<GameTurnBlockProps> = ({
   turn_number,

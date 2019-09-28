@@ -4,7 +4,7 @@ import { storiesOf } from '@storybook/react';
 // import { action } from '@storybook/addon-actions';
 // import { linkTo } from '@storybook/addon-links';
 
-import App from '../App.tsx';
+import App from '../components/app';
 import { navigate } from 'hookrouter';
 
 import mockGameData from '../mock/mockGameData';
@@ -15,25 +15,25 @@ import mockUserData from '../mock/mockUserData';
 storiesOf('App', module)
   .add('basic', () => {
     navigate('/', true);
-    return <App game={mockUserData} game={mockGameData} />;
+    return <App user={mockUserData} game={mockGameData} />;
   })
   .add('about', () => {
     navigate('/about', true);
-    return <App game={mockUserData} game={mockGameData} />;
+    return <App user={mockUserData} game={mockGameData} />;
   })
   .add('lobby', () => {
     navigate('/lobby', true);
-    return <App game={mockUserData} game={mockGameData} />;
+    return <App user={mockUserData} game={mockGameData} />;
   })
   .add('game entry', () => {
     navigate('/game/mock_game_1', true);
-    return <App game={mockUserData} game={mockGameData} />;
+    return <App user={mockUserData} game={mockGameData} />;
   })
   .add('game play', () => {
     navigate('/game/mock_game_1/mock_team_1', true);
-    return <App game={mockUserData} game={mockGameData} />;
+    return <App user={mockUserData} game={mockGameData} />;
   })
   .add('404', () => {
     navigate('/404', true);
-    return <App game={mockUserData} game={mockGameData} />;
+    return <App user={mockUserData} game={mockGameData} />;
   });

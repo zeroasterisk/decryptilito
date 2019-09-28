@@ -6,8 +6,8 @@ import { storiesOf } from '@storybook/react';
 // import { action } from '@storybook/addon-actions';
 // import { linkTo } from '@storybook/addon-links';
 
-import Game from '../Game';
-import { TeamKey, TurnStatus } from '../gameData';
+import Game from '../components/game/Game';
+import { TurnStatus } from '../logic/gameData';
 
 import mockGameData from '../mock/mockGameData';
 import mockUserData from '../mock/mockUserData';

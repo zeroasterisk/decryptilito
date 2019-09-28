@@ -1,6 +1,6 @@
 import { Avatar, Card, Col, List, PageHeader, Row, Typography } from 'antd';
 import React from 'react';
-import Btn from './Btn';
+import Btn from '../btn';
 
 const { Paragraph } = Typography;
 

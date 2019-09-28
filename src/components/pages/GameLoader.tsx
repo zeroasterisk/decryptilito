@@ -1,15 +1,15 @@
 import React from 'react';
 
 // import { GameData } from './gameData';
-import { UserData } from './userData';
+import { UserData } from '../../logic/userData';
 
-import Game from './Game';
+// import Game from '../game/Game';
 
-type GameLoaderProps = {
+interface GameLoaderProps {
   game_id?: string;
   team_id?: string;
   user?: UserData;
-};
+}
 const GameLoader: React.FC<GameLoaderProps> = ({ game_id, team_id, user }) => {
   if (!game_id) {
     return <p>GameLoader.Lobby not yet built</p>;

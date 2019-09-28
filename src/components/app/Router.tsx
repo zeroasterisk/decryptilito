@@ -1,13 +1,13 @@
 import { HookRouter, useRoutes } from 'hookrouter';
 import React from 'react';
 
-import About from './About';
-import GameLoader from './GameLoader';
-import GameEntry from './GameEntry';
-import Home from './Home';
-import Lobby from './Lobby';
-// import MustLogin from './MustLogin';
-import NotFoundPage from './NotFoundPage';
+import About from '../pages/About';
+import GameLoader from '../pages/GameLoader';
+import GameEntry from '../pages/GameEntry';
+import Home from '../pages/Home';
+import Lobby from '../pages/Lobby';
+// import MustLogin from '../pages/MustLogin';
+import NotFoundPage from '../pages/NotFoundPage';
 
 const routes = {
   '/': () => <Home />,

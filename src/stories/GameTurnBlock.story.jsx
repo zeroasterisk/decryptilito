@@ -14,8 +14,8 @@ import {
   GameTurnBlockActiveEncryptor,
   GameTurnBlockActiveEncryptedWaiting,
   GameTurnBlockActiveDecryptors,
-} from '../GameTurnBlock.tsx';
-import { TeamKey, TurnStatus } from '../gameData';
+} from '../components/game/GameTurnBlock.tsx';
+import { TeamKey, TurnStatus } from '../logic/gameData';
 
 import mockGameData from '../mock/mockGameData';
 import mockUserData from '../mock/mockUserData';

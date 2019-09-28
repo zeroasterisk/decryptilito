@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { GameData, GameStatus, TeamColor, TurnStatus } from '../gameData';
+import { GameData, GameStatus, TurnStatus } from '../logic/gameData';
 import mockGameData from '../mock/mockGameData';
 
 describe('GameData', () => {

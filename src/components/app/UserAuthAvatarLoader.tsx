@@ -1,9 +1,6 @@
 import React from 'react';
 
-import {
-  FirebaseClass,
-  FirebaseContext /* withFirebase */,
-} from './components/firebase';
+import { FirebaseClass, FirebaseContext /* withFirebase */ } from '../firebase';
 
 import { AuthStateHook, useAuthState } from 'react-firebase-hooks/auth';
 

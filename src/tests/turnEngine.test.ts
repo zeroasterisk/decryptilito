@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import { cloneDeep } from 'lodash';
 
-import { GameData, TurnData, TurnStatus } from '../gameData';
-// import { UserData } from '../userData';
+import { GameData, TurnData, TurnStatus } from '../logic/gameData';
+// import { UserData } from '../logic/userData';
 
 import mockGameData from '../mock/mockGameData';
 // import mockUserData from '../mock/mockUserData';
@@ -14,7 +14,7 @@ import {
   getRandomOrder,
   getTurnData,
   scoreTurn,
-} from '../turnEngine';
+} from '../logic/turnEngine';
 
 describe('TurnEngine turn utilities', () => {
   it('getTurnData gets current turn data', () => {

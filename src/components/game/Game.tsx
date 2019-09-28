@@ -6,16 +6,16 @@ import GameTeamName from './GameTeamName';
 import GameTurnBlocks from './GameTurnBlocks';
 import Words from './Words';
 
-import { getTeamData } from './gameEngine';
+import { getTeamData } from '../../logic/gameEngine';
 
-import { GameData } from './gameData';
-import { UserData } from './userData';
+import { GameData } from '../../logic/gameData';
+import { UserData } from '../../logic/userData';
 
-type GameProps = {
+interface GameProps {
   // after fetching the game data...
   game: GameData;
   user: UserData;
-};
+}
 const Game: React.FC<GameProps> = ({ game, user }) => {
   const teamData = getTeamData({ game, user });
   return (

@@ -1,5 +1,5 @@
-import { TeamKey } from '../gameData';
-import { UserData } from '../userData';
+import { TeamKey } from '../logic/gameData';
+import { UserData } from '../logic/userData';
 
 const mockData = new UserData({
   id: 'mockuser12345',
