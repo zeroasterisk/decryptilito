@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { cloneDeep } from 'lodash';
 
-import { GameData, TurnData, TurnStatus } from '../logic/gameData';
+import { GameData, TeamKey, TurnData, TurnStatus } from '../logic/gameData';
 // import { UserData } from '../logic/userData';
 
 import mockGameData from '../mock/mockGameData';
@@ -10,6 +10,7 @@ import mockGameData from '../mock/mockGameData';
 import {
   calculateTurnStatus,
   createNextTurn,
+  getCluesDetails,
   getNextEncryptor,
   getRandomOrder,
   getTurnData,
@@ -150,5 +151,73 @@ describe('TurnEngine create next turn', () => {
     expect(turn.blackTeam.correctOrder.length).to.equal(3);
     // TODO validate turn data
     // expect(turn.validate()).to.equal(true);
+  });
+});
+describe('TurnEngine get clue details', () => {
+  it('getCluesDetails for prior turn clues for either team', () => {
+    // this should get each position, and fill in the clues and guesses
+    const game = new GameData(cloneDeep(mockGameData));
+    const clueDetailsWhite = getCluesDetails(game.turns[0], TeamKey.whiteTeam);
+    expect(clueDetailsWhite).to.deep.equal([
+      {
+        index: 0,
+        position: 1,
+        clue: 'dive',
+        guessedOrderSelf: 1,
+        guessedOrderOpponent: 2,
+      },
+      {
+        index: 1,
+        position: 2,
+        clue: 'hover',
+        guessedOrderSelf: 2,
+        guessedOrderOpponent: 4,
+      },
+      {
+        index: 2,
+        position: 3,
+        clue: 'step',
+        guessedOrderSelf: 3,
+        guessedOrderOpponent: 3,
+      },
+      {
+        index: 3,
+        position: 4,
+        clue: null,
+        guessedOrderSelf: null,
+        guessedOrderOpponent: null,
+      },
+    ]);
+    const clueDetailsBlack = getCluesDetails(game.turns[0], TeamKey.blackTeam);
+    expect(clueDetailsBlack).to.deep.equal([
+      {
+        index: 0,
+        position: 1,
+        clue: null,
+        guessedOrderSelf: null,
+        guessedOrderOpponent: null,
+      },
+      {
+        index: 1,
+        position: 2,
+        clue: 'tires',
+        guessedOrderSelf: 2,
+        guessedOrderOpponent: 3,
+      },
+      {
+        index: 2,
+        position: 3,
+        clue: 'tail',
+        guessedOrderSelf: 3,
+        guessedOrderOpponent: 2,
+      },
+      {
+        index: 3,
+        position: 4,
+        clue: 'gunnel',
+        guessedOrderSelf: 4,
+        guessedOrderOpponent: 4,
+      },
+    ]);
   });
 });

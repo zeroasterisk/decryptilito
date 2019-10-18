@@ -7,6 +7,8 @@ import {
 } from './gameData';
 // import { UserData } from './userData';
 
+import { teamOpposite } from './gameEngine';
+
 const getTurnData = (game: GameData, turnNumber: number) => {
   const { turns } = game;
   if (!(turns && turns.length)) {
@@ -197,6 +199,41 @@ const calculateTurnStatus = (turn: TurnData) => {
   return 'NOPE';
 };
 
+// get clue details, re-organized into more human-useful form
+// index = position
+//   correctOrderIndex = correctOrder[index]
+interface CluesDetails {
+  index: number;
+  position: number; // always index + 1
+  clue: string | null;
+  guessedOrderSelf: number | null;
+  guessedOrderOpponent: number | null;
+}
+const getCluesDetails = (turn: TurnData, teamkey: TeamKey) => {
+  // translate correctOrder into clues
+  return [0, 1, 2, 3].map(index => {
+    const position = index + 1;
+    // is this position in correctOrder?
+    const orderIndex = turn[teamkey].correctOrder.indexOf(position);
+    const clue = orderIndex > -1 ? turn[teamkey].clues[orderIndex] : null;
+    const guessedOrderSelf =
+      orderIndex > -1 ? turn[teamkey].guessedOrderSelf[orderIndex] : null;
+    const guessedOrderOpponent =
+      orderIndex > -1
+        ? turn[teamOpposite(teamkey)].guessedOrderOpponent[orderIndex]
+        : null;
+
+    const node = {
+      index,
+      position, // always index + 1
+      clue,
+      guessedOrderSelf,
+      guessedOrderOpponent,
+    };
+    return node;
+  });
+};
+
 export {
   calculateTurnStatus,
   createNextTurn,
@@ -204,4 +241,5 @@ export {
   getRandomOrder,
   getNextEncryptor,
   scoreTurn,
+  getCluesDetails,
 };
