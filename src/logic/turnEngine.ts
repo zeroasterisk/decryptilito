@@ -98,7 +98,7 @@ const getNextEncryptor = (myTeam: TeamKey, game: GameData) => {
       !Object.keys(turnMemberIdFreqCount).includes(member.id),
   );
   if (missingTeamMembers.length > 0) {
-    return missingTeamMembers.pop();
+    return missingTeamMembers.shift();
   }
   // finally, return the least found name
   const encryptorId = Object.keys(turnMemberIdFreqCount)
@@ -108,7 +108,7 @@ const getNextEncryptor = (myTeam: TeamKey, game: GameData) => {
     .shift();
   return teamMembers
     .filter((member: TeamMember) => member.id === encryptorId)
-    .pop();
+    .shift();
 };
 
 const scoreTurn = (turn: TurnData) => {

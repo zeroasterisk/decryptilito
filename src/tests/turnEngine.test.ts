@@ -5,6 +5,7 @@ import { GameData, TeamKey, TurnData, TurnStatus } from '../logic/gameData';
 // import { UserData } from '../logic/userData';
 
 import mockGameData from '../mock/mockGameData';
+import mockGameDataTurn4 from '../mock/mockGameDataTurn4';
 // import mockUserData from '../mock/mockUserData';
 
 import {
@@ -84,15 +85,55 @@ describe('TurnEngine turn scoring utilities', () => {
 describe('TurnEngine turn phase calculation utilities', () => {
   it('calculateTurnStatus returns turn status DONE if all submitted', () => {
     const game = new GameData(cloneDeep(mockGameData));
-    const turn = getTurnData(game, 1);
+    const turn = game.turns[0]; // turn 1, done
     expect(calculateTurnStatus(turn)).to.equal(TurnStatus.DONE);
+    // and it doesn't care about about you setting a status
     turn.status = TurnStatus.PREPARE;
     expect(calculateTurnStatus(turn)).to.equal(TurnStatus.DONE);
   });
   it('calculateTurnStatus returns turn status PREPARE if no clues', () => {
     const game = new GameData(cloneDeep(mockGameData));
-    const turn = getTurnData(game, 2);
+    const turn = game.turns[1]; // turn 2, just setup
     expect(calculateTurnStatus(turn)).to.equal(TurnStatus.PREPARE);
+  });
+  it('calculateTurnStatus returns turn status ENCRYPT_PARTIAL if 1 of the clues are submitted', () => {
+    const game = new GameData(cloneDeep(mockGameData));
+    const turn = game.turns[1]; // turn 2, just setup
+    turn.blackTeam.clues = ['a', 'b', 'c'];
+    turn.blackTeam.cluesSubmitted = true;
+    expect(calculateTurnStatus(turn)).to.equal(TurnStatus.ENCRYPT_PARTIAL);
+  });
+  it('calculateTurnStatus returns turn status DECRYPT_WHITE_CLUES if both clues are submitted', () => {
+    const game = new GameData(cloneDeep(mockGameData));
+    const turn = game.turns[1]; // turn 2, just setup
+    turn.blackTeam.clues = ['a', 'b', 'c'];
+    turn.blackTeam.cluesSubmitted = true;
+    turn.whiteTeam.clues = ['a', 'b', 'c'];
+    turn.whiteTeam.cluesSubmitted = true;
+    expect(calculateTurnStatus(turn)).to.equal(TurnStatus.DECRYPT_WHITE_CLUES);
+  });
+  it('calculateTurnStatus returns turn status DECRYPT_WHITE_CLUES from mock', () => {
+    const game = new GameData(cloneDeep(mockGameDataTurn4));
+    const turn = game.turns[3]; // turn 4, DECRYPT_WHITE_CLUES
+    expect(calculateTurnStatus(turn)).to.equal(TurnStatus.DECRYPT_WHITE_CLUES);
+  });
+  it('calculateTurnStatus returns turn status DECRYPT_WHITE_CLUES_PARTIAL guessedOrderOpponentSubmitted', () => {
+    const game = new GameData(cloneDeep(mockGameDataTurn4));
+    const turn = game.turns[3]; // turn 4, DECRYPT_WHITE_CLUES
+    turn.blackTeam.guessedOrderOpponent = [1, 2, 3];
+    turn.blackTeam.guessedOrderOpponentSubmitted = true;
+    expect(calculateTurnStatus(turn)).to.equal(
+      TurnStatus.DECRYPT_WHITE_CLUES_PARTIAL,
+    );
+  });
+  it('calculateTurnStatus returns turn status DECRYPT_WHITE_CLUES_PARTIAL guessedOrderSelfSubmitted', () => {
+    const game = new GameData(cloneDeep(mockGameDataTurn4));
+    const turn = game.turns[3]; // turn 4, DECRYPT_WHITE_CLUES
+    turn.whiteTeam.guessedOrderSelf = [1, 2, 3];
+    turn.whiteTeam.guessedOrderSelfSubmitted = true;
+    expect(calculateTurnStatus(turn)).to.equal(
+      TurnStatus.DECRYPT_WHITE_CLUES_PARTIAL,
+    );
   });
   // TODO fill in more status calculations here
 });
@@ -115,12 +156,29 @@ describe('TurnEngine create next turn', () => {
     expect(order.length).to.equal(3);
     expect(new Set(order).size).to.equal(3);
   });
-  it('getNextEncryptor gets the next "turn order" encryptor who has "least answers"', () => {
+  it('getNextEncryptor gets the next "turn order" encryptor', () => {
     const game = new GameData(cloneDeep(mockGameData));
-    const member = getNextEncryptor('blackTeam', game);
+    const member = getNextEncryptor(TeamKey.blackTeam, game);
     expect(member).to.be.a('object');
     expect(member.id).to.equal('6666');
     expect(member.name).to.equal('Eggbert');
+  });
+  it('getNextEncryptor gets the next "least answers" encryptor', () => {
+    // fake all encryptors as Jerry for the black team
+    const game = new GameData(cloneDeep(mockGameDataTurn4));
+    game.turns = game.turns.map(t => {
+      t.blackTeam.encryptor = { name: 'Jerry', id: '4444' };
+      return t;
+    });
+    const member = getNextEncryptor(TeamKey.blackTeam, game);
+    expect(member).to.be.a('object');
+    expect(member.id).to.equal('5555');
+    expect(member.name).to.equal('Gerry');
+    game.turns[1].blackTeam.encryptor = { name: 'Gerry', id: '5555' };
+    const member2 = getNextEncryptor(TeamKey.blackTeam, game);
+    expect(member2).to.be.a('object');
+    expect(member2.id).to.equal('6666');
+    expect(member2.name).to.equal('Eggbert');
   });
   it('createNextTurn gets a new, blank, next turn data', () => {
     const game = new GameData(cloneDeep(mockGameData));
