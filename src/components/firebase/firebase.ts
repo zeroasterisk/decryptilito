@@ -3,12 +3,11 @@
 import { FirebaseApp, FirebaseOptions } from '@firebase/app-types';
 // import { FirebaseAuth } from '@firebase/auth-types'
 // import { ServerValue } from '@firebase/database'
-// import { DataSnapshot, Reference, FirebaseDatabase } from '@firebase/database-types'
-import * as app from 'firebase/app';
+import * as fb from 'firebase/app';
 
 // Add the Firebase services that you want to use
-import 'firebase/auth';
 import 'firebase/firestore';
+import 'firebase/auth';
 
 // servervalue timestamp is here
 // types are in these packages
@@ -36,13 +35,55 @@ const config: FirebaseOptions = {
 
 class FirebaseClass {
   public app: FirebaseApp;
+  public fb: any;
+  public err: any;
+  // auth stuff
   public auth: any;
+  public provider: any;
+  // login stuff
+  public user: any;
+  public token: any;
   constructor() {
+    console.log('firebase fb', fb);
+    this.fb = fb;
     // const appName: string = 'Decryptilito';
     // this.app = app.initializeApp(config, appName);
-    this.app = app.initializeApp(config);
+    this.app = fb.initializeApp(config);
     console.log('firebase after init', this.app);
-    this.auth = app.auth();
+    // setup this.auth as shortcut
+    this.auth = fb.auth();
+    this.auth.useDeviceLanguage();
+    // setup provider for Google OAuth
+    this.provider = new fb.auth.GoogleAuthProvider();
+    this.provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+    this.provider.setCustomParameters({
+      login_hint: 'yourname@gmail.com',
+    });
+  }
+  public clearError() {
+    this.err = null;
+  }
+  public login() {
+    this.auth
+      .signInWithPopup(this.provider)
+      .then((result: any) => {
+        console.log('logged in', result);
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        this.token = result.credential.accessToken;
+        // The signed-in user info.
+        this.user = result.user;
+      })
+      .catch((error: any) => {
+        console.log('login error', error);
+        this.err = error;
+        // Handle Errors here.
+        // var errorCode = error.code;
+        // var errorMessage = error.message;
+        // The email of the user's account used.
+        // var email = error.email;
+        // The firebase.auth.AuthCredential type that was used.
+        // var credential = error.credential;
+      });
   }
 }
 

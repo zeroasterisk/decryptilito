@@ -7,6 +7,7 @@ import Router from './Router';
 
 import { Layout } from 'antd';
 
+import AlertsLoader from './AlertsLoader';
 import UserAuthAvatarLoader from './UserAuthAvatarLoader';
 
 const { Header, Footer, Content } = Layout;
@@ -35,6 +36,7 @@ const App: React.FC = () => {
         <Footer>
           <p className="Footer-desc">This is a fun project. Don't sue me.</p>
         </Footer>
+        <AlertsLoader />
       </Layout>
     </div>
   );

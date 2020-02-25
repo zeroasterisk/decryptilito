@@ -33,9 +33,10 @@ const UserAuthAvatar: React.FC<UserAuthAvatarProps> = ({
     return (
       <div className="UserAuthAvatar Error">
         <Tooltip title={error}>
-          <Tag>
+          <Button type="dashed" onClick={login}>
             <Icon type="warning" />
-          </Tag>
+            Not Authenticated
+          </Button>
         </Tooltip>
       </div>
     );

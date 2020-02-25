@@ -13,7 +13,9 @@ const UserAuthAvatarLoaded: React.FC<UserAuthAvatarLoadedProps> = ({
   firebase,
 }) => {
   const login = () => {
+    console.log('login', firebase, FirebaseClass, FirebaseContext);
     // firebase.auth().signInWithEmailAndPassword('test@test.com', 'password');
+    firebase.login();
   };
   const logout = () => {
     firebase.auth.signOut();
@@ -21,6 +23,7 @@ const UserAuthAvatarLoaded: React.FC<UserAuthAvatarLoadedProps> = ({
   const [user, initialising, error]: AuthStateHook = useAuthState(
     firebase.auth,
   );
+  // temp logging debugging (because I'm lazy apparently)
   console.log({ user, initialising, error }, firebase);
   return (
     <UserAuthAvatar
