@@ -22,6 +22,14 @@ Notes for nerds.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+Required dev environment (or equivalent):
+
+```sh
+asdf install nodejs 10.16.3 && asdf global nodejs 10.16.3
+npm i -g prettier typescript tslint-config-standard tslint-react tslint firebase-tools
+cd . && npm i
+```
+
 ## Available Scripts
 
 In the project directory, you can run:

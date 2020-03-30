@@ -19,7 +19,7 @@ const config: FirebaseOptions = {
   appId: process.env.REACT_APP_APPID,
   authDomain: process.env.REACT_APP_AUTHDOMAIN,
   databaseURL: process.env.REACT_APP_DATABASEURL,
-  locationId: process.env.REACT_APP_LOCATIONID,
+  automaticDataCollectionEnabled: TRUE,
   messagingSenderId: process.env.REACT_APP_MESSAGINGSENDERID,
   projectId: process.env.REACT_APP_PROJECTID,
   storageBucket: process.env.REACT_APP_STORAGEBUCKET,
