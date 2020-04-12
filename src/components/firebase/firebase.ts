@@ -1,9 +1,10 @@
 // Firebase App (the core Firebase SDK) is always required and
 // must be listed before other Firebase SDKs
-import { FirebaseApp, FirebaseOptions } from '@firebase/app-types';
+//!! import { FirebaseApp, FirebaseOptions } from '@firebase/app-types';
 // import { FirebaseAuth } from '@firebase/auth-types'
 // import { ServerValue } from '@firebase/database'
-import * as fb from 'firebase/app';
+/*
+import * as firebase from 'firebase/app';
 
 // Add the Firebase services that you want to use
 import 'firebase/firestore';
@@ -16,16 +17,20 @@ import 'firebase/auth';
 // Chosen path: we can keep the config here and load it statically or from ENV
 // not committed to git, but will be visible to browser in built JS
 const config: FirebaseOptions = {
-  apiKey: process.env.REACT_APP_APIKEY,
-  appId: process.env.REACT_APP_APPID,
-  authDomain: process.env.REACT_APP_AUTHDOMAIN,
-  databaseURL: process.env.REACT_APP_DATABASEURL,
-  automaticDataCollectionEnabled: TRUE,
-  messagingSenderId: process.env.REACT_APP_MESSAGINGSENDERID,
-  projectId: process.env.REACT_APP_PROJECTID,
-  storageBucket: process.env.REACT_APP_STORAGEBUCKET,
+  apiKey: process.env.REACT_APP_API_KEY,
+  appId: process.env.REACT_APP_APP_ID,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_DATABASE_URL,
+  // automaticDataCollectionEnabled: TRUE,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
 };
 
+const appName: string = 'Decryptilito';
+const fbApp: firebase.app.App = firebase.initializeApp(config, appName);
+
+/*
 // Alternative: we can load firebase hosted URLs
 //              https://firebase.google.com/docs/hosting/reserved-urls
 // This url is provided by firebase hosting (PROD)
@@ -89,3 +94,6 @@ class FirebaseClass {
 }
 
 export default FirebaseClass;
+ */
+
+export default null;

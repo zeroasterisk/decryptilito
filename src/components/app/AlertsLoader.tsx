@@ -1,12 +1,16 @@
-import React from 'react';
+// import React from 'react';
 
-import { FirebaseClass, FirebaseContext /* withFirebase */ } from '../firebase';
+// import { FirebaseClass, FirebaseContext /* withFirebase */ } from '../firebase';
 
 // import { AuthStateHook, useAuthState } from 'react-firebase-hooks/auth';
 
 import Alerts from './Alerts';
 
+export default Alerts;
+
+/*
 interface AlertsLoadedProps {
+  // firebase: FirebaseClass;
   firebase: FirebaseClass;
 }
 const AlertsLoaded: React.FC<AlertsLoadedProps> = ({ firebase }) => {
@@ -35,3 +39,4 @@ const AlertsLoader: React.FC<AlertsLoaderProps> = props => (
 );
 //
 export default AlertsLoader;
+*/

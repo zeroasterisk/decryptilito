@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "decryptilito"
+    "default": "decryptilito",
+    "production": "decryptilito"
   }
 }

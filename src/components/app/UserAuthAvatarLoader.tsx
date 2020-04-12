@@ -1,11 +1,14 @@
-import React from 'react';
+// import React from 'react';
 
-import { FirebaseClass, FirebaseContext /* withFirebase */ } from '../firebase';
+// import { FirebaseClass, FirebaseContext /* withFirebase */ } from '../firebase';
 
-import { AuthStateHook, useAuthState } from 'react-firebase-hooks/auth';
+// import { AuthStateHook, useAuthState } from 'react-firebase-hooks/auth';
 
 import UserAuthAvatar from './UserAuthAvatar';
 
+export default UserAuthAvatar;
+
+/*
 interface UserAuthAvatarLoadedProps {
   firebase: FirebaseClass;
 }
@@ -48,3 +51,4 @@ const UserAuthAvatarLoader: React.FC<UserAuthAvatarLoaderProps> = props => (
 );
 //
 export default UserAuthAvatarLoader;
+*/
