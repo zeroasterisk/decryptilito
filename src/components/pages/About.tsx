@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { Icon, Menu, PageHeader } from 'antd';
+import { Menu, PageHeader } from 'antd';
 import { A, usePath, useRoutes } from 'hookrouter';
+import { LoadingOutlined } from '@ant-design/icons';
 
 import AboutGameHowToPlay from './AboutGameHowToPlay';
 import AboutOverview from './AboutOverview';
@@ -24,17 +25,17 @@ const AboutMenu: React.FC = () => {
     <Menu selectedKeys={[getSelectedRoute(usePath())]} mode="horizontal">
       <Menu.Item key="overview">
         <A href="/about">
-          <Icon type="loading" /> Overview
+          <LoadingOutlined /> Overview
         </A>
       </Menu.Item>
       <Menu.Item key="game">
         <A href="/about/game">
-          <Icon type="loading" /> Playing the Game
+          <LoadingOutlined /> Playing the Game
         </A>
       </Menu.Item>
       <Menu.Item key="tech">
         <A href="/about/tech">
-          <Icon type="loading" /> About the Tech
+          <LoadingOutlined /> About the Tech
         </A>
       </Menu.Item>
     </Menu>

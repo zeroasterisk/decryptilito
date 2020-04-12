@@ -12,6 +12,7 @@ import 'firebase/auth';
 // servervalue timestamp is here
 // types are in these packages
 
+
 // Chosen path: we can keep the config here and load it statically or from ENV
 // not committed to git, but will be visible to browser in built JS
 const config: FirebaseOptions = {

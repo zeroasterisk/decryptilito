@@ -2,7 +2,6 @@ import React from 'react';
 
 import {
   Col,
-  Icon,
   Input,
   Row,
   Select,
@@ -10,6 +9,12 @@ import {
   Tooltip,
   Typography,
 } from 'antd';
+import {
+  ClockCircleOutlined,
+  CheckCircleOutlined,
+  LockOutlined,
+  QuestionCircleOutlined,
+} from '@ant-design/icons';
 
 import { TeamKey, TurnTeamData } from '../../logic/gameData';
 import { teamName, teamOppositeName } from '../../logic/gameEngine';
@@ -45,7 +50,7 @@ const ColOpponentGuess: React.FC<ColOpponentGuessProps> = ({
     <Col xs={3} className="Order teamOwn">
       {future || lock ? (
         <Text disabled>
-          <Icon type={lock ? 'lock' : 'clock-circle'} />
+          {lock ? <LockOutlined /> : <ClockCircleOutlined /> }
         </Text>
       ) : (
         children
@@ -67,7 +72,7 @@ const ColOwnGuess: React.FC<ColOwnGuessProps> = ({
     <Col xs={3} className="Order teamOpposite">
       {future ? (
         <Text disabled>
-          <Icon type="clock-circle" />
+          <ClockCircleOutlined />
         </Text>
       ) : (
         children
@@ -89,7 +94,7 @@ const ColCorrect: React.FC<ColCorrectProps> = ({
     <Col xs={3} className="Order">
       {lock ? (
         <Text disabled>
-          <Icon type="lock" />
+          <LockOutlined />
         </Text>
       ) : (
         children
@@ -130,7 +135,7 @@ const OrderSelect: React.FC<OrderSelectProps> = ({ disabled, value }) => {
         </Text>
       </Option>
       {options.map((val, index) => (
-        <Option key={`option${val}`}>{val}</Option>
+        <Option key={`option${val}`} value={val}>{val}</Option>
       ))}
     </Select>
   );
@@ -148,17 +153,17 @@ const GameClueHeader: React.FC<GameClueHeaderProps> = ({
     <Col xs={15}>{children}</Col>
     <Tooltip title={`Guessed Order for ${teamName(showTeam)}`}>
       <Col xs={3} className="Order">
-        <Icon type="question-circle" />
+        <QuestionCircleOutlined />
       </Col>
     </Tooltip>
     <Tooltip title={`Guessed Order for ${teamOppositeName(showTeam)}`}>
       <Col xs={3} className="Order teamOpposite">
-        <Icon type="question-circle" />
+        <QuestionCircleOutlined />
       </Col>
     </Tooltip>
     <Tooltip title={`Correct Order for ${teamName(showTeam)}`}>
       <Col xs={3} className="Order">
-        <Icon type="check-circle" />
+        <CheckCircleOutlined />
       </Col>
     </Tooltip>
   </Row>

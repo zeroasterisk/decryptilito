@@ -4,7 +4,12 @@
  */
 import React from 'react';
 
-import { Button, Card, Icon, Typography } from 'antd';
+import { Button, Card, Typography } from 'antd';
+import {
+  LoadingOutlined,
+  LockOutlined,
+  RightOutlined,
+} from '@ant-design/icons';
 
 import {
   GameClueEditClue,
@@ -143,7 +148,7 @@ const GameTurnBlockActivePrepare: React.FC<GameTurnBlockProps> = ({
         <div>
           Encryption&nbsp;
           <strong>(rest of team avert eyes)</strong>
-          <Icon type="lock" />
+          <LockOutlined />
           <br />
           Encryptor: {turnTeamData.encryptor.name}
         </div>
@@ -151,7 +156,7 @@ const GameTurnBlockActivePrepare: React.FC<GameTurnBlockProps> = ({
       actions={[
         <Button key="ready" type="primary">
           Show the Correct Order
-          <Icon type="right" />
+          <RightOutlined />
         </Button>,
       ]}
       loading
@@ -183,7 +188,7 @@ const GameTurnBlockActiveEncryptor: React.FC<GameTurnBlockProps> = ({
         <div>
           Encryption&nbsp;
           <strong>(rest of team avert eyes)</strong>
-          <Icon type="lock" />
+          <LockOutlined />
           <br />
           Encryptor: {turnTeamData.encryptor.name}
         </div>
@@ -191,11 +196,11 @@ const GameTurnBlockActiveEncryptor: React.FC<GameTurnBlockProps> = ({
       actions={[
         <Button key="hide" type="dashed">
           Hide Order
-          <Icon type="lock" />
+          <LockOutlined />
         </Button>,
         <Button key="submit" type="primary">
           Submit Clues
-          <Icon type="right" />
+          <RightOutlined />
         </Button>,
       ]}
       style={{ maxWidth: 400 }}
@@ -242,7 +247,7 @@ const GameTurnBlockActiveEncryptedWaiting: React.FC<GameTurnBlockProps> = ({
         <div>
           Encryption&nbsp;
           <strong>(rest of team avert eyes)</strong>
-          <Icon type="lock" />
+          <LockOutlined />
           <br />
           Encryptor: {turnTeamData.encryptor.name}
         </div>
@@ -251,7 +256,7 @@ const GameTurnBlockActiveEncryptedWaiting: React.FC<GameTurnBlockProps> = ({
         // TODO consider allowing a team to go back and edit...?
         <Button key="waiting" type="dashed" disabled>
           Waiting on {teamOppositeName(showTeam)}
-          <Icon type="loading" />
+          <LoadingOutlined />
         </Button>,
       ]}
       style={{ maxWidth: 400 }}
@@ -352,13 +357,13 @@ const GameTurnBlockActiveDecryptors: React.FC<GameTurnBlockProps> = ({
               // TODO consider allowing a team to go back and edit...?
               <Button key="waiting" type="dashed" disabled>
                 Waiting on {teamOppositeName(showTeam)}
-                <Icon type="loading" />
+                <LoadingOutlined />
               </Button>,
             ]
           : [
               <Button key="submit" type="primary">
                 Submit Order Guesses
-                <Icon type="right" />
+                <RightOutlined />
               </Button>,
             ]
       }
@@ -390,7 +395,8 @@ const GameTurnBlockActiveDecryptors: React.FC<GameTurnBlockProps> = ({
       {opposingTeamHasGuessed ? (
         <div>
           <Text disabled>
-            <Icon type="loading" /> The {teamOppositeName(myTeam)} is ready.
+            <LoadingOutlined />
+            The {teamOppositeName(myTeam)} is ready.
           </Text>
         </div>
       ) : (

@@ -1,6 +1,12 @@
 import React from 'react';
 
-import { Button, Icon, Tag, Tooltip } from 'antd';
+import { Button, Tag, Tooltip } from 'antd';
+import {
+  LoadingOutlined,
+  LogoutOutlined,
+  LoginOutlined,
+  WarningOutlined,
+} from '@ant-design/icons';
 
 // smart component, can figure out if we have a user or not
 type UserAuthAvatarProps = {
@@ -23,7 +29,7 @@ const UserAuthAvatar: React.FC<UserAuthAvatarProps> = ({
       <div className="UserAuthAvatar initialising">
         <Tooltip title="Connecting to our top-secret servers...">
           <Tag>
-            <Icon type="loading" />
+            <LoadingOutlined />
           </Tag>
         </Tooltip>
       </div>
@@ -34,7 +40,7 @@ const UserAuthAvatar: React.FC<UserAuthAvatarProps> = ({
       <div className="UserAuthAvatar Error">
         <Tooltip title={error}>
           <Button type="dashed" onClick={login}>
-            <Icon type="warning" />
+            <WarningOutlined />
             Not Authenticated
           </Button>
         </Tooltip>
@@ -48,7 +54,7 @@ const UserAuthAvatar: React.FC<UserAuthAvatarProps> = ({
       <div className="UserAuthAvatar LoggedIn">
         <p>Current User: {user.name}</p>
         <Button type="dashed" onClick={logout}>
-          <Icon type="logout" />
+          <LogoutOutlined />
           Log Out
         </Button>
       </div>
@@ -57,7 +63,7 @@ const UserAuthAvatar: React.FC<UserAuthAvatarProps> = ({
   return (
     <div className="UserAuthAvatar LogIn">
       <Button type="primary" onClick={login}>
-        <Icon type="login" />
+        <LoginOutlined />
         Log in
       </Button>
     </div>
