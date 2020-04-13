@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
+import { navigate } from 'hookrouter';
 import {
+  PageHeader,
+  Button,
   Col,
   Row,
   Card,
@@ -10,8 +13,6 @@ import {
 } from 'antd';
 
 import { RightOutlined, HomeOutlined } from '@ant-design/icons';
-
-import Btn from '../btn';
 
 import {
   loginWithGoogle,
@@ -39,12 +40,20 @@ const AuthAuthenticated: React.FC<AuthAuthenticatedProps> = ({ user }) => {
         subTitle="bada boom bada bing"
         extra={
           <div>
-            <Btn href="/lobby" type="primary" icon={<RightOutlined />}>
+            <Button
+              onClick={() => navigate('/lobby')}
+              type="primary"
+              icon={<RightOutlined />}
+            >
               Game Lobby
-            </Btn>
-            <Btn href="/" type="primary" icon={<HomeOutlined />}>
+            </Button>
+            <Button
+              onClick={() => navigate('/')}
+              type="primary"
+              icon={<HomeOutlined />}
+            >
               Go Home
-            </Btn>
+            </Button>
           </div>
         }
       />
@@ -74,11 +83,15 @@ const AuthAnon: React.FC<AuthProps> = () => {
       }
     };
   }
-  console.log('loginWithGoogle');
-  console.log(loginWithGoogle);
 
   return (
     <div>
+      <PageHeader
+        className="site-page-header"
+        onBack={() => navigate('/', true)}
+        title="Login to Decryptilito"
+        subTitle="Decryptilito doesn't really care, but we want to keep track for you"
+      />
       <Row justify="space-around">
         <Col xl={6} md={10} sm={12}>
           <Card title="Login">
@@ -90,16 +103,16 @@ const AuthAnon: React.FC<AuthProps> = () => {
               NOTE: We are not hosting ads, not selling or storing your
               information. This is fun only.
             </p>
-            <Btn block onClick={login(loginWithGoogle)}>
+            <Button block loading={loading} onClick={login(loginWithGoogle)}>
               Login with Google
-            </Btn>
-            <Btn block onClick={login(loginWithGithub)}>
+            </Button>
+            <Button block loading={loading} onClick={login(loginWithGithub)}>
               Login with Github
-            </Btn>
+            </Button>
 
-            <Btn block onClick={openModel}>
+            <Button block onClick={openModel}>
               Login with Email/Pass
-            </Btn>
+            </Button>
             {/* <AuthCreateEmailPass visible={visible} /> */}
           </Card>
         </Col>

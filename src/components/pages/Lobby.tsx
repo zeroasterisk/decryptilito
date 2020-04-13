@@ -1,8 +1,7 @@
 import React from 'react';
-import { Card, PageHeader } from 'antd';
 import { navigate } from 'hookrouter';
-
-import Btn from '../btn';
+import { Button, Card, PageHeader } from 'antd';
+import { LoginOutlined } from '@ant-design/icons';
 
 import { useSession } from '../../auth';
 
@@ -53,7 +52,15 @@ const LobbyAnon: React.FC<LobbyProps> = () => {
       <Card title="You are not logged in">
         <p>You must first login or put in a guest name.</p>
         <p>
-          <Btn href="/auth">Login</Btn> and then come back.
+          <Button
+            icon={<LoginOutlined />}
+            type="primary"
+            shape="round"
+            onClick={() => navigate('/auth')}
+          >
+            Login
+          </Button>
+          and then come back.
         </p>
       </Card>
     </div>

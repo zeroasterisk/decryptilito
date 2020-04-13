@@ -1,15 +1,14 @@
 import React from 'react';
+import { navigate } from 'hookrouter';
 
 import { Avatar, Button, Tag, Tooltip } from 'antd';
 import {
   LoadingOutlined,
-  LogoutOutlined,
+  // LogoutOutlined,
   LoginOutlined,
   WarningOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-
-import Btn from '../btn';
 
 // smart component, can figure out if we have a user or not
 type UserAuthAvatarProps = {
@@ -42,10 +41,10 @@ const UserAuthAvatar: React.FC<UserAuthAvatarProps> = ({
     return (
       <div className="UserAuthAvatar Error">
         <Tooltip title={error}>
-          <Btn type="dashed" href="/auth">
+          <Button type="dashed" onClick={() => navigate('/auth')}>
             <WarningOutlined />
             Not Authenticated
-          </Btn>
+          </Button>
         </Tooltip>
       </div>
     );
@@ -61,19 +60,28 @@ const UserAuthAvatar: React.FC<UserAuthAvatarProps> = ({
     const userName = user.displayName || user.email || `User: ${user.uid}`;
     return (
       <div className="UserAuthAvatar LoggedIn">
-        <Btn icon={userIcon} type="dashed" shape="round" href="/account">
+        <Button
+          icon={userIcon}
+          type="dashed"
+          shape="round"
+          onClick={() => navigate('/account')}
+        >
           &nbsp;
           {userName}
-        </Btn>
+        </Button>
       </div>
     );
   }
   return (
     <div className="UserAuthAvatar LogIn">
-      <Btn type="primary" href="/auth">
-        <LoginOutlined />
+      <Button
+        icon={<LoginOutlined />}
+        type="primary"
+        shape="round"
+        onClick={() => navigate('/auth')}
+      >
         Log in
-      </Btn>
+      </Button>
     </div>
   );
 };

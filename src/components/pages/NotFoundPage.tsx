@@ -1,8 +1,7 @@
-import { Result } from 'antd';
-import { usePath } from 'hookrouter';
+import { Button, Result } from 'antd';
+import { navigate, usePath } from 'hookrouter';
 import { HomeOutlined } from '@ant-design/icons';
 import React from 'react';
-import Btn from '../btn';
 
 const NotFoundPage: React.FC = () => {
   const path = usePath();
@@ -14,9 +13,13 @@ const NotFoundPage: React.FC = () => {
         subTitle="Sorry, the page does not exist."
         extra={
           <div>
-            <Btn href="/" type="primary" icon={<HomeOutlined />}>
+            <Button
+              icon={<HomeOutlined />}
+              type="primary"
+              onClick={() => navigate('/')}
+            >
               Go Home
-            </Btn>
+            </Button>
             <p>
               <code>{path}</code>
             </p>

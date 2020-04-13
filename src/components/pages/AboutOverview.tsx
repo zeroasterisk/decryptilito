@@ -1,6 +1,7 @@
 import React from 'react';
+import { navigate } from 'hookrouter';
+import { Button } from 'antd';
 import { PlaySquareOutlined } from '@ant-design/icons';
-import Btn from '../btn';
 
 const AboutOverview: React.FC = () => {
   return (
@@ -9,14 +10,14 @@ const AboutOverview: React.FC = () => {
         <p>TL;DR: 2 teams, each with devices, can play Decrypto.</p>
         <p>
           Ready to go?
-          <Btn
-            href="/lobby"
+          <Button
+            onClick={() => navigate('/lobby')}
             type="primary"
             size="large"
             icon={<PlaySquareOutlined />}
           >
             Play Now
-          </Btn>
+          </Button>
         </p>
       </div>
     </div>

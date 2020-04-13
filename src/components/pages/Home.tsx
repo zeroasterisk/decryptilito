@@ -1,4 +1,15 @@
-import { Avatar, Card, Col, List, PageHeader, Row, Typography } from 'antd';
+import React from 'react';
+import { navigate } from 'hookrouter';
+import {
+  Avatar,
+  Button,
+  Card,
+  Col,
+  List,
+  PageHeader,
+  Row,
+  Typography,
+} from 'antd';
 import {
   LaptopOutlined,
   PhoneOutlined,
@@ -6,8 +17,6 @@ import {
   QuestionOutlined,
   UsergroupAddOutlined,
 } from '@ant-design/icons';
-import React from 'react';
-import Btn from '../btn';
 
 const { Paragraph } = Typography;
 
@@ -49,14 +58,14 @@ const Home: React.FC = () => {
               <Card
                 title="Get Started"
                 extra={
-                  <Btn
-                    href="/lobby"
+                  <Button
+                    onClick={() => navigate('/lobby')}
                     type="primary"
                     size="large"
                     icon={<PlaySquareOutlined />}
                   >
                     Play Now
-                  </Btn>
+                  </Button>
                 }
               >
                 <List
@@ -78,14 +87,14 @@ const Home: React.FC = () => {
               <Card
                 title="Find out more"
                 extra={
-                  <Btn
-                    href="/about"
+                  <Button
+                    onClick={() => navigate('/about')}
                     type="link"
                     size="large"
                     icon={<QuestionOutlined />}
                   >
                     About
-                  </Btn>
+                  </Button>
                 }
               >
                 <p>

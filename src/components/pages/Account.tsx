@@ -1,8 +1,16 @@
 import React from 'react';
-
 import { navigate } from 'hookrouter';
 
-import { Avatar, Card, Col, PageHeader, Result, Row } from 'antd';
+import {
+  Avatar,
+  Button,
+  Card,
+  Col,
+  PageHeader,
+  Result,
+  Row,
+  Popconfirm,
+} from 'antd';
 import {
   // LoadingOutlined,
   LogoutOutlined,
@@ -10,8 +18,6 @@ import {
   // WarningOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-
-import Btn from '../btn';
 
 import { useSession, signOut } from '../../auth';
 
@@ -31,9 +37,13 @@ const Anon: React.FC = () => {
         subTitle="sign in please"
         extra={
           <div>
-            <Btn href="/auth" type="primary" icon={<LoginOutlined />}>
+            <Button
+              onClick={() => navigate('/auth')}
+              type="primary"
+              icon={<LoginOutlined />}
+            >
               Get Signed In
-            </Btn>
+            </Button>
           </div>
         }
       />
@@ -63,9 +73,20 @@ const Account: React.FC<AccountProps> = () => {
           <Card title={userName} extra={userIcon}>
             TODO: Details &amp; Stats
             <p>
-              <Btn onClick={signOut} icon={<LogoutOutlined />}>
-                Logout
-              </Btn>
+              <Popconfirm
+                title="Are you sure you want to logout?"
+                onConfirm={() => {
+                  signOut();
+                  navigate('/auth');
+                }}
+                onCancel={() => null}
+                okText="Yes, logout"
+                cancelText="No"
+              >
+                <Button href="#" type="ghost" icon={<LogoutOutlined />}>
+                  Logout
+                </Button>
+              </Popconfirm>
             </p>
           </Card>
         </Col>
