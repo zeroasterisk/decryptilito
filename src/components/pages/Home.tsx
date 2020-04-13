@@ -1,4 +1,11 @@
 import { Avatar, Card, Col, List, PageHeader, Row, Typography } from 'antd';
+import {
+  LaptopOutlined,
+  PhoneOutlined,
+  PlaySquareOutlined,
+  QuestionOutlined,
+  UsergroupAddOutlined,
+} from '@ant-design/icons';
 import React from 'react';
 import Btn from '../btn';
 
@@ -8,18 +15,18 @@ const Home: React.FC = () => {
   const features = [
     {
       desc: 'This is on you... each team should have 2+ people',
-      icon: 'usergroup-add',
+      icon: <UsergroupAddOutlined />,
       title: 'You need 2 teams',
     },
     {
       desc: 'Each team needs their own device, laptop, etc. (more=ok)',
-      icon: 'laptop',
+      icon: <LaptopOutlined />,
       title: 'You need 2+ devices',
     },
     {
       desc:
         'If your team is not in the same room, you need some way to collaborate with your team (IM, phone, whatever)',
-      icon: 'phone',
+      icon: <PhoneOutlined />,
       title: 'You need to communicate with your team',
     },
   ];
@@ -46,7 +53,7 @@ const Home: React.FC = () => {
                     href="/lobby"
                     type="primary"
                     size="large"
-                    icon="play-square"
+                    icon={<PlaySquareOutlined />}
                   >
                     Play Now
                   </Btn>
@@ -55,7 +62,7 @@ const Home: React.FC = () => {
                 <List
                   itemLayout="horizontal"
                   dataSource={features}
-                  renderItem={item => (
+                  renderItem={(item) => (
                     <List.Item>
                       <List.Item.Meta
                         avatar={<Avatar {...item} />}
@@ -71,7 +78,12 @@ const Home: React.FC = () => {
               <Card
                 title="Find out more"
                 extra={
-                  <Btn href="/about" type="link" size="large" icon="question">
+                  <Btn
+                    href="/about"
+                    type="link"
+                    size="large"
+                    icon={<QuestionOutlined />}
+                  >
                     About
                   </Btn>
                 }

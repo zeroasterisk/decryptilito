@@ -1,7 +1,11 @@
 import React from 'react';
 
 const Stub: React.FC = () => {
-  return <div>Stub... TODO: build me</div>;
+  return (
+    <div>
+      <h1>Login</h1>
+    </div>
+  );
 };
 
 export default Stub;

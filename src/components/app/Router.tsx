@@ -6,6 +6,8 @@ import GameLoader from '../pages/GameLoader';
 import GameEntry from '../pages/GameEntry';
 import Home from '../pages/Home';
 import Lobby from '../pages/Lobby';
+import Auth from '../pages/Auth';
+import Account from '../pages/Account';
 // import MustLogin from '../pages/MustLogin';
 import NotFoundPage from '../pages/NotFoundPage';
 
@@ -18,6 +20,8 @@ const routes = {
   '/game/:game_id/:team_id': ({ game_id, team_id }: HookRouter.QueryParams) => (
     <GameLoader game_id={game_id} team_id={team_id} />
   ),
+  '/auth': () => <Auth />,
+  '/account': () => <Account />,
   // gotcha - storybook routes to this url :/
   '/iframe.html': () => <Home />,
   '/lobby': () => <Lobby />,

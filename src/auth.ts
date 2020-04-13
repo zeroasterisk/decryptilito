@@ -1,7 +1,12 @@
 import * as firebase from 'firebase/app';
+import 'firebase/storage';
+import 'firebase/firestore';
 import 'firebase/auth';
+import './firebase';
 import { useContext } from 'react';
 import { userContext } from './user-context';
+
+import { UserData } from './logic/userData';
 
 const provider = new firebase.auth.GoogleAuthProvider();
 
@@ -11,6 +16,8 @@ export const useSession = () => {
 };
 
 export const loginWithGoogle = async () => {
+  console.log('loginWithGoogle');
+  console.log(firebase.auth());
   try {
     const result = await firebase.auth().signInWithPopup(provider);
     return result;

@@ -1,12 +1,15 @@
 import React from 'react';
 
-import { Button, Tag, Tooltip } from 'antd';
+import { Avatar, Button, Tag, Tooltip } from 'antd';
 import {
   LoadingOutlined,
   LogoutOutlined,
   LoginOutlined,
   WarningOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
+
+import Btn from '../btn';
 
 // smart component, can figure out if we have a user or not
 type UserAuthAvatarProps = {
@@ -39,10 +42,10 @@ const UserAuthAvatar: React.FC<UserAuthAvatarProps> = ({
     return (
       <div className="UserAuthAvatar Error">
         <Tooltip title={error}>
-          <Button type="dashed" onClick={login}>
+          <Btn type="dashed" href="/auth">
             <WarningOutlined />
             Not Authenticated
-          </Button>
+          </Btn>
         </Tooltip>
       </div>
     );
@@ -50,22 +53,27 @@ const UserAuthAvatar: React.FC<UserAuthAvatarProps> = ({
   if (user) {
     // TODO style w/ user avatar data
     // TODO make button a ConfirmButton action (new component?)
+    const userIcon = user.photoURL ? (
+      <Avatar src={user.photoURL} />
+    ) : (
+      <Avatar icon={<UserOutlined />} />
+    );
+    const userName = user.displayName || user.email || `User: ${user.uid}`;
     return (
       <div className="UserAuthAvatar LoggedIn">
-        <p>Current User: {user.name}</p>
-        <Button type="dashed" onClick={logout}>
-          <LogoutOutlined />
-          Log Out
-        </Button>
+        <Btn icon={userIcon} type="dashed" shape="round" href="/account">
+          &nbsp;
+          {userName}
+        </Btn>
       </div>
     );
   }
   return (
     <div className="UserAuthAvatar LogIn">
-      <Button type="primary" onClick={login}>
+      <Btn type="primary" href="/auth">
         <LoginOutlined />
         Log in
-      </Button>
+      </Btn>
     </div>
   );
 };

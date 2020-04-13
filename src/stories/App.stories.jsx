@@ -23,6 +23,11 @@ export const about = () => {
   return <App user={mockUserData} game={mockGameData} />;
 };
 
+export const auth = () => {
+  navigate('/auth', true);
+  return <App user={mockUserData} game={mockGameData} />;
+};
+
 export const lobby = () => {
   navigate('/lobby', true);
   return <App user={mockUserData} game={mockGameData} />;

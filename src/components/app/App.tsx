@@ -1,5 +1,7 @@
 import React from 'react';
 import * as firebase from 'firebase/app';
+import 'firebase/firestore';
+import 'firebase/auth';
 
 import 'antd/dist/antd.css';
 import './App.css';
@@ -12,8 +14,11 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { userContext } from '../../user-context';
 
-import AlertsLoader from './AlertsLoader';
-import UserAuthAvatarLoader from './UserAuthAvatarLoader';
+// import AlertsLoader from './AlertsLoader';
+import UserAuthAvatar from './UserAuthAvatar';
+// import UserAuthAvatarLoader from './UserAuthAvatarLoader';
+
+import '../../firebase';
 
 const { Header, Footer, Content } = Layout;
 
@@ -44,6 +49,7 @@ const PrivateRoute = ({
 
 function App() {
   const [user, initialising, error] = useAuthState(firebase.auth());
+  console.log('user', user, 'initialising', initialising, 'error', error);
 
   if (initialising) {
     return (
@@ -75,6 +81,29 @@ function App() {
           <Route path="/login" component={Login} />
           <PrivateRoute path="/:rest*" component={Main} />
           */}
+        <Layout>
+          <Header className="AppHeader">
+            <img src="/logo-marching.jpg" className="App-logo" alt="logo" />
+            <p className="Header-desc">
+              Decryptalito - A variation on{' '}
+              <a
+                href="https://boardgamegeek.com/boardgame/225694/decrypto"
+                rel="noopener"
+              >
+                Decrypto
+              </a>
+              , allowing web-based access and remote teams.
+            </p>
+            <UserAuthAvatar {...{ initialising, user, error }} />
+          </Header>
+          <Content>
+            <Router />
+          </Content>
+          <Footer>
+            <p className="Footer-desc">This is a fun project. Don't sue me.</p>
+          </Footer>
+          {/* <AlertsLoader /> */}
+        </Layout>
       </div>
     </userContext.Provider>
   );

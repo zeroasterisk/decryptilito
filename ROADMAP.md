@@ -1,12 +1,19 @@
 # Roadmap / Plans / Tasks
 
 - [x] Basic UI
-- [x] Layout
-- [x] Game UI
-- [x] Turn Components
-- [x] Word Components
-- [ ] Firebase
-- [ ] Auth / User
+  - [x] Layout
+  - [x] Game UI
+  - [x] Turn Components
+  - [x] Word Components
+- [x] Basic Game Logic
+- [-] Firebase
+  - [-] Auth / User
+    - [ ] Bugfix: Convert UserData -> firebase.User (types, and game logic)
+    - [ ] Bugfix: Convert UserData -> firebase.User (types, and game logic)
+  - [-] Account UI
+    - [x] Login (maybe)
+    - [x] Logout
+    - [ ] Create New User
 - [ ] Games / Lobby
 - [ ] Find Games based on details: location, interests, etc
 - [ ] Game Details

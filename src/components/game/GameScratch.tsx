@@ -32,6 +32,7 @@ const GameScratch: React.FC<GameScratchProps> = ({
         <Skeleton />
       ) : (
         <GameScratchRow
+          key={`turnScratchRow${showTeamClues}${index}`}
           game={game}
           turn={turn}
           myTeam={user.myTeam}
@@ -87,11 +88,13 @@ const GameScratchRow: React.FC<GameScratchRowProps> = ({
   showTeamClues,
   turn,
 }) => {
+  const clueDetails = getCluesDetails(turn, showTeamClues);
+  if (!(clueDetails && clueDetails.length > 0)) return null;
   return (
     <Row gutter={8} className="GameScratchRow">
-      {getCluesDetails(turn, showTeamClues).map(p => (
+      {clueDetails.map((p) => (
         <GameScratchCol
-          key={`c{p.index}`}
+          key={`c${p.index}`}
           showTeamClues={showTeamClues}
           myTeam={myTeam}
           {...p}
