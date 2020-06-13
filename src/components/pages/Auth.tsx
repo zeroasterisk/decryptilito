@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { navigate } from 'hookrouter';
 import {
+  notification,
   PageHeader,
   Button,
   Col,
@@ -49,7 +50,7 @@ const AuthAuthenticated: React.FC<AuthAuthenticatedProps> = ({ user }) => {
             </Button>
             <Button
               onClick={() => navigate('/')}
-              type="primary"
+              type="dashed"
               icon={<HomeOutlined />}
             >
               Go Home
@@ -76,10 +77,13 @@ const AuthAnon: React.FC<AuthProps> = () => {
         setError('');
         setLoading(true);
         await fn();
-        // setRedirectToReferrer(true);
+        // navigate('/account');
       } catch (err) {
         setLoading(false);
         setError(err.message || 'Please try again.');
+        notification.error({
+          message: err.message,
+        });
       }
     };
   }
