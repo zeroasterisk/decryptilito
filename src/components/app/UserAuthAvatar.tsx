@@ -61,7 +61,6 @@ const UserAuthAvatar: React.FC<UserAuthAvatarProps> = ({
     return (
       <div className="UserAuthAvatar LoggedIn">
         <Button
-          icon={userIcon}
           type="dashed"
           shape="round"
           onClick={() => navigate('/account')}
@@ -69,6 +68,7 @@ const UserAuthAvatar: React.FC<UserAuthAvatarProps> = ({
           &nbsp;
           {userName}
         </Button>
+        {userIcon}
       </div>
     );
   }

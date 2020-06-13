@@ -136,6 +136,7 @@ const factoryTeamData = (team: TeamColor) => {
 
 interface GameDataInput {
   id: string;
+  shortCode: string;
   status: GameStatus;
   // which turn number: 0-10
   activeTurnNumber: number;
@@ -149,6 +150,8 @@ class GameData {
   // game id (for saving)
   @Length(10, 20)
   public id: string;
+  @Length(4, 8)
+  public shortCode: string;
   @IsEnum(GameStatus)
   public status: GameStatus;
   // which turn number: 0-10
@@ -164,26 +167,23 @@ class GameData {
   public debug: boolean;
 
   constructor(data: GameDataInput) {
-    this.id = data.id || this.makeId();
+    this.id = data.id || this.makeId(15);
+    this.shortCode = data.shortCode || this.makeId(5);
     this.status = data.status || 'ENTRY';
     this.activeTurnNumber = data.activeTurnNumber || 0;
-    this.turns = (data.turns && data.turns.map(x => new TurnData(x))) || [];
+    this.turns = (data.turns && data.turns.map((x) => new TurnData(x))) || [];
     this.whiteTeam = data.whiteTeam || factoryTeamData(TeamColor.WHITE);
     this.blackTeam = data.blackTeam || factoryTeamData(TeamColor.BLACK);
     this.errors = [];
     this.debug = false;
   }
 
-  public makeId() {
+  public makeId(length: number) {
     return (
       '' +
-      Math.random()
-        .toString(16)
-        .slice(2) +
-      Math.random()
-        .toString(16)
-        .slice(2)
-    ).substring(0, 15);
+      Math.random().toString(16).slice(2) +
+      Math.random().toString(16).slice(2)
+    ).substring(0, length);
   }
 
   public validate() {

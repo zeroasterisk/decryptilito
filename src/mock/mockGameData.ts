@@ -2,6 +2,7 @@ import { GameData, GameStatus, TeamColor, TurnStatus } from '../logic/gameData';
 
 const mockData = new GameData({
   id: 'mockdata123',
+  shortCode: '1qaz',
   status: GameStatus.ACTIVE,
   // which turn block is active, finished turn #1, about to start turn #2
   activeTurnNumber: 2,
