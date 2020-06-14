@@ -23,10 +23,11 @@ interface PendingGameUser {
   // TODO store more from firebase?
 }
 
-interface PendingGameDataInput {
+export interface PendingGameDataInput {
   id: string;
   shortCode: string;
   status: PendingGameStatus;
+  uids: string[];
   users: PendingGameUser[];
   allocation: PendingGameTeamAllocation;
 }
@@ -44,6 +45,8 @@ export class PendingGameData {
   @ArrayMinSize(2, { message: 'You need at least 2 players per team.' })
   @ArrayMaxSize(10, { message: 'With 10 players on a team, it is too crazy.' })
   public users: PendingGameUser[];
+  // uids of participants
+  public uids: string[];
   // show error
   public errors: ValidationError[];
   public debug: boolean;
@@ -54,7 +57,7 @@ export class PendingGameData {
     this.status = data.status || PendingGameStatus.ENTRY;
     this.allocation = data.allocation || PendingGameTeamAllocation.RANDOM;
     this.users = data.users || [];
-
+    this.uids = data.uids || [];
     this.errors = [];
     this.debug = false;
   }

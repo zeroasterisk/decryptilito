@@ -69,6 +69,9 @@ const AuthAnon: React.FC<AuthProps> = () => {
   // created new user
   const [visible, setVisible] = useState(false);
   const openModel = () => setVisible(true);
+  if (error) {
+    console.error(error, visible);
+  }
 
   // Promise<UserCredential>
   function login(fn: () => Promise<any>) {

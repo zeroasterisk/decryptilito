@@ -6,6 +6,7 @@ import GameLoader from '../pages/GameLoader';
 import GameEntry from '../pages/GameEntry';
 import Home from '../pages/Home';
 import Lobby from '../pages/Lobby';
+import PendingGame from '../pages/PendingGame';
 import Auth from '../pages/Auth';
 import Account from '../pages/Account';
 // import MustLogin from '../pages/MustLogin';
@@ -25,6 +26,9 @@ const routes = {
   // gotcha - storybook routes to this url :/
   '/iframe.html': () => <Home />,
   '/lobby': () => <Lobby />,
+  '/join/:id': ({ id }: HookRouter.QueryParams) => (
+    <PendingGame short_code={id} />
+  ),
 };
 
 const Router: React.FC = () => {

@@ -28,6 +28,8 @@ interface GameDataInput {
   id: string;
   shortCode: string;
   status: GameStatus;
+  // participants
+  uids: string[];
   // which turn number: 0-10
   activeTurnNumber: number;
   turns: TurnData[];
@@ -44,6 +46,8 @@ export class GameData {
   public shortCode: string;
   @IsEnum(GameStatus)
   public status: GameStatus;
+  // participants
+  public uids: string[];
   // which turn number: 0-10
   @IsInt()
   @Min(0)
@@ -64,6 +68,7 @@ export class GameData {
     this.id = data.id || this.makeId(15);
     this.shortCode = data.shortCode || this.makeId(5);
     this.status = data.status || 'ENTRY';
+    this.uids = data.uids || [];
     this.activeTurnNumber = data.activeTurnNumber || 0;
     this.turns = (data.turns && data.turns.map((x) => new TurnData(x))) || [];
     // this.whiteTeam = new TeamData(classToPlain(data.whiteTeam)) || factoryTeamData(TeamColor.WHITE);

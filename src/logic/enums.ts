@@ -36,6 +36,7 @@ export enum PendingGameStatus {
   ENTRY = 'ENTRY',
   READY = 'READY',
   LAUNCHING = 'LAUNCHING',
+  EXPIRED = 'EXPIRED',
 }
 
 export enum PendingGameTeamAllocation {

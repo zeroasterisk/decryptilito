@@ -6,7 +6,7 @@ import './firebase';
 import { useContext } from 'react';
 import { userContext } from './user-context';
 
-import { UserData } from './logic/userData';
+// import { UserData } from './logic/userData';
 
 const provider = new firebase.auth.GoogleAuthProvider();
 

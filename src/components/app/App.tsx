@@ -2,7 +2,6 @@ import React from 'react';
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
-import debug from 'debug';
 
 import 'antd/dist/antd.css';
 import './App.css';
@@ -17,9 +16,7 @@ import { userContext } from '../../user-context';
 
 import UserAuthAvatar from './UserAuthAvatar';
 
-import firebaseConfig from '../../firebase';
-
-const log = debug('app:App');
+import '../../firebase';
 
 const { Header, Footer, Content } = Layout;
 
@@ -49,7 +46,7 @@ const PrivateRoute = ({
 }; */
 
 function App() {
-  if (window && window.name && window.name != 'nodejs') {
+  if (window && !(window.name && window.name === 'nodejs')) {
     console.log('firebase', firebase);
   }
   const [user, initialising, error] = useAuthState(firebase.auth());

@@ -5,6 +5,7 @@ const mockData = new GameData({
   id: 'mockdata123',
   shortCode: '1qaz',
   status: GameStatus.ACTIVE,
+  uids: [],
   // which turn block is active, finished turn #1, about to start turn #2
   activeTurnNumber: 2,
   turns: [

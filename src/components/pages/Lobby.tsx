@@ -1,9 +1,12 @@
 import React from 'react';
 import { navigate } from 'hookrouter';
-import { Button, Card, PageHeader } from 'antd';
+import { Button, Card, PageHeader, Row, Col } from 'antd';
 import { LoginOutlined } from '@ant-design/icons';
 
 import { useSession } from '../../auth';
+
+import ListPendingGames from '../../components/lobby/ListPendingGames';
+import JoinPendingGameForm from '../../components/lobby/JoinPendingGameForm';
 
 // Lobby if authenticated
 // Lobby if anon
@@ -19,12 +22,16 @@ const LobbyAuthenticated: React.FC<LobbyProps> = ({ user }) => {
         className="site-page-header"
         onBack={() => navigate('/', true)}
         title="Lobby"
-        subTitle="Active Games"
+        subTitle="You are not logged in"
       />
-      <Card title="You are not logged in">
-        <p>TODO: list of open games</p>
-        <p>TODO: create a game</p>
-      </Card>
+      <Row gutter={16}>
+        <Col md={8} xs={24}>
+          <JoinPendingGameForm />
+        </Col>
+        <Col md={8} xs={24}>
+          <ListPendingGames />
+        </Col>
+      </Row>
     </div>
   );
 };
