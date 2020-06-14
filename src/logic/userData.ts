@@ -12,7 +12,7 @@ import {
   ValidationError,
 } from 'class-validator';
 
-import { TeamKey } from './gameData';
+import { TeamKey } from './enums';
 
 interface UserDataInput {
   // from firebase

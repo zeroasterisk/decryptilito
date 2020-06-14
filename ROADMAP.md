@@ -9,12 +9,18 @@
 - [-] Firebase
   - [-] Auth / User
     - [ ] Bugfix: Convert UserData -> firebase.User (types, and game logic)
-    - [ ] Bugfix: Convert UserData -> firebase.User (types, and game logic)
+      - `cloneDeep(obj, toPlainObject)`
+    - [ ] Allow anon users
+      - [info](https://firebase.google.com/docs/auth/web/anonymous-auth?hl=en#authenticate-with-firebase-anonymously)
   - [-] Account UI
     - [x] Login (maybe)
     - [x] Logout
     - [ ] Create New User
+  - [ ] Save game data to database
+  - [ ] Save user stats data to database
 - [ ] Games / Lobby
+  - [ ] Add new game (pending join)
+  - [ ] Start game
 - [ ] Find Games based on details: location, interests, etc
 - [ ] Game Details
 - [ ] Robust word picker, low repeats, etc. (functions)

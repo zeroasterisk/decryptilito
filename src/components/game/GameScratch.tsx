@@ -2,7 +2,9 @@ import React from 'react';
 
 import { Col, Row, Skeleton, Tooltip, Typography } from 'antd';
 
-import { GameData, TeamKey, TurnData } from '../../logic/gameData';
+import { TeamKey } from '../../logic/enums';
+import { GameData } from '../../logic/gameData';
+import { TurnData } from '../../logic/turnData';
 import { teamName, teamOppositeName } from '../../logic/gameEngine';
 import { getCluesDetails } from '../../logic/turnEngine';
 import { UserData } from '../../logic/userData';

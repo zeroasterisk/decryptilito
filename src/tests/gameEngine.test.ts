@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 
-import { GameData, TeamKey } from '../logic/gameData';
+import { TeamKey } from '../logic/enums';
+import { GameData } from '../logic/gameData';
 import { UserData } from '../logic/userData';
 
 import { getTeamData, teamName, teamOppositeName } from '../logic/gameEngine';

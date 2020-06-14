@@ -1,10 +1,7 @@
-import {
-  GameData,
-  TeamKey,
-  TeamMember,
-  TurnData,
-  TurnStatus,
-} from './gameData';
+import { TeamKey, TurnStatus } from './enums';
+import { GameData } from './gameData';
+import { TurnData } from './turnData';
+import { TeamMember } from './teamData';
 // import { UserData } from './userData';
 
 import { teamOpposite } from './gameEngine';
@@ -142,11 +139,11 @@ const calculateTurnStatus = (turn: TurnData) => {
   const enteredCluesBothTeams = [
     ...turn.whiteTeam.clues,
     ...turn.blackTeam.clues,
-  ].filter(x => x.length > 0);
+  ].filter((x) => x.length > 0);
   const submittedClues = [
     turn.whiteTeam.cluesSubmitted,
     turn.blackTeam.cluesSubmitted,
-  ].filter(x => x);
+  ].filter((x) => x);
   // no clues, we are in PREPARE -- or ENcryptor have not yet started :/
   if (enteredCluesBothTeams.length === 0) {
     return TurnStatus.PREPARE;
@@ -163,7 +160,7 @@ const calculateTurnStatus = (turn: TurnData) => {
   const submittedGuessWhite = [
     turn.blackTeam.guessedOrderOpponentSubmitted,
     turn.whiteTeam.guessedOrderSelfSubmitted,
-  ].filter(x => x);
+  ].filter((x) => x);
   if (submittedGuessWhite.length === 0) {
     return TurnStatus.DECRYPT_WHITE_CLUES;
   }
@@ -182,7 +179,7 @@ const calculateTurnStatus = (turn: TurnData) => {
   const submittedGuessBlack = [
     turn.blackTeam.guessedOrderOpponentSubmitted,
     turn.blackTeam.guessedOrderSelfSubmitted,
-  ].filter(x => x);
+  ].filter((x) => x);
   if (submittedGuessBlack.length === 0) {
     return TurnStatus.DECRYPT_BLACK_CLUES;
   }
@@ -211,7 +208,7 @@ interface CluesDetails {
 }
 const getCluesDetails = (turn: TurnData, teamkey: TeamKey) => {
   // translate correctOrder into clues
-  return [0, 1, 2, 3].map(index => {
+  return [0, 1, 2, 3].map((index) => {
     const position = index + 1;
     // is this position in correctOrder?
     const orderIndex = turn[teamkey].correctOrder.indexOf(position);

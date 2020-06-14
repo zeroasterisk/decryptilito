@@ -49,7 +49,9 @@ const PrivateRoute = ({
 }; */
 
 function App() {
-  console.log('firebase', firebase);
+  if (window && window.name && window.name != 'nodejs') {
+    console.log('firebase', firebase);
+  }
   const [user, initialising, error] = useAuthState(firebase.auth());
   // console.log('user', user, 'initialising', initialising, 'error', error);
 

@@ -1,6 +1,7 @@
 import { cloneDeep } from 'lodash';
 
-import { GameData, GameStatus, TeamColor, TurnStatus } from '../logic/gameData';
+import { GameStatus, TeamColor, TurnStatus } from '../logic/enums';
+import { GameData } from '../logic/gameData';
 
 import mockGameData from './mockGameData';
 

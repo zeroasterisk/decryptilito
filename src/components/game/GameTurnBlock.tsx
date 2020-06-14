@@ -23,7 +23,8 @@ import {
 
 import TimeoutClock from '../timeout/TimeoutClock';
 
-import { GameData, TeamKey, TurnStatus } from '../../logic/gameData';
+import { TeamKey, TurnStatus } from '../../logic/enums';
+import { GameData } from '../../logic/gameData';
 import { UserData } from '../../logic/userData';
 
 import { teamName, teamOppositeName } from '../../logic/gameEngine';

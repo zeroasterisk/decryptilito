@@ -1,4 +1,5 @@
-import { GameData, GameStatus, TeamColor, TurnStatus } from '../logic/gameData';
+import { GameStatus, TeamColor, TurnStatus } from '../logic/enums';
+import { GameData } from '../logic/gameData';
 
 const mockData = new GameData({
   id: 'mockdata123',

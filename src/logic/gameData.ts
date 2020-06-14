@@ -1,3 +1,4 @@
+import { classToPlain } from 'class-transformer';
 import {
   // Contains,
   // IsDate,
@@ -6,133 +7,22 @@ import {
   Length,
   Max,
   Min,
+  MinLength,
+  MaxLength,
+  ArrayMinSize,
+  ArrayMaxSize,
+  ValidateNested,
   validateSync,
   ValidationError,
 } from 'class-validator';
 
 // https://github.com/typestack/class-validator
 
-// export as namespace GameData;
+import { GameStatus, TeamColor } from './enums';
 
-enum TeamKey {
-  blackTeam = 'blackTeam',
-  whiteTeam = 'whiteTeam',
-}
-enum TeamColor {
-  BLACK = 'BLACK',
-  WHITE = 'WHITE',
-}
-enum GameStatus {
-  ENTRY = 'ENTRY',
-  ACTIVE = 'ACTIVE',
-  COMPLETE = 'COMPLETE',
-}
-// active_turn_phase: "prepare", // prepare, encrypt, guess_order_white_team, guess_order_black_team
+import { TeamData } from './teamData';
 
-// this should cover all phases of a single turn (including pauses)
-// NOTE: turn is global, so each combination must be accounted for
-enum TurnStatus {
-  // get the encryptor setup
-  PREPARE = 'PREPARE',
-  // encryptor is putting in clues
-  ENCRYPT = 'ENCRYPT',
-  ENCRYPT_PARTIAL = 'ENCRYPT_PARTIAL',
-  // decryptors are guessing at order (one team at a time)
-  DECRYPT_WHITE_CLUES = 'DECRYPT_WHITE_CLUES',
-  DECRYPT_WHITE_CLUES_PARTIAL = 'DECRYPT_WHITE_CLUES_PARTIAL',
-  SCORING_WHITE = 'SCORING_WHITE',
-  DECRYPT_BLACK_CLUES = 'DECRYPT_BLACK_CLUES',
-  DECRYPT_BLACK_CLUES_PARTIAL = 'DECRYPT_BLACK_CLUES_PARTIAL',
-  SCORING_BLACK = 'SCORING_BLACK',
-  // done
-  DONE = 'DONE',
-}
-
-// declare interface GameUi {
-//     // which team UI am I showing?
-//     public team: TeamColor;
-// }
-
-export interface TeamMember {
-  // public details about each team member
-  name: string;
-  id: string;
-  // TODO store more from firebase?
-}
-
-export interface TurnTeamData {
-  encryptor: TeamMember;
-  correctOrder: number[];
-  correctOrderHidden?: boolean; // only matter while encrypting
-  clues: string[];
-  cluesSubmitted?: boolean;
-  guessedOrderOpponent: number[];
-  guessedOrderOpponentSubmitted?: boolean;
-  guessedOrderSelf: number[];
-  guessedOrderSelfSubmitted?: boolean;
-  interception?: boolean;
-  miscommunication?: boolean;
-}
-export interface TurnDataInput {
-  id: number;
-  status: TurnStatus;
-  timeoutSecondsRemaining: number;
-  whiteTeam: TurnTeamData;
-  blackTeam: TurnTeamData;
-}
-
-class TurnData {
-  @IsInt()
-  @Min(0)
-  @Max(10)
-  public id: number;
-  @IsEnum(TurnStatus)
-  public status: TurnStatus;
-  @IsInt()
-  @Min(0)
-  @Max(60)
-  public timeoutSecondsRemaining: number;
-  public whiteTeam: TurnTeamData;
-  public blackTeam: TurnTeamData;
-  public errors: ValidationError[];
-  constructor(data: TurnDataInput) {
-    this.id = data.id || 0;
-    this.status = data.status || TurnStatus.PREPARE;
-    this.timeoutSecondsRemaining = data.timeoutSecondsRemaining || 0;
-    this.whiteTeam = data.whiteTeam || {};
-    this.blackTeam = data.blackTeam || {};
-    this.errors = [];
-  }
-  // public validate() {
-  //   this.errors = validateSync(this, { validationError: { target: false } });
-  //   if (this.errors.length > 0) {
-  //     // TODO switch to better logging
-  //     console.error(this.errors);
-  //   }
-  //   return this.errors.length === 0;
-  // }
-}
-
-interface TeamData {
-  // team data storage block
-  teamColor: TeamColor;
-  teamName: string;
-  // TODO, omit in favor of CSV stringify from teamMembers
-  teamMemberNames: string;
-
-  teamMembers: TeamMember[];
-  words: string[]; // should be exactly 4
-}
-
-const factoryTeamData = (team: TeamColor) => {
-  return {
-    team,
-    teamName: '',
-    teamMembers: [],
-    words: [],
-    turns: [],
-  };
-};
+import { TurnData } from './turnData';
 
 interface GameDataInput {
   id: string;
@@ -146,7 +36,7 @@ interface GameDataInput {
   blackTeam: TeamData;
 }
 
-class GameData {
+export class GameData {
   // game id (for saving)
   @Length(10, 20)
   public id: string;
@@ -159,10 +49,14 @@ class GameData {
   @Min(0)
   @Max(10)
   public activeTurnNumber: number;
+  @ValidateNested({ each: true })
   public turns: TurnData[];
   // team data for each team
+  @ValidateNested()
   public whiteTeam: TeamData;
+  @ValidateNested()
   public blackTeam: TeamData;
+  // show error
   public errors: ValidationError[];
   public debug: boolean;
 
@@ -172,8 +66,19 @@ class GameData {
     this.status = data.status || 'ENTRY';
     this.activeTurnNumber = data.activeTurnNumber || 0;
     this.turns = (data.turns && data.turns.map((x) => new TurnData(x))) || [];
-    this.whiteTeam = data.whiteTeam || factoryTeamData(TeamColor.WHITE);
-    this.blackTeam = data.blackTeam || factoryTeamData(TeamColor.BLACK);
+    // this.whiteTeam = new TeamData(classToPlain(data.whiteTeam)) || factoryTeamData(TeamColor.WHITE);
+    // this.blackTeam = new TeamData(classToPlain(data.blackTeam)) || factoryTeamData(TeamColor.BLACK);
+    this.whiteTeam =
+      new TeamData(data.whiteTeam) ||
+      new TeamData({
+        teamColor: TeamColor.WHITE,
+      });
+    this.blackTeam =
+      new TeamData(data.blackTeam) ||
+      new TeamData({
+        teamColor: TeamColor.BLACK,
+      });
+
     this.errors = [];
     this.debug = false;
   }
@@ -188,10 +93,10 @@ class GameData {
 
   public validate() {
     this.errors = validateSync(this, { validationError: { target: false } });
-    if (this.errors.length > 0) {
-      // TODO switch to better logging
-      console.error(this.errors);
-    }
+    // if (this.errors.length > 0) {
+    //   // TODO switch to better logging
+    //   console.error(this.errors);
+    // }
     return this.errors.length === 0;
   }
 
@@ -203,13 +108,3 @@ class GameData {
 //         height?: number;
 //     }
 // }
-
-export {
-  GameData,
-  TurnData,
-  // enums
-  TeamKey,
-  TeamColor,
-  TurnStatus,
-  GameStatus,
-};

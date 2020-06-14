@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { TeamKey } from '../logic/gameData';
+import { TeamKey } from '../logic/enums';
 import { UserData } from '../logic/userData';
 
 describe('UserData', () => {

@@ -1,7 +1,9 @@
 import { expect } from 'chai';
 import { cloneDeep } from 'lodash';
 
-import { GameData, TeamKey, TurnData, TurnStatus } from '../logic/gameData';
+import { TeamKey, TurnStatus } from '../logic/enums';
+import { GameData } from '../logic/gameData';
+import { TurnData } from '../logic/turnData';
 // import { UserData } from '../logic/userData';
 
 import mockGameData from '../mock/mockGameData';
@@ -166,7 +168,7 @@ describe('TurnEngine create next turn', () => {
   it('getNextEncryptor gets the next "least answers" encryptor', () => {
     // fake all encryptors as Jerry for the black team
     const game = new GameData(cloneDeep(mockGameDataTurn4));
-    game.turns = game.turns.map(t => {
+    game.turns = game.turns.map((t) => {
       t.blackTeam.encryptor = { name: 'Jerry', id: '4444' };
       return t;
     });

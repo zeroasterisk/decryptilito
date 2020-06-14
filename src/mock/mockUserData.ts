@@ -1,4 +1,4 @@
-import { TeamKey } from '../logic/gameData';
+import { TeamKey } from '../logic/enums';
 import { UserData } from '../logic/userData';
 
 const mockData = new UserData({

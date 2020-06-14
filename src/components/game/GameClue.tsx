@@ -1,14 +1,6 @@
 import React from 'react';
 
-import {
-  Col,
-  Input,
-  Row,
-  Select,
-  Skeleton,
-  Tooltip,
-  Typography,
-} from 'antd';
+import { Col, Input, Row, Select, Skeleton, Tooltip, Typography } from 'antd';
 import {
   ClockCircleOutlined,
   CheckCircleOutlined,
@@ -16,7 +8,8 @@ import {
   QuestionCircleOutlined,
 } from '@ant-design/icons';
 
-import { TeamKey, TurnTeamData } from '../../logic/gameData';
+import { TeamKey } from '../../logic/enums';
+import { TurnTeamData } from '../../logic/turnData';
 import { teamName, teamOppositeName } from '../../logic/gameEngine';
 
 const { Text } = Typography;
@@ -50,7 +43,7 @@ const ColOpponentGuess: React.FC<ColOpponentGuessProps> = ({
     <Col xs={3} className="Order teamOwn">
       {future || lock ? (
         <Text disabled>
-          {lock ? <LockOutlined /> : <ClockCircleOutlined /> }
+          {lock ? <LockOutlined /> : <ClockCircleOutlined />}
         </Text>
       ) : (
         children
@@ -135,7 +128,9 @@ const OrderSelect: React.FC<OrderSelectProps> = ({ disabled, value }) => {
         </Text>
       </Option>
       {options.map((val, index) => (
-        <Option key={`option${val}`} value={val}>{val}</Option>
+        <Option key={`option${val}`} value={val}>
+          {val}
+        </Option>
       ))}
     </Select>
   );
