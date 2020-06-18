@@ -71,7 +71,7 @@ function App() {
   return (
     <userContext.Provider
       value={{
-        user: user,
+        user,
         initialising,
       }}
     >

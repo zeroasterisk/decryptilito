@@ -40,6 +40,12 @@ export enum PendingGameStatus {
 }
 
 export enum PendingGameTeamAllocation {
+  PICK_OR_RANDOM = 'Pick if you wish, Random Balance from Free Agents',
+  FORCED_PICK = 'Players Must Pick Teams',
+  FORCED_RANDOM = 'Forced Random',
+}
+
+export enum NextGameTeamAllocation {
   RANDOM = 'Random',
   PICK = 'Each Player Picks',
   CHANGETEAMS = 'Random (avoid repeat teams)',
