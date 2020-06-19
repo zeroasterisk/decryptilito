@@ -43,7 +43,9 @@
   background-color: #333;
   color: #eee;
 }
-.BLACKTeam .ant-card-actions {
+.BLACKTeam .ant-card-actions,
+.BLACKTeam .ant-list-header,
+.BLACKTeam .ant-list-footer {
   background-color: #444;
   color: #eee;
 }

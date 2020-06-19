@@ -62,3 +62,15 @@
   }
 }
 */
+
+/* copy fomr game.css */
+.BLACKTeam .ant-card-actions,
+.BLACKTeam .ant-list-header,
+.BLACKTeam .ant-list-footer {
+  background-color: #333;
+  color: #eee;
+}
+.BLACKTeam .ant-list-item {
+  background-color: #444;
+  color: #eee;
+}

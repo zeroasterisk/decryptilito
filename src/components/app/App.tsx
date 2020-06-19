@@ -1,7 +1,4 @@
 import React from 'react';
-import * as firebase from 'firebase/app';
-import 'firebase/firestore';
-import 'firebase/auth';
 
 import 'antd/dist/antd.css';
 import './App.css';
@@ -16,7 +13,8 @@ import { userContext } from '../../user-context';
 
 import UserAuthAvatar from './UserAuthAvatar';
 
-import '../../firebase';
+import firebase from '../../firebase';
+import '../../firebase/initialize';
 
 const { Header, Footer, Content } = Layout;
 

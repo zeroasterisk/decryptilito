@@ -9,21 +9,13 @@
  */
 
 import React from 'react';
-import * as firebase from 'firebase/app';
-import 'firebase/firestore';
-import 'firebase/auth';
 
 import { navigate } from 'hookrouter';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { Alert, Badge, Button, Card, List, Tag } from 'antd';
-import {
-  CheckCircleTwoTone,
-  ClockCircleOutlined,
-  LoadingOutlined,
-  PlusCircleOutlined,
-} from '@ant-design/icons';
+import { PlusCircleOutlined } from '@ant-design/icons';
 
-import { PendingGameDataInput } from '../../logic/pendingGameData';
+import firebase from '../../firebase';
 
 interface ListPendingGamesProps {
   user?: firebase.User;

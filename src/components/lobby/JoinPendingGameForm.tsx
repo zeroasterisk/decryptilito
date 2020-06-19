@@ -1,6 +1,5 @@
 import React from 'react';
 import { Card, Form, Button, Input } from 'antd';
-import { PlusCircleOutlined } from '@ant-design/icons';
 import SpyIcon from '../icons/spy';
 
 interface JoinPendingGameFormProps {

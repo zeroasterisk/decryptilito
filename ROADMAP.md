@@ -18,8 +18,9 @@
     - [ ] Create New User
   - [ ] Save game data to database
   - [ ] Save user stats data to database
+  - [ ] Add user presence [guide](https://firebase.google.com/docs/firestore/solutions/presence)
 - [ ] Games / Lobby
-  - [ ] Add new game (pending join)
+  - [x] Add new game (pending join)
   - [ ] Start game
 - [ ] Find Games based on details: location, interests, etc
 - [ ] Game Details

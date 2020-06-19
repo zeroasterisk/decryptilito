@@ -11,121 +11,156 @@
  */
 
 import React from 'react';
-import * as firebase from 'firebase/app';
-import 'firebase/firestore';
-import 'firebase/auth';
 
-import { navigate } from 'hookrouter';
-import { useCollection } from 'react-firebase-hooks/firestore';
-import { Alert, Badge, Button, Card, List, Tag } from 'antd';
-import {
-  CheckCircleTwoTone,
-  ClockCircleOutlined,
-  LoadingOutlined,
-  PlusCircleOutlined,
-} from '@ant-design/icons';
+import { Button, Col, Row, Tag, List } from 'antd';
+import { UsergroupAddOutlined } from '@ant-design/icons';
 
 import {
-  PendingGameDataInput,
   PendingGameData,
   PendingGameUser,
-  fnAddUserToTeam,
+  addUserToTeam,
 } from '../../logic/pendingGameData';
 
-import { fnAddUserToTeamAndUpdate } from '../pages/PendingGame';
+import SpyIcon from '../icons/spy';
 
-// ui for each list
+import firebase from '../../firebase';
 
-interface PendingGameUserListProps {
-  user: firebase.User;
-  users: PendingGameUser[];
-  title: string;
-  subtitle?: string;
-  joinButton: React.ReactNode;
-}
+import PendingGameUserItem from './PendingGameUserItem';
+import PendingGameUserItemEditable from './PendingGameUserItemEditable';
 
-const PendingGameUserList: React.FC<PendingGameUserListProps> = ({
-  title,
-  subtitle,
-  users,
-  user,
-  joinButton,
-}) => {
-  return (
-    <List
-      bordered
-      dataSource={users}
-      header={title}
-      footer={joinButton}
-      renderItem={(userInList) => (
-        <List.Item>
-          <Badge status={userInList.id === user.uid ? 'success' : 'default'} />
-          <span>{userInList.name}</span>
-        </List.Item>
-      )}
-    />
-  );
-};
+// helper function, used to determine if a user is in a specific list
+const isUserInList = (user: firebase.User, list: PendingGameUser[]) =>
+  list.findIndex(({ id }: { id: string }) => id === user.uid) !== -1;
+
+// used to update the name for the currently logged in use (injected into the funciton)
+export type onChangeUserDisplayNameType = (name: string) => void;
+// addUserToTeam and save in firebase
+export type addUserToTeamAndUpdateType = (
+  team: string,
+  user: firebase.User,
+  data: PendingGameData,
+) => void;
 
 // main ui, all 3 lists
-
 interface PendingGameUserListsProps {
   user: firebase.User;
   pendingGame: PendingGameData;
-  addUserToTeamAndUpdate: fnAddUserToTeamAndUpdate;
 }
-
 const PendingGameUserLists: React.FC<PendingGameUserListsProps> = ({
   user,
   pendingGame,
-  addUserToTeamAndUpdate,
 }) => {
+  const addUserToTeamAndUpdate: addUserToTeamAndUpdateType = (
+    team,
+    user,
+    data,
+  ) => {
+    data = addUserToTeam(team, user, data);
+    data.update();
+  };
+  const onChangeUserDisplayName: onChangeUserDisplayNameType = (newName) => {
+    // update references to this user...
+    const mutate = ({ id, name }: PendingGameUser) => {
+      if (id === user.uid) return { id, name: newName };
+      return { id, name };
+    };
+    pendingGame.whiteTeam = pendingGame.whiteTeam.map(mutate);
+    pendingGame.blackTeam = pendingGame.blackTeam.map(mutate);
+    pendingGame.freeAgents = pendingGame.freeAgents.map(mutate);
+    pendingGame.update();
+    // update the currentUser.displayName (for next time)
+    user.updateProfile({ displayName: newName });
+    return;
+  };
+
+  // for each item in each list, simple render function.
+  const renderItem = (userInList: PendingGameUser) => (
+    <List.Item>
+      {userInList.id === user.uid ? (
+        <PendingGameUserItemEditable
+          user={user}
+          userInList={userInList}
+          onChangeUserDisplayName={onChangeUserDisplayName}
+        />
+      ) : (
+        <PendingGameUserItem userInList={userInList} />
+      )}
+    </List.Item>
+  );
   return (
-    <div>
-      <PendingGameUserList
-        user={user}
-        users={pendingGame.whiteTeam || []}
-        title="White Team"
-        joinButton={
-          <Button
-            onClick={() =>
-              addUserToTeamAndUpdate('whiteTeam', user, pendingGame)
-            }
-          >
-            Join
-          </Button>
-        }
-      />
-      <PendingGameUserList
-        user={user}
-        users={pendingGame.blackTeam || []}
-        title="Black Team"
-        joinButton={
-          <Button
-            onClick={() =>
-              addUserToTeamAndUpdate('blackTeam', user, pendingGame)
-            }
-          >
-            Join
-          </Button>
-        }
-      />
-      <PendingGameUserList
-        user={user}
-        users={pendingGame.freeAgents || []}
-        title="Free Agents"
-        subtitle="Will be assigned randomly to balance team numbers."
-        joinButton={
-          <Button
-            onClick={() =>
-              addUserToTeamAndUpdate('freeAgents', user, pendingGame)
-            }
-          >
-            Wait for Assignment
-          </Button>
-        }
-      />
-    </div>
+    <Row gutter={16}>
+      <Col sm={24} md={12} lg={8} className="WHITETeam">
+        <List
+          bordered
+          dataSource={pendingGame.whiteTeam || []}
+          header="White Team"
+          footer={
+            isUserInList(user, pendingGame.whiteTeam) ? (
+              <Tag icon={<SpyIcon />} color="#444">
+                You are on the White Team
+              </Tag>
+            ) : (
+              <Button
+                icon={<UsergroupAddOutlined />}
+                onClick={() =>
+                  addUserToTeamAndUpdate('whiteTeam', user, pendingGame)
+                }
+              >
+                Join the White Team
+              </Button>
+            )
+          }
+          renderItem={renderItem}
+        />
+      </Col>
+      <Col sm={24} md={12} lg={8} className="BLACKTeam">
+        <List
+          bordered
+          dataSource={pendingGame.blackTeam || []}
+          header="Black Team"
+          footer={
+            isUserInList(user, pendingGame.blackTeam) ? (
+              <Tag icon={<SpyIcon />} color="#444">
+                You are on the Black Team
+              </Tag>
+            ) : (
+              <Button
+                icon={<UsergroupAddOutlined />}
+                onClick={() =>
+                  addUserToTeamAndUpdate('blackTeam', user, pendingGame)
+                }
+              >
+                Join the Black Team
+              </Button>
+            )
+          }
+          renderItem={renderItem}
+        />
+      </Col>
+      <Col sm={24} md={12} lg={8} className="FREEAGENTS">
+        <List
+          bordered
+          dataSource={pendingGame.freeAgents || []}
+          header="Free Agents"
+          // subtitle="Will be assigned randomly to balance team numbers."
+          footer={
+            isUserInList(user, pendingGame.freeAgents) ? (
+              <Tag>You are on a free agent</Tag>
+            ) : (
+              <Button
+                icon={<UsergroupAddOutlined />}
+                onClick={() =>
+                  addUserToTeamAndUpdate('freeAgents', user, pendingGame)
+                }
+              >
+                Join the Black Team
+              </Button>
+            )
+          }
+          renderItem={renderItem}
+        />
+      </Col>
+    </Row>
   );
 };
 

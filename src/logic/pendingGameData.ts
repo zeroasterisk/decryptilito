@@ -1,22 +1,19 @@
-import fromPairs from 'lodash.frompairs';
 import sortBy from 'lodash.sortby';
 
 import {
   // Contains,
   // IsDate,
-  ArrayMaxSize,
-  ArrayMinSize,
+  // ArrayMaxSize,
+  // ArrayMinSize,
   IsEnum,
   Length,
   validateSync,
   ValidationError,
 } from 'class-validator';
 
-import {
-  TeamColor,
-  PendingGameStatus,
-  PendingGameTeamAllocation,
-} from './enums';
+import firebase, { updatePendingGame } from '../firebase';
+
+import { PendingGameStatus, PendingGameTeamAllocation } from './enums';
 
 export interface PendingGameUser {
   // public details about each team member
@@ -85,6 +82,9 @@ export class PendingGameData {
     // }
     return this.errors.length === 0;
   }
+  public update() {
+    return updatePendingGame(this);
+  }
 }
 
 // Firestore data converter
@@ -97,16 +97,6 @@ const toFirestoreUserList: fnToFirestoreUserList = (list: PendingGameUser[]) =>
   );
 export const pendingGameDataConverter = {
   toFirestore: (data: PendingGameData) => {
-    console.log('toFirestore trigger...', {
-      id: data.id,
-      shortCode: data.shortCode,
-      status: data.status,
-      allocation: data.allocation,
-      whiteTeam: toFirestoreUserList(data.whiteTeam),
-      blackTeam: toFirestoreUserList(data.blackTeam),
-      freeAgents: toFirestoreUserList(data.freeAgents),
-      uids: data.uids.sort(),
-    });
     return {
       id: data.id,
       shortCode: data.shortCode,

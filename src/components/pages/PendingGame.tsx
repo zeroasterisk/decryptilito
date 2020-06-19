@@ -10,54 +10,18 @@
  */
 import React from 'react';
 import { classToPlain } from 'class-transformer';
-import * as firebase from 'firebase/app';
-import 'firebase/firestore';
-import 'firebase/auth';
 import { navigate } from 'hookrouter';
 import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 // import { useAuthState } from 'react-firebase-hooks/auth';
 import { Card, PageHeader, Tag } from 'antd';
 
-import {
-  PendingGameData,
-  pendingGameDataConverter,
-  addUserToTeam,
-  fnAddUserToTeam,
-} from '../../logic/pendingGameData';
+import { PendingGameData } from '../../logic/pendingGameData';
+
+import firebase from '../../firebase';
 
 import { userContext } from '../../user-context';
 import PendingGameNotFound from '../lobby/PendingGameNotFound';
 import PendingGameCard from '../lobby/PendingGameCard';
-
-// helper to update a pending game, saving up to firebase
-export type fnUpdatePendingGame = (pendingGame: PendingGameData) => void;
-const updatePendingGame: fnUpdatePendingGame = (
-  pendingGame: PendingGameData,
-) => {
-  console.log('about to updatePendingGame', pendingGame);
-  console.dir(pendingGame);
-  firebase
-    .firestore()
-    .collection('PendingGames')
-    .doc(pendingGame.id)
-    .withConverter(pendingGameDataConverter)
-    .set(pendingGame)
-    .then(() => console.log('updated', pendingGame))
-    .catch((error: any) => console.error('update failed', error, pendingGame));
-};
-export type fnAddUserToTeamAndUpdate = (
-  team: string,
-  user: firebase.User,
-  data: PendingGameData,
-) => void;
-// functional version of addUserToTeamAndUpdate
-export const addUserToTeamAndUpdate: fnAddUserToTeamAndUpdate = (
-  team: string,
-  user: firebase.User,
-  data: PendingGameData,
-) => {
-  updatePendingGame(addUserToTeam(team, user, data));
-};
 
 // placeholder ui while loading
 interface PendingGameLoadingProps {
@@ -112,19 +76,8 @@ const PendingGameSearchByShortCode: React.FC<PendingGameSearchByShortCodeProps> 
   }
   // we only care about the first, single PendingGames found with this short code.
   const id = value.docs[0].id;
-  // console.log('found by shortCode', 'about to load by doc', `firebase.firestore().doc('PendingGames/${id}')`);
   return <PendingGameLoadDoc id={id} />;
 };
-
-// functionality
-// const updateDocWithPendingGame = (user: firebase.User, doc: firebase.DocumentData, pendingGame: PendingGameData)  => {
-//
-// };
-//
-// // update the PendingGame to set the user in question, into the correct slot
-// const updateDocSelfToUserList = (user: firebase.User, doc: firebase.DocumentData, userListDestination: string) => {
-//   // doc.set()
-// };
 
 // load a single PendingGame by id (After search by shortCode returned the ID)
 interface PendingGameLoadDocProps {
@@ -146,12 +99,12 @@ const PendingGameLoadDoc: React.FC<PendingGameLoadDocProps> = ({ id }) => {
     console.log('Did not return PendingGames doc value', value, loading, error);
     return <PendingGameNotFound />;
   }
-  console.log('doc', value);
   const pendingGameData = value.data();
   if (!(pendingGameData && pendingGameData.shortCode)) {
     return <PendingGameLoading reason="Loading Pending Game x2" />;
   }
   pendingGameData.id = id;
+  // TODO instead of forcing the firebase data into the PendingGameData class, instead
   const pendingGame = new PendingGameData(classToPlain(pendingGameData));
   if (!(pendingGame && pendingGame.id)) {
     console.log(
@@ -171,12 +124,7 @@ const PendingGameLoadDoc: React.FC<PendingGameLoadDocProps> = ({ id }) => {
       <userContext.Consumer>
         {({ user }) =>
           user ? (
-            <PendingGameCard
-              pendingGame={pendingGame}
-              user={user}
-              updatePendingGame={updatePendingGame}
-              addUserToTeamAndUpdate={addUserToTeamAndUpdate}
-            />
+            <PendingGameCard pendingGame={pendingGame} user={user} />
           ) : (
             <PendingGameLoading reason="Loading User Conext" />
           )

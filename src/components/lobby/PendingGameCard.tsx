@@ -1,24 +1,17 @@
 import React from 'react';
-import { Button, Card, Form, Input, PageHeader, Tag, Result } from 'antd';
+import { Button, Card, Tag } from 'antd';
+
 import { PendingGameData } from '../../logic/pendingGameData';
 import PendingGameUserLists from './PendingGameUserLists';
-import {
-  fnUpdatePendingGame,
-  fnAddUserToTeamAndUpdate,
-} from '../pages/PendingGame';
 
 // load a pendingGame Card
 interface PendingGameCardProps {
   user: firebase.User;
   pendingGame: PendingGameData;
-  updatePendingGame: fnUpdatePendingGame;
-  addUserToTeamAndUpdate: fnAddUserToTeamAndUpdate;
 }
 const PendingGameCard: React.FC<PendingGameCardProps> = ({
   user,
   pendingGame,
-  updatePendingGame,
-  addUserToTeamAndUpdate,
 }) => {
   return (
     <div>
@@ -29,11 +22,7 @@ const PendingGameCard: React.FC<PendingGameCardProps> = ({
         <p>TODO edit shortCode</p>
         <p>TODO join game if not already joined / edit name</p>
         <p>TODO list users, group by allocation</p>
-        <PendingGameUserLists
-          user={user}
-          pendingGame={pendingGame}
-          addUserToTeamAndUpdate={addUserToTeamAndUpdate}
-        />
+        <PendingGameUserLists user={user} pendingGame={pendingGame} />
         <p>TODO status: pending, ready --> action button</p>
         <Button>todo</Button>
       </Card>
