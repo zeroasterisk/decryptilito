@@ -4,15 +4,15 @@ import { expect } from 'chai';
 import { GameData, GameStatus, TurnStatus } from '../logic/gameData';
 import mockGameData from '../mock/mockGameData';
 
-import * as firebase from 'firebase/app';
-import 'firebase/firestore';
-import 'firebase/auth';
+// import * as firebase from 'firebase/app';
+// import 'firebase/firestore';
+// import 'firebase/auth';
+import firebase from '../firebase';
+import firebaseConfig from '../firebase/config';
 
-import firebaseConfig from '../firebase';
-
-// beforeAll(() => {
-//   return firebase.initializeApp(firebaseConfig);
-// });
+beforeAll(() => {
+  return firebase.initializeApp(firebaseConfig);
+});
 
 describe('Firebase Config', () => {
   it('exposes databaseURL', () => {

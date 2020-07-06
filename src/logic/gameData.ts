@@ -24,7 +24,7 @@ import { TeamData } from './teamData';
 
 import { TurnData } from './turnData';
 
-interface GameDataInput {
+export interface GameDataInput {
   id: string;
   shortCode: string;
   status: GameStatus;

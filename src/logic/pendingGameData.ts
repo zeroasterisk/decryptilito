@@ -13,7 +13,14 @@ import {
 
 import firebase, { updatePendingGame } from '../firebase';
 
-import { PendingGameStatus, PendingGameTeamAllocation } from './enums';
+import {
+  TeamColor,
+  GameStatus,
+  PendingGameStatus,
+  PendingGameTeamAllocation,
+} from './enums';
+
+import { GameDataInput } from './gameData';
 
 export interface PendingGameUser {
   // public details about each team member
@@ -34,6 +41,14 @@ export interface PendingGameDataInput {
   freeAgents?: PendingGameUser[];
   allocation?: PendingGameTeamAllocation;
 }
+
+const makeId = (length: number) =>
+  (
+    '' +
+    Math.random().toString(16).slice(2) +
+    Math.random().toString(16).slice(2) +
+    Math.random().toString(16).slice(2)
+  ).substring(0, length);
 
 export class PendingGameData {
   // game id (for saving)
@@ -57,8 +72,8 @@ export class PendingGameData {
   public debug: boolean;
 
   constructor(data: PendingGameDataInput) {
-    this.id = data.id || this.makeId(15);
-    this.shortCode = data.shortCode || this.makeId(5);
+    this.id = data.id || makeId(15);
+    this.shortCode = data.shortCode || makeId(5);
     this.status = data.status || PendingGameStatus.ENTRY;
     this.allocation =
       data.allocation || PendingGameTeamAllocation.PICK_OR_RANDOM;
@@ -70,14 +85,6 @@ export class PendingGameData {
     this.uids = data.uids || [];
     this.errors = [];
     this.debug = false;
-  }
-
-  public makeId(length: number) {
-    return (
-      '' +
-      Math.random().toString(16).slice(2) +
-      Math.random().toString(16).slice(2)
-    ).substring(0, length);
   }
 
   public validate() {
@@ -124,12 +131,12 @@ export const pendingGameDataConverter = {
 };
 
 // add a user to the PendingGame
-export type fnAddUserToTeam = (
+export type addUserToTeamType = (
   team: string,
   user: firebase.User,
   data: PendingGameData,
 ) => PendingGameData;
-export const addUserToTeam: fnAddUserToTeam = (
+export const addUserToTeam: addUserToTeamType = (
   team: string,
   user: firebase.User,
   data: PendingGameData,
@@ -153,4 +160,70 @@ export const addUserToTeam: fnAddUserToTeam = (
     data.freeAgents.push(newUser);
   }
   return data;
+};
+
+// what is the reason a game is not ready to launch (or it is READY)
+export type whatElseIsNeededToLaunchType = (data: PendingGameData) => string;
+export const whatElseIsNeededToLaunch: whatElseIsNeededToLaunchType = (
+  data: PendingGameData,
+) => {
+  const validUser = ({ id }: { id: string }) => id && id.length > 1;
+  const whiteTeam = data.whiteTeam.filter(validUser).length;
+  const blackTeam = data.blackTeam.filter(validUser).length;
+  const freeAgents = data.freeAgents.filter(validUser).length;
+  if (whiteTeam + blackTeam + freeAgents < 4) {
+    return 'You have less than 4 agents.  Find more players.';
+  }
+  if (whiteTeam > blackTeam + freeAgents + 1) {
+    return 'The white team has too many agents.';
+  }
+  if (blackTeam > whiteTeam + freeAgents + 1) {
+    return 'The black team has too many agents.';
+  }
+  return 'READY';
+};
+
+// convert a pending game into a real game
+// relying on you to have done: data.status = PendingGameStatus.LAUNCHING;
+// relying on a subsequent function to create the words and setup the 1st turn
+export type buildGameType = (data: PendingGameData) => GameDataInput;
+export const buildGame: buildGameType = (data: PendingGameData) => {
+  const validUser = ({ id }: { id: string }) => id && id.length > 1;
+  const whiteTeam = data.whiteTeam.filter(validUser);
+  const blackTeam = data.blackTeam.filter(validUser);
+  const freeAgents = data.freeAgents.filter(validUser);
+  while (freeAgents.length > 0) {
+    const agent = freeAgents.pop();
+    if (agent) {
+      if (whiteTeam.length < blackTeam.length) {
+        whiteTeam.push(agent);
+      } else {
+        blackTeam.push(agent);
+      }
+    }
+  }
+  const gameData = {
+    id: makeId(16),
+    shortCode: data.shortCode,
+    status: GameStatus.ENTRY,
+    uids: data.uids,
+    activeTurnNumber: 1,
+    turns: [],
+    // team data
+    whiteTeam: {
+      teamColor: TeamColor.WHITE,
+      teamName: data.whiteTeamName,
+      teamMemberNames: whiteTeam.map(({ name }) => name).join(', '),
+      teamMembers: whiteTeam,
+      words: [],
+    },
+    blackTeam: {
+      teamColor: TeamColor.BLACK,
+      teamName: data.blackTeamName,
+      teamMemberNames: blackTeam.map(({ name }) => name).join(', '),
+      teamMembers: blackTeam,
+      words: [],
+    },
+  };
+  return gameData;
 };

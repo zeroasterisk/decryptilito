@@ -1,7 +1,11 @@
 import React from 'react';
-import { Button, Card, Tag, Typography } from 'antd';
+import { Button, Card, Typography } from 'antd';
+import { SecurityScanOutlined } from '@ant-design/icons';
 
-import { PendingGameData } from '../../logic/pendingGameData';
+import {
+  PendingGameData,
+  whatElseIsNeededToLaunch,
+} from '../../logic/pendingGameData';
 import PendingGameUserLists from './PendingGameUserLists';
 import PendingGameAdminMenu from './PendingGameAdminMenu';
 
@@ -18,9 +22,26 @@ const PendingGameCard: React.FC<PendingGameCardProps> = ({
   user,
   pendingGame,
 }) => {
+  const nextStep = whatElseIsNeededToLaunch(pendingGame);
   return (
     <div>
-      <Card title="Game getting ready...">
+      <Card
+        title={nextStep === 'READY' ? 'The game is ready!' : 'Get Ready...'}
+        extra={
+          nextStep === 'READY' ? (
+            <Button
+              type="primary"
+              shape="round"
+              size="large"
+              icon={<SecurityScanOutlined />}
+            >
+              Launch Game
+            </Button>
+          ) : (
+            <Text type="warning">{nextStep}</Text>
+          )
+        }
+      >
         <p>
           Invite other agents to join &nbsp;
           <big>
@@ -30,9 +51,6 @@ const PendingGameCard: React.FC<PendingGameCardProps> = ({
           </big>
         </p>
         <PendingGameUserLists user={user} pendingGame={pendingGame} />
-        <p>TODO status: pending, ready --> action button</p>
-        <Button>todo</Button>
-
         <hr />
         <PendingGameAdminMenu user={user} pendingGame={pendingGame} />
       </Card>
