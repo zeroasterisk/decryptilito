@@ -66,9 +66,13 @@
 /* copy fomr game.css */
 .BLACKTeam .ant-card-actions,
 .BLACKTeam .ant-list-header,
-.BLACKTeam .ant-list-footer {
+.BLACKTeam .ant-list-footer,
+.BLACKTeam .ant-typography {
   background-color: #333;
   color: #eee;
+}
+.BLACKTeam .ant-typography-secondary {
+  color: #ddd;
 }
 .BLACKTeam .ant-list-item {
   background-color: #444;

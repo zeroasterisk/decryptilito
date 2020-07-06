@@ -1,33 +1,29 @@
 import React from 'react';
 import { Button, Tooltip, Form, Input } from 'antd';
-import { UserOutlined, EditOutlined } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
 
 import { Store } from 'rc-field-form/lib/interface';
 
 import { PendingGameUser } from '../../logic/pendingGameData';
 
-import PresenceBadge from '../app/PresenceBadge';
-
 import { onChangeNameType } from './PendingGameUserLists';
 
 import firebase from '../../firebase';
 
-interface PendingGameUserItemEditableProps {
-  onChangeUserDisplayName: onChangeNameType;
-  user: firebase.User;
-  userInList: PendingGameUser;
+interface PendingGameTeamNameEditProps {
+  onChange: onChangeNameType;
+  value: string;
 }
-const PendingGameUserItemEditable: React.FC<PendingGameUserItemEditableProps> = ({
-  onChangeUserDisplayName,
-  user,
-  userInList,
+const PendingGameTeamNameEdit: React.FC<PendingGameTeamNameEditProps> = ({
+  onChange,
+  value,
 }) => {
   const [isEditMode, setEditMode] = React.useState(false);
   const [form] = Form.useForm();
   // form.setFieldsValue({ name: userInList.name });
 
   const onFinish = ({ name }: Store) => {
-    onChangeUserDisplayName(name);
+    onChange(name);
     setEditMode(false);
   };
 
@@ -39,16 +35,13 @@ const PendingGameUserItemEditable: React.FC<PendingGameUserItemEditableProps> = 
           name="horizontal_login"
           layout="inline"
           onFinish={onFinish}
-          initialValues={{ name: userInList.name }}
+          initialValues={{ name: value }}
         >
           <Form.Item
             name="name"
-            rules={[{ required: true, message: 'Set your name' }]}
+            rules={[{ required: true, message: 'Set your team name' }]}
           >
-            <Input
-              prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Agent Alias"
-            />
+            <Input placeholder="Team Name" />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
@@ -58,10 +51,11 @@ const PendingGameUserItemEditable: React.FC<PendingGameUserItemEditableProps> = 
         </Form>
       ) : (
         <span>
-          <PresenceBadge user={user} />
-          <strong>{userInList.name}</strong>
+          <strong>
+            {value && value.length > 0 ? value : <small>No Team Name</small>}
+          </strong>
           &nbsp;
-          <Tooltip title="Change your name">
+          <Tooltip title="Change team name">
             <Button
               type="ghost"
               icon={<EditOutlined />}
@@ -74,4 +68,4 @@ const PendingGameUserItemEditable: React.FC<PendingGameUserItemEditableProps> = 
   );
 };
 
-export default PendingGameUserItemEditable;
+export default PendingGameTeamNameEdit;

@@ -27,6 +27,8 @@ export interface PendingGameDataInput {
   shortCode?: string;
   status?: PendingGameStatus;
   uids?: string[];
+  blackTeamName?: string;
+  whiteTeamName?: string;
   blackTeam?: PendingGameUser[];
   whiteTeam?: PendingGameUser[];
   freeAgents?: PendingGameUser[];
@@ -43,6 +45,8 @@ export class PendingGameData {
   public status: PendingGameStatus;
   @IsEnum(PendingGameTeamAllocation)
   public allocation: PendingGameTeamAllocation;
+  public blackTeamName: string;
+  public whiteTeamName: string;
   public blackTeam: PendingGameUser[];
   public whiteTeam: PendingGameUser[];
   public freeAgents: PendingGameUser[];
@@ -58,6 +62,8 @@ export class PendingGameData {
     this.status = data.status || PendingGameStatus.ENTRY;
     this.allocation =
       data.allocation || PendingGameTeamAllocation.PICK_OR_RANDOM;
+    this.whiteTeamName = data.whiteTeamName || '';
+    this.blackTeamName = data.blackTeamName || '';
     this.whiteTeam = data.whiteTeam || [];
     this.blackTeam = data.blackTeam || [];
     this.freeAgents = data.freeAgents || [];
@@ -102,6 +108,8 @@ export const pendingGameDataConverter = {
       shortCode: data.shortCode,
       status: data.status,
       allocation: data.allocation,
+      whiteTeamName: data.whiteTeamName,
+      blackTeamName: data.blackTeamName,
       whiteTeam: toFirestoreUserList(data.whiteTeam),
       blackTeam: toFirestoreUserList(data.blackTeam),
       freeAgents: toFirestoreUserList(data.freeAgents),

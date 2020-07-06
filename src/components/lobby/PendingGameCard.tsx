@@ -1,8 +1,13 @@
 import React from 'react';
-import { Button, Card, Tag } from 'antd';
+import { Button, Card, Tag, Typography } from 'antd';
 
 import { PendingGameData } from '../../logic/pendingGameData';
 import PendingGameUserLists from './PendingGameUserLists';
+import PendingGameAdminMenu from './PendingGameAdminMenu';
+
+const { Text } = Typography;
+
+// TODO consider allowing changing the shortCode
 
 // load a pendingGame Card
 interface PendingGameCardProps {
@@ -17,14 +22,19 @@ const PendingGameCard: React.FC<PendingGameCardProps> = ({
     <div>
       <Card title="Game getting ready...">
         <p>
-          Invite other agents to join <Tag>{pendingGame.shortCode}</Tag>
+          Invite other agents to join &nbsp;
+          <big>
+            <Text code>
+              <Text copyable>{pendingGame.shortCode}</Text>
+            </Text>
+          </big>
         </p>
-        <p>TODO edit shortCode</p>
-        <p>TODO join game if not already joined / edit name</p>
-        <p>TODO list users, group by allocation</p>
         <PendingGameUserLists user={user} pendingGame={pendingGame} />
         <p>TODO status: pending, ready --> action button</p>
         <Button>todo</Button>
+
+        <hr />
+        <PendingGameAdminMenu user={user} pendingGame={pendingGame} />
       </Card>
     </div>
   );

@@ -12,7 +12,7 @@
 
 import React from 'react';
 
-import { Button, Col, Row, Tag, List } from 'antd';
+import { Button, Col, Row, Tag, List, Typography } from 'antd';
 import { UsergroupAddOutlined } from '@ant-design/icons';
 
 import {
@@ -27,13 +27,18 @@ import firebase from '../../firebase';
 
 import PendingGameUserItem from './PendingGameUserItem';
 import PendingGameUserItemEditable from './PendingGameUserItemEditable';
+import PendingGameTeamNameEdit from './PendingGameTeamNameEdit';
+
+const { Text } = Typography;
 
 // helper function, used to determine if a user is in a specific list
 const isUserInList = (user: firebase.User, list: PendingGameUser[]) =>
   list.findIndex(({ id }: { id: string }) => id === user.uid) !== -1;
 
 // used to update the name for the currently logged in use (injected into the funciton)
-export type onChangeUserDisplayNameType = (name: string) => void;
+export type onChangeNameType = (name: string) => void;
+export type onChangeNameAndTeamType = (teamKey: string, name: string) => void;
+
 // addUserToTeam and save in firebase
 export type addUserToTeamAndUpdateType = (
   team: string,
@@ -58,7 +63,7 @@ const PendingGameUserLists: React.FC<PendingGameUserListsProps> = ({
     data = addUserToTeam(team, user, data);
     data.update();
   };
-  const onChangeUserDisplayName: onChangeUserDisplayNameType = (newName) => {
+  const onChangeUserDisplayName: onChangeNameType = (newName) => {
     // update references to this user...
     const mutate = ({ id, name }: PendingGameUser) => {
       if (id === user.uid) return { id, name: newName };
@@ -70,6 +75,17 @@ const PendingGameUserLists: React.FC<PendingGameUserListsProps> = ({
     pendingGame.update();
     // update the currentUser.displayName (for next time)
     user.updateProfile({ displayName: newName });
+    return;
+  };
+  const onChangeTeamName: onChangeNameAndTeamType = (teamKey, newName) => {
+    console.log('onChangeTeamName', teamKey, newName);
+    // update the team name to the new string
+    if (teamKey === 'whiteTeam') {
+      pendingGame.whiteTeamName = newName;
+    } else {
+      pendingGame.blackTeamName = newName;
+    }
+    pendingGame.update();
     return;
   };
 
@@ -93,12 +109,25 @@ const PendingGameUserLists: React.FC<PendingGameUserListsProps> = ({
         <List
           bordered
           dataSource={pendingGame.whiteTeam || []}
-          header="White Team"
+          header={
+            <div>
+              <div>
+                White Team{' '}
+                <Tag color="#444">{pendingGame.whiteTeam.length}</Tag>
+              </div>
+              {isUserInList(user, pendingGame.whiteTeam) ? (
+                <PendingGameTeamNameEdit
+                  onChange={onChangeTeamName.bind(null, 'whiteTeam')}
+                  value={pendingGame.whiteTeamName}
+                />
+              ) : (
+                <Text type="secondary">{pendingGame.whiteTeamName}</Text>
+              )}
+            </div>
+          }
           footer={
             isUserInList(user, pendingGame.whiteTeam) ? (
-              <Tag icon={<SpyIcon />} color="#444">
-                You are on the White Team
-              </Tag>
+              <Tag icon={<SpyIcon />}>You are on the White Team</Tag>
             ) : (
               <Button
                 icon={<UsergroupAddOutlined />}
@@ -117,7 +146,22 @@ const PendingGameUserLists: React.FC<PendingGameUserListsProps> = ({
         <List
           bordered
           dataSource={pendingGame.blackTeam || []}
-          header="Black Team"
+          header={
+            <div>
+              <div>
+                Black Team{' '}
+                <Tag color="#444">{pendingGame.blackTeam.length}</Tag>
+              </div>
+              {isUserInList(user, pendingGame.blackTeam) ? (
+                <PendingGameTeamNameEdit
+                  onChange={onChangeTeamName.bind(null, 'blackTeam')}
+                  value={pendingGame.blackTeamName}
+                />
+              ) : (
+                <Text type="secondary">{pendingGame.blackTeamName}</Text>
+              )}
+            </div>
+          }
           footer={
             isUserInList(user, pendingGame.blackTeam) ? (
               <Tag icon={<SpyIcon />} color="#444">
@@ -141,7 +185,11 @@ const PendingGameUserLists: React.FC<PendingGameUserListsProps> = ({
         <List
           bordered
           dataSource={pendingGame.freeAgents || []}
-          header="Free Agents"
+          header={
+            <span>
+              Free Agents <Tag>{pendingGame.freeAgents.length}</Tag>
+            </span>
+          }
           // subtitle="Will be assigned randomly to balance team numbers."
           footer={
             isUserInList(user, pendingGame.freeAgents) ? (
@@ -153,7 +201,7 @@ const PendingGameUserLists: React.FC<PendingGameUserListsProps> = ({
                   addUserToTeamAndUpdate('freeAgents', user, pendingGame)
                 }
               >
-                Join the Black Team
+                Become a Free Agent
               </Button>
             )
           }
