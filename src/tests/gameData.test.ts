@@ -1,7 +1,7 @@
-import { classToPlain } from 'class-transformer';
+// import { classToPlain } from 'class-transformer';
 import { expect } from 'chai';
 import { GameStatus, TurnStatus } from '../logic/enums';
-import { GameData } from '../logic/gameData';
+import { GameData, gameDataConverter } from '../logic/gameData';
 import { TeamData } from '../logic/teamData';
 import mockGameData from '../mock/mockGameData';
 
@@ -11,7 +11,7 @@ describe('GameData', () => {
     status: GameStatus.ACTIVE,
     turns: [
       {
-        id: 1,
+        id: 0,
         status: TurnStatus.PREPARE,
         timeoutSecondsRemaining: 0,
         whiteTeam: {
@@ -59,6 +59,35 @@ describe('GameData', () => {
       words: ['shoe', 'car', 'plane', 'boat'],
     },
   };
+
+  describe('gameDataConverter', () => {
+    it('it should convert gameDataInputBasic without mutation', () => {
+      const data = new GameData(gameDataInputBasic);
+      const out = gameDataConverter.fromFirestore(
+        // mock snapshot from firestore
+        {
+          data: () => gameDataConverter.toFirestore(data),
+          id: data.id,
+        },
+        // mock options from firestore
+        {},
+      );
+      expect(out).to.deep.equal(data);
+    });
+    it('it should convert mockGameData without mutation', () => {
+      const data = new GameData(mockGameData);
+      const out = gameDataConverter.fromFirestore(
+        // mock snapshot from firestore
+        {
+          data: () => gameDataConverter.toFirestore(data),
+          id: data.id,
+        },
+        // mock options from firestore
+        {},
+      );
+      expect(out).to.deep.equal(data);
+    });
+  });
 
   it('basic input data maintained', () => {
     const game = new GameData(gameDataInputBasic);

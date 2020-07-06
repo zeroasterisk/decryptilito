@@ -100,14 +100,17 @@ export class PendingGameData {
   }
 }
 
-// Firestore data converter
-// https://firebase.google.com/docs/firestore/manage-data/add-data
-type fnToFirestoreUserList = (list: PendingGameUser[]) => PendingGameUser[];
-const toFirestoreUserList: fnToFirestoreUserList = (list: PendingGameUser[]) =>
+type toFirestoreUserListType = (list: PendingGameUser[]) => PendingGameUser[];
+const toFirestoreUserList: toFirestoreUserListType = (
+  list: PendingGameUser[],
+) =>
   sortBy(
     list.map(({ id, name }: PendingGameUser) => ({ id, name })),
     ['name'],
   );
+
+// Firestore data converter
+// https://firebase.google.com/docs/firestore/manage-data/add-data
 export const pendingGameDataConverter = {
   toFirestore: (data: PendingGameData) => {
     return {
@@ -207,7 +210,7 @@ export const buildGame: buildGameType = (data: PendingGameData) => {
     shortCode: data.shortCode,
     status: GameStatus.ENTRY,
     uids: data.uids,
-    activeTurnNumber: 1,
+    activeTurnNumber: 0,
     turns: [],
     // team data
     whiteTeam: {

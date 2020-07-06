@@ -13,8 +13,8 @@ const mockPendingData = new PendingGameData({
   ],
   blackTeamName: 'Go Black',
   blackTeam: [
-    { id: 'uid5', name: 'display name 5' },
     { id: 'uid2', name: 'display name 2' },
+    { id: 'uid5', name: 'display name 5' },
   ],
   freeAgents: [{ id: 'uid4', name: 'display name 4' }],
 });

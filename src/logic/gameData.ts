@@ -1,3 +1,4 @@
+import sortBy from 'lodash.sortby';
 import { classToPlain } from 'class-transformer';
 import {
   // Contains,
@@ -23,6 +24,8 @@ import { GameStatus, TeamColor } from './enums';
 import { TeamData } from './teamData';
 
 import { TurnData } from './turnData';
+
+import firebase, { updateGame } from '../firebase';
 
 export interface GameDataInput {
   id: string;
@@ -105,11 +108,36 @@ export class GameData {
     return this.errors.length === 0;
   }
 
-  // public myMethod(opts: GameData.MyClassMethodOptions): number;
+  public update() {
+    return updateGame(this);
+  }
 }
-// declare namespace GameData {
-//     export interface MyClassMethodOptions {
-//         width?: number;
-//         height?: number;
-//     }
-// }
+
+// type toFirestoreTurnsType = (list: TurnData[]) => TurnData[];
+// const toFirestoreTurns: toFirestoreTurnsType = (list: TurnData[]) =>
+//   sortBy(
+//     list.map((turn: TurnData) => classToPlain(turn)),
+//     ['id'],
+//   );
+
+// Firestore data converter
+// https://firebase.google.com/docs/firestore/manage-data/add-data
+export const gameDataConverter = {
+  toFirestore: (data: GameData) => {
+    return {
+      id: data.id,
+      shortCode: data.shortCode,
+      status: data.status,
+      activeTurnNumber: data.activeTurnNumber,
+      uids: data.uids.sort(),
+      turns: classToPlain(data.turns),
+      whiteTeam: classToPlain(data.whiteTeam),
+      blackTeam: classToPlain(data.blackTeam),
+    };
+  },
+  fromFirestore: (snapshot: any, options: any) => {
+    const data = snapshot.data(options);
+    data.id = snapshot.id;
+    return new GameData(data);
+  },
+};

@@ -2,20 +2,36 @@ import { expect } from 'chai';
 
 import {
   PendingGameData,
+  pendingGameDataConverter,
   addUserToTeam,
   whatElseIsNeededToLaunch,
   buildGame,
 } from '../logic/pendingGameData';
 
-import mockPendingData from '../mock/mockPendingGameData';
+import mockPendingGameData from '../mock/mockPendingGameData';
 
 describe('PendingGameData utilities', () => {
   const agent = { id: 'mockagent', name: 'mock agent' };
   // mock firebase user
   const user = { uid: 'pretenduid', displayName: 'pretend name' };
+  describe('pendingGameDataConverter', () => {
+    it('it should convert mockPendingGameData without mutation', () => {
+      const data = new PendingGameData(mockPendingGameData);
+      const out = pendingGameDataConverter.fromFirestore(
+        // mock snapshot from firestore
+        {
+          data: () => pendingGameDataConverter.toFirestore(data),
+          id: data.id,
+        },
+        // mock options from firestore
+        {},
+      );
+      expect(out).to.deep.equal(data);
+    });
+  });
   describe('addUserToTeam', () => {
     it('updates pending game data with a new user added to the white team', () => {
-      const data = new PendingGameData(mockPendingData);
+      const data = new PendingGameData(mockPendingGameData);
       expect(data.whiteTeam.length).to.equal(2);
       const out = addUserToTeam('whiteTeam', user, data);
       expect(out.whiteTeam.length).to.equal(3);
@@ -24,7 +40,7 @@ describe('PendingGameData utilities', () => {
       expect(last.name).to.equal('pretend name');
     });
     it('updates pending game data with a new user added to the black team', () => {
-      const data = new PendingGameData(mockPendingData);
+      const data = new PendingGameData(mockPendingGameData);
       expect(data.blackTeam.length).to.equal(2);
       const out = addUserToTeam('blackTeam', user, data);
       expect(out.blackTeam.length).to.equal(3);
@@ -33,7 +49,7 @@ describe('PendingGameData utilities', () => {
       expect(last.name).to.equal('pretend name');
     });
     it('updates pending game data with an existing user added to a team (1 copy)', () => {
-      const data = new PendingGameData(mockPendingData);
+      const data = new PendingGameData(mockPendingGameData);
       data.blackTeam = [agent, { id: 'pretenduid', name: 'whatever' }];
       expect(data.whiteTeam.length).to.equal(2);
       const out = addUserToTeam('whiteTeam', user, data);
@@ -48,11 +64,11 @@ describe('PendingGameData utilities', () => {
     });
   });
   describe('whatElseIsNeededToLaunch', () => {
-    it('returns READY for unaltered mockPendingData', () => {
-      expect(whatElseIsNeededToLaunch(mockPendingData)).to.equal('READY');
+    it('returns READY for unaltered mockPendingGameData', () => {
+      expect(whatElseIsNeededToLaunch(mockPendingGameData)).to.equal('READY');
     });
     it('returns error when no agents', () => {
-      const data = new PendingGameData(mockPendingData);
+      const data = new PendingGameData(mockPendingGameData);
       data.freeAgents = [];
       data.whiteTeam = [];
       data.blackTeam = [];
@@ -61,7 +77,7 @@ describe('PendingGameData utilities', () => {
       );
     });
     it('returns error when only 3 agents total', () => {
-      const data = new PendingGameData(mockPendingData);
+      const data = new PendingGameData(mockPendingGameData);
       data.freeAgents = [agent];
       data.whiteTeam = [agent];
       data.blackTeam = [agent];
@@ -70,7 +86,7 @@ describe('PendingGameData utilities', () => {
       );
     });
     it('returns error when all 4 agents are on white', () => {
-      const data = new PendingGameData(mockPendingData);
+      const data = new PendingGameData(mockPendingGameData);
       data.freeAgents = [];
       data.whiteTeam = [agent, agent, agent, agent];
       data.blackTeam = [];
@@ -79,7 +95,7 @@ describe('PendingGameData utilities', () => {
       );
     });
     it('returns error when all 4 agents are on black', () => {
-      const data = new PendingGameData(mockPendingData);
+      const data = new PendingGameData(mockPendingGameData);
       data.freeAgents = [];
       data.whiteTeam = [];
       data.blackTeam = [agent, agent, agent, agent];
@@ -88,7 +104,7 @@ describe('PendingGameData utilities', () => {
       );
     });
     it('returns error when 3/4 agents are on black', () => {
-      const data = new PendingGameData(mockPendingData);
+      const data = new PendingGameData(mockPendingGameData);
       data.freeAgents = [];
       data.whiteTeam = [agent];
       data.blackTeam = [agent, agent, agent];
@@ -97,7 +113,7 @@ describe('PendingGameData utilities', () => {
       );
     });
     it('returns error when 5/8 agents are on black', () => {
-      const data = new PendingGameData(mockPendingData);
+      const data = new PendingGameData(mockPendingGameData);
       data.freeAgents = [];
       data.whiteTeam = [agent, agent, agent];
       data.blackTeam = [agent, agent, agent, agent, agent];
@@ -106,14 +122,14 @@ describe('PendingGameData utilities', () => {
       );
     });
     it('returns READY if 4/7 agents are on black', () => {
-      const data = new PendingGameData(mockPendingData);
+      const data = new PendingGameData(mockPendingGameData);
       data.freeAgents = [];
       data.whiteTeam = [agent, agent, agent];
       data.blackTeam = [agent, agent, agent, agent];
       expect(whatElseIsNeededToLaunch(data)).to.equal('READY');
     });
     it('returns READY if 4/7 agents are on black and the rest are free-agents', () => {
-      const data = new PendingGameData(mockPendingData);
+      const data = new PendingGameData(mockPendingGameData);
       data.freeAgents = [agent, agent, agent];
       data.whiteTeam = [];
       data.blackTeam = [agent, agent, agent, agent];
@@ -122,7 +138,7 @@ describe('PendingGameData utilities', () => {
   });
   describe('buildGame', () => {
     it('will create most of the data needed to start a game, allocating all free agents to white team in an effort to balance', () => {
-      const data = new PendingGameData(mockPendingData);
+      const data = new PendingGameData(mockPendingGameData);
       data.freeAgents = [agent, agent, agent];
       data.whiteTeam = [];
       data.blackTeam = [agent, agent, agent, agent];
