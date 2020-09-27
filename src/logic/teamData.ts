@@ -6,8 +6,8 @@ import {
   MaxLength,
   ArrayMinSize,
   ArrayMaxSize,
-  validateSync,
-  ValidationError,
+  // validateSync,
+  // ValidationError,
 } from 'class-validator';
 
 import { TeamColor } from './enums';

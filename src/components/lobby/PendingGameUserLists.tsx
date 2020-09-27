@@ -12,7 +12,7 @@
 
 import React from 'react';
 
-import { Button, Col, Row, Tag, List, Typography } from 'antd';
+import { Button, Col, Row, Tag, List, Tooltip, Typography } from 'antd';
 import { UsergroupAddOutlined } from '@ant-design/icons';
 
 import {
@@ -121,7 +121,9 @@ const PendingGameUserLists: React.FC<PendingGameUserListsProps> = ({
                   value={pendingGame.whiteTeamName}
                 />
               ) : (
-                <Text type="secondary">{pendingGame.whiteTeamName}</Text>
+                <Tooltip title="Team name">
+                  <Text type="secondary">{pendingGame.whiteTeamName}</Text>
+                </Tooltip>
               )}
             </div>
           }
@@ -158,7 +160,11 @@ const PendingGameUserLists: React.FC<PendingGameUserListsProps> = ({
                   value={pendingGame.blackTeamName}
                 />
               ) : (
-                <Text type="secondary">{pendingGame.blackTeamName}</Text>
+                <Tooltip title="Team name">
+                  <Text type="secondary" strong>
+                    {pendingGame.blackTeamName}
+                  </Text>
+                </Tooltip>
               )}
             </div>
           }
@@ -188,6 +194,8 @@ const PendingGameUserLists: React.FC<PendingGameUserListsProps> = ({
           header={
             <span>
               Free Agents <Tag>{pendingGame.freeAgents.length}</Tag>
+              <br />
+              <Text type="secondary">Will be assigned to a team</Text>
             </span>
           }
           // subtitle="Will be assigned randomly to balance team numbers."

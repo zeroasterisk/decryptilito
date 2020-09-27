@@ -18,12 +18,12 @@ describe('Firebase Config', () => {
   it('exposes databaseURL', () => {
     expect(firebaseConfig).to.have.property('databaseURL');
     expect(firebaseConfig.databaseURL).to.equal(
-      'https://decryptilito.firebaseio.com',
+      'https://decryptilito2.firebaseio.com',
     );
   });
   it('exposes storageBucket', () => {
     expect(firebaseConfig).to.have.property('storageBucket');
-    expect(firebaseConfig.storageBucket).to.equal('decryptilito.appspot.com');
+    expect(firebaseConfig.storageBucket).to.equal('decryptilito2.appspot.com');
   });
 });
 

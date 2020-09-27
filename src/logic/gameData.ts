@@ -1,4 +1,4 @@
-import sortBy from 'lodash.sortby';
+// import sortBy from 'lodash.sortby';
 import { classToPlain } from 'class-transformer';
 import {
   // Contains,
@@ -8,10 +8,10 @@ import {
   Length,
   Max,
   Min,
-  MinLength,
-  MaxLength,
-  ArrayMinSize,
-  ArrayMaxSize,
+  // MinLength,
+  // MaxLength,
+  // ArrayMinSize,
+  // ArrayMaxSize,
   ValidateNested,
   validateSync,
   ValidationError,
@@ -25,7 +25,7 @@ import { TeamData } from './teamData';
 
 import { TurnData } from './turnData';
 
-import firebase, { updateGame } from '../firebase';
+import { updateGame } from '../firebase';
 
 export interface GameDataInput {
   id: string;

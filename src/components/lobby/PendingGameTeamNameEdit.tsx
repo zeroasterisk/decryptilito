@@ -4,11 +4,7 @@ import { EditOutlined } from '@ant-design/icons';
 
 import { Store } from 'rc-field-form/lib/interface';
 
-import { PendingGameUser } from '../../logic/pendingGameData';
-
 import { onChangeNameType } from './PendingGameUserLists';
-
-import firebase from '../../firebase';
 
 interface PendingGameTeamNameEditProps {
   onChange: onChangeNameType;

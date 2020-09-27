@@ -6,8 +6,6 @@ import { Store } from 'rc-field-form/lib/interface';
 
 import { PendingGameUser } from '../../logic/pendingGameData';
 
-import PresenceBadge from '../app/PresenceBadge';
-
 import { onChangeNameType } from './PendingGameUserLists';
 
 import firebase from '../../firebase';
@@ -58,7 +56,9 @@ const PendingGameUserItemEditable: React.FC<PendingGameUserItemEditableProps> = 
         </Form>
       ) : (
         <span>
-          <PresenceBadge user={user} />
+          <Tooltip title="This is you.">
+            <UserOutlined style={{ color: '#08c' }} />
+          </Tooltip>{' '}
           <strong>{userInList.name}</strong>
           &nbsp;
           <Tooltip title="Change your name">

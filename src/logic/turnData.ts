@@ -3,7 +3,7 @@ import {
   IsInt,
   Min,
   Max,
-  validateSync,
+  // validateSync,
   ValidationError,
 } from 'class-validator';
 

@@ -52,6 +52,7 @@ const PendingGameCard: React.FC<PendingGameCardProps> = ({
               shape="round"
               size="large"
               icon={<SecurityScanOutlined />}
+              onClick={() => launchPendingGame(pendingGame)}
             >
               Launch Game
             </Button>
@@ -60,14 +61,14 @@ const PendingGameCard: React.FC<PendingGameCardProps> = ({
           )
         }
       >
-        <p>
+        <div>
           Invite other agents to join &nbsp;
           <big>
             <Text code>
               <Text copyable>{pendingGame.shortCode}</Text>
             </Text>
           </big>
-        </p>
+        </div>
         <PendingGameUserLists user={user} pendingGame={pendingGame} />
         <hr />
         <PendingGameAdminMenu user={user} pendingGame={pendingGame} />
