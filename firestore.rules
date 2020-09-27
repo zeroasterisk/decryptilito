@@ -1,7 +1,56 @@
+
+rules_version = '2';
 service cloud.firestore {
+
+
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write;
+
+    // Returns `true` if the logged in user is in the uids list on the already-stored data.
+    function isParticipant() {
+      return request.auth != null && request.auth.uid in resource.data.uids;
     }
+    // Returns `true` you are a logged in user
+    function isLoggedIn() {
+      return request.auth != null;
+    }
+
+    function isRecordStatusActive() {
+      return resource.data.status in ['ENTRY', 'READY', 'LAUNCHING'];
+    }
+    function isPendingGameCreatable() {
+      // input data must be in status ENTRY
+      return request.resource.data.status == 'ENTRY';
+    }
+    function isGameCreatable() {
+      // input data must be in status ENTRY
+      return request.resource.data.status == 'ENTRY'
+        // input data must have a id field
+        && request.resource.data.id != null
+        // the id for the new game must exist as a PendingGame
+        && exists(/databases/$(database)/documents/PendingGames/$(request.resource.data.id))
+        // the id for the new game must exist as a PendingGame with status LAUNCHING
+        && get(/databases/$(database)/documents/PendingGames/$(request.resource.data.id)).data.status == 'LAUNCHING';
+    }
+    function isMatchingPendingGame() {
+      return exists(/databases/$(database)/documents/PendingGames/$(request.data.id));
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+    match /PendingGames/{game} {
+      allow create: if isLoggedIn() && isPendingGameCreatable();
+      allow list, read, write: if isRecordStatusActive();
+    }
+    match /Games/{game} {
+      allow create: if isGameCreatable();
+      allow read, write: if isParticipant();
+
+      match /words {
+        allow create, list, delete: if false;
+        allow read: if isParticipant();
+      }
+    }
+
   }
 }
