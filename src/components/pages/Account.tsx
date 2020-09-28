@@ -21,11 +21,13 @@ import {
 
 import { useSession, signOut } from '../../auth';
 
+import { UserData } from '../../logic/userData';
+
 // Auth if authenticated
 // Auth if anon
 
 interface AccountProps {
-  user?: firebase.User;
+  user?: UserData;
 }
 
 const Anon: React.FC = () => {

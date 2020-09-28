@@ -1,4 +1,5 @@
 import React from 'react';
+import { navigate } from 'hookrouter';
 import { Button, Card, Typography } from 'antd';
 import { SecurityScanOutlined } from '@ant-design/icons';
 
@@ -9,6 +10,7 @@ import {
   buildGame,
 } from '../../logic/pendingGameData';
 import { GameData } from '../../logic/gameData';
+import { UserData } from '../../logic/userData';
 import PendingGameUserLists from './PendingGameUserLists';
 import PendingGameAdminMenu from './PendingGameAdminMenu';
 
@@ -17,23 +19,21 @@ const { Text } = Typography;
 // TODO consider allowing changing the shortCode
 
 // launch a pending game --> game
-export type launchPendingGameType = (data: PendingGameData) => GameData;
+export type launchPendingGameType = (data: PendingGameData) => void;
 const launchPendingGame: launchPendingGameType = (data) => {
-  console.log('launching', data);
   // set pendingGame status to launching
   data.status = PendingGameStatus.LAUNCHING;
   data.update();
   // get the basics for a new game
   const gameData = new GameData(buildGame(data));
-  console.log('launch to', gameData);
   gameData.update();
-  // return here... but should probably redirect and return void
-  return gameData;
+  // now redirect to the game...
+  navigate(`/game/${gameData.id}`);
 };
 
 // load a pendingGame Card
 interface PendingGameCardProps {
-  user: firebase.User;
+  user: UserData;
   pendingGame: PendingGameData;
 }
 const PendingGameCard: React.FC<PendingGameCardProps> = ({

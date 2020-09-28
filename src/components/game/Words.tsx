@@ -1,20 +1,19 @@
 import React from 'react';
 
-import { Card, List } from 'antd';
+import { Card, List, Tooltip } from 'antd';
 
-import { GameData } from '../../logic/gameData';
-import { UserData } from '../../logic/userData';
+import { TeamData } from '../../logic/teamData';
 
 import { getTeamData } from '../../logic/gameEngine';
 
 interface GameProps {
-  // after fetching the game data...
-  game: GameData;
-  user: UserData;
+  teamData: TeamData;
 }
 
-const Words: React.FC<GameProps> = props => {
-  const teamData = getTeamData(props);
+const Words: React.FC<GameProps> = ({ teamData }) => {
+  if (!(teamData && teamData.words)) {
+    return <Tooltip title="No words">?</Tooltip>;
+  }
   const words = teamData.words.map((word: string, i: number) => {
     return { index: i + 1, title: word };
   });

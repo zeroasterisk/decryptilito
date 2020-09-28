@@ -4,6 +4,10 @@ import 'firebase/firestore';
 import 'firebase/auth';
 
 export type { updateGameType, updatePendingGameType } from './updateHelpers';
-export { updateGame, updatePendingGame } from './updateHelpers';
+export {
+  updateGame,
+  updatePendingGame,
+  updateUserProfile,
+} from './updateHelpers';
 
 export default firebase;

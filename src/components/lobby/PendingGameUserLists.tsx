@@ -20,10 +20,9 @@ import {
   PendingGameUser,
   addUserToTeam,
 } from '../../logic/pendingGameData';
+import { UserData } from '../../logic/userData';
 
 import SpyIcon from '../icons/spy';
-
-import firebase from '../../firebase';
 
 import PendingGameUserItem from './PendingGameUserItem';
 import PendingGameUserItemEditable from './PendingGameUserItemEditable';
@@ -32,7 +31,7 @@ import PendingGameTeamNameEdit from './PendingGameTeamNameEdit';
 const { Text } = Typography;
 
 // helper function, used to determine if a user is in a specific list
-const isUserInList = (user: firebase.User, list: PendingGameUser[]) =>
+const isUserInList = (user: UserData, list: PendingGameUser[]) =>
   list.findIndex(({ id }: { id: string }) => id === user.uid) !== -1;
 
 // used to update the name for the currently logged in use (injected into the funciton)
@@ -42,13 +41,13 @@ export type onChangeNameAndTeamType = (teamKey: string, name: string) => void;
 // addUserToTeam and save in firebase
 export type addUserToTeamAndUpdateType = (
   team: string,
-  user: firebase.User,
+  user: UserData,
   data: PendingGameData,
 ) => void;
 
 // main ui, all 3 lists
 interface PendingGameUserListsProps {
-  user: firebase.User;
+  user: UserData;
   pendingGame: PendingGameData;
 }
 const PendingGameUserLists: React.FC<PendingGameUserListsProps> = ({

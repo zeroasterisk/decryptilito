@@ -24,13 +24,15 @@ import {
   useSession,
 } from '../../auth';
 
+import { UserData } from '../../logic/userData';
+
 // Auth if authenticated
 // Auth if anon
 
 interface AuthProps {}
 
 interface AuthAuthenticatedProps {
-  user?: firebase.User;
+  user?: UserData;
 }
 const AuthAuthenticated: React.FC<AuthAuthenticatedProps> = ({ user }) => {
   return (

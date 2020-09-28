@@ -15,10 +15,11 @@ import { useCollection } from 'react-firebase-hooks/firestore';
 import { Alert, Badge, Button, Card, List, Tag } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 
+import { UserData } from '../../logic/userData';
 import firebase from '../../firebase';
 
 interface ListPendingGamesProps {
-  user?: firebase.User;
+  user?: UserData;
 }
 
 const ListPendingGames: React.FC<ListPendingGamesProps> = () => {
@@ -43,6 +44,7 @@ const ListPendingGames: React.FC<ListPendingGamesProps> = () => {
         loading={loading}
         actions={[
           <Button
+            key="startGameButton"
             icon={<PlusCircleOutlined />}
             type="primary"
             shape="round"

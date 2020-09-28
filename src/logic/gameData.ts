@@ -28,17 +28,17 @@ import { TurnData } from './turnData';
 import { updateGame } from '../firebase';
 
 export interface GameDataInput {
-  id: string;
-  shortCode: string;
-  status: GameStatus;
+  id?: string;
+  shortCode?: string;
+  status?: GameStatus;
   // participants
-  uids: string[];
+  uids?: string[];
   // which turn number: 0-10
-  activeTurnNumber: number;
-  turns: TurnData[];
+  activeTurnNumber?: number;
+  turns?: TurnData[];
   // team data for each team
-  whiteTeam: TeamData;
-  blackTeam: TeamData;
+  whiteTeam?: TeamData;
+  blackTeam?: TeamData;
 }
 
 export class GameData {
@@ -70,19 +70,19 @@ export class GameData {
   constructor(data: GameDataInput) {
     this.id = data.id || this.makeId(15);
     this.shortCode = data.shortCode || this.makeId(5);
-    this.status = data.status || 'ENTRY';
+    this.status = data.status || GameStatus.ENTRY;
     this.uids = data.uids || [];
     this.activeTurnNumber = data.activeTurnNumber || 0;
     this.turns = (data.turns && data.turns.map((x) => new TurnData(x))) || [];
     // this.whiteTeam = new TeamData(classToPlain(data.whiteTeam)) || factoryTeamData(TeamColor.WHITE);
     // this.blackTeam = new TeamData(classToPlain(data.blackTeam)) || factoryTeamData(TeamColor.BLACK);
     this.whiteTeam =
-      new TeamData(data.whiteTeam) ||
+      (data.whiteTeam && new TeamData(data.whiteTeam)) ||
       new TeamData({
         teamColor: TeamColor.WHITE,
       });
     this.blackTeam =
-      new TeamData(data.blackTeam) ||
+      (data.blackTeam && new TeamData(data.blackTeam)) ||
       new TeamData({
         teamColor: TeamColor.BLACK,
       });

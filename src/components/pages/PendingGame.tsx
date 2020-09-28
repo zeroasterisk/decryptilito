@@ -104,7 +104,8 @@ const PendingGameLoadDoc: React.FC<PendingGameLoadDocProps> = ({ id }) => {
     return <PendingGameLoading reason="Loading Pending Game x2" />;
   }
   pendingGameData.id = id;
-  // TODO instead of forcing the firebase data into the PendingGameData class, instead
+  // TODO instead of forcing the firebase data into the PendingGameData class,
+  //      should be able to rely on converter
   const pendingGame = new PendingGameData(classToPlain(pendingGameData));
   if (!(pendingGame && pendingGame.id)) {
     console.log(

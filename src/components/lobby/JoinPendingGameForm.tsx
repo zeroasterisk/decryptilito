@@ -1,9 +1,10 @@
 import React from 'react';
 import { Card, Form, Button, Input } from 'antd';
 import SpyIcon from '../icons/spy';
+import { UserData } from '../../logic/userData';
 
 interface JoinPendingGameFormProps {
-  user?: firebase.User;
+  user?: UserData;
 }
 
 const JoinPendingGameForm: React.FC<JoinPendingGameFormProps> = () => {

@@ -10,9 +10,11 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 
+import { UserData } from '../../logic/userData';
+
 // smart component, can figure out if we have a user or not
 type UserAuthAvatarProps = {
-  user?: any; // firebase.User
+  user?: UserData;
   initialising: boolean;
   error?: any; // firebase.auth.Error
   login?: () => void; // function

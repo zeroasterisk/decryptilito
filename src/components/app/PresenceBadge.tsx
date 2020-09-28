@@ -5,11 +5,11 @@
 import React from 'react';
 
 import { Badge, Tooltip } from 'antd';
-import firebase from '../../firebase';
+import { UserData } from '../../logic/userData';
 //
 // TODO make this a fancy presence badge
 interface PresenceBadgeProps {
-  user?: firebase.User;
+  user?: UserData;
   uid?: string;
 }
 const PresenceBadge: React.FC<PresenceBadgeProps> = ({ user, uid }) => {

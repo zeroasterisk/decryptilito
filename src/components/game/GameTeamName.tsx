@@ -2,21 +2,21 @@ import React from 'react';
 
 import { Col, Input, Row, Tooltip, Typography } from 'antd';
 
-import { GameData } from '../../logic/gameData';
-import { UserData } from '../../logic/userData';
+import { TeamData } from '../../logic/teamData';
 
-import { getTeamData, teamName } from '../../logic/gameEngine';
+import { teamName } from '../../logic/gameEngine';
 
 const { Title } = Typography;
 const InputGroup = Input.Group;
 
 // TODO consider making this read only, with a Modal to edit
 interface GameTeamNameProps {
-  game: GameData;
-  user: UserData;
+  teamData: TeamData;
 }
-const GameTeamName: React.FC<GameTeamNameProps> = ({ game, user }) => {
-  const teamData = getTeamData({ game, user });
+const GameTeamName: React.FC<GameTeamNameProps> = ({ teamData }) => {
+  if (!teamData) {
+    return <Tooltip title="Unable to get Team Name">?</Tooltip>;
+  }
   return (
     <div>
       <InputGroup size="large">

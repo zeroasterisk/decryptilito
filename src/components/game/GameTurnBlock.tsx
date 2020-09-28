@@ -40,13 +40,17 @@ interface GameTurnBlockProps {
   game: GameData;
   turn_number: number;
   user: UserData;
+  myTeam: TeamKey;
+  showTeam: TeamKey;
 }
 const GameTurnBlock: React.FC<GameTurnBlockProps> = ({
   turn_number,
   game,
   user,
+  myTeam,
+  showTeam,
 }) => {
-  const props = { game, user, turn_number };
+  const props = { game, user, turn_number, myTeam, showTeam };
   const { activeTurnNumber } = game;
   if (turn_number < activeTurnNumber) {
     return <GameTurnBlockPast {...props} />;
@@ -81,10 +85,10 @@ const GameTurnBlockPast: React.FC<GameTurnBlockProps> = ({
   turn_number,
   game,
   user,
+  myTeam,
+  showTeam,
 }) => {
   const turnData = getTurnData(game, turn_number);
-  const myTeam = user.myTeam; // TODO we should allow rendering the other team too
-  const showTeam = myTeam;
   const turnTeamData = turnData[showTeam];
   const clueProps = {
     turnTeamData,
@@ -114,33 +118,31 @@ const GameTurnBlockFuture: React.FC<GameTurnBlockProps> = ({
   turn_number,
   game,
   user,
-}) => {
-  const myTeam = user.myTeam; // TODO we should allow rendering the other team too
-  const showTeam = myTeam;
-  return (
-    <Card
-      size="small"
-      className={`GameTurnBlock GameTurnBlockFuture`}
-      style={{ maxWidth: 400 }}
-    >
-      <GameClueHeader showTeam={showTeam}>
-        <div>#{turn_number}</div>
-      </GameClueHeader>
-      <GameClueUnreveiled />
-      <GameClueUnreveiled />
-      <GameClueUnreveiled />
-    </Card>
-  );
-};
+  myTeam,
+  showTeam,
+}) => (
+  <Card
+    size="small"
+    className={`GameTurnBlock GameTurnBlockFuture`}
+    style={{ maxWidth: 400 }}
+  >
+    <GameClueHeader showTeam={showTeam}>
+      <div>#{turn_number}</div>
+    </GameClueHeader>
+    <GameClueUnreveiled />
+    <GameClueUnreveiled />
+    <GameClueUnreveiled />
+  </Card>
+);
 
 const GameTurnBlockActivePrepare: React.FC<GameTurnBlockProps> = ({
   turn_number,
   game,
   user,
+  myTeam,
+  showTeam,
 }) => {
   const turnData = getTurnData(game, turn_number);
-  const myTeam = user.myTeam; // TODO we should allow rendering the other team too
-  const showTeam = myTeam;
   const turnTeamData = turnData[showTeam];
   return (
     <Card
@@ -173,10 +175,10 @@ const GameTurnBlockActiveEncryptor: React.FC<GameTurnBlockProps> = ({
   turn_number,
   game,
   user,
+  myTeam,
+  showTeam,
 }) => {
   const turnData = getTurnData(game, turn_number);
-  const myTeam = user.myTeam; // TODO we should allow rendering the other team too
-  const showTeam = myTeam;
   const turnTeamData = turnData[showTeam];
   const clueProps = {
     turnTeamData,
@@ -232,10 +234,10 @@ const GameTurnBlockActiveEncryptedWaiting: React.FC<GameTurnBlockProps> = ({
   turn_number,
   game,
   user,
+  myTeam,
+  showTeam,
 }) => {
   const turnData = getTurnData(game, turn_number);
-  const myTeam = user.myTeam; // TODO we should allow rendering the other team too
-  const showTeam = myTeam;
   const turnTeamData = turnData[showTeam];
   const clueProps = {
     turnTeamData,
@@ -288,18 +290,20 @@ const GameTurnBlockActiveDecryptors: React.FC<GameTurnBlockProps> = ({
   turn_number,
   game,
   user,
+  // what team am I on (logged in user)
+  myTeam,
+  // which team clues are we showing?
+  showTeam,
 }: {
   turn_number: number;
   game: GameData;
   user: UserData;
+  myTeam: TeamKey;
+  showTeam: TeamKey;
 }) => {
   const { debug } = game;
   // TODO should we allow rendering the other team intentionally?
   const turnData = getTurnData(game, turn_number);
-  // what team am I on (logged in user)
-  const myTeam = user.myTeam;
-  const showTeam = myTeam;
-  // which team clues are we showing?
   const isWhiteTeamClues =
     turnData.status === TurnStatus.DECRYPT_WHITE_CLUES ||
     turnData.status === TurnStatus.DECRYPT_WHITE_CLUES_PARTIAL;

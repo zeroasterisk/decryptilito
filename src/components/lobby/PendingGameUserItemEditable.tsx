@@ -5,14 +5,13 @@ import { UserOutlined, EditOutlined } from '@ant-design/icons';
 import { Store } from 'rc-field-form/lib/interface';
 
 import { PendingGameUser } from '../../logic/pendingGameData';
+import { UserData } from '../../logic/userData';
 
 import { onChangeNameType } from './PendingGameUserLists';
 
-import firebase from '../../firebase';
-
 interface PendingGameUserItemEditableProps {
   onChangeUserDisplayName: onChangeNameType;
-  user: firebase.User;
+  user: UserData;
   userInList: PendingGameUser;
 }
 const PendingGameUserItemEditable: React.FC<PendingGameUserItemEditableProps> = ({

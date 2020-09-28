@@ -16,18 +16,20 @@ interface GameScratchProps {
   turn_number: number;
   showTeamClues: TeamKey;
   user: UserData;
+  myTeam: TeamKey;
 }
 const GameScratch: React.FC<GameScratchProps> = ({
   game,
   turn_number,
   showTeamClues,
   user,
+  myTeam,
 }) => (
   <div className="GameScratch">
     <GameScratchHeader
       showTeamClues={showTeamClues}
       turn_number={turn_number}
-      myTeam={user.myTeam}
+      myTeam={myTeam}
     />
     {game.turns.map((turn, index) =>
       turn_number < index ? (
@@ -37,7 +39,7 @@ const GameScratch: React.FC<GameScratchProps> = ({
           key={`turnScratchRow${showTeamClues}${index}`}
           game={game}
           turn={turn}
-          myTeam={user.myTeam}
+          myTeam={myTeam}
           showTeamClues={showTeamClues}
         />
       ),

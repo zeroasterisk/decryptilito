@@ -5,7 +5,7 @@ const mockData = new GameData({
   id: 'mockdata123',
   shortCode: '1qaz',
   status: GameStatus.ACTIVE,
-  uids: [],
+  uids: ['1111', '2222', '3333', '4444', '5555', '6666'],
   // which turn block is active, finished turn #1, about to start turn #2
   activeTurnNumber: 2,
   turns: [
@@ -72,6 +72,7 @@ const mockData = new GameData({
   ],
   // team data
   whiteTeam: {
+    uids: ['1111', '2222', '3333'],
     teamColor: TeamColor.WHITE,
     teamName: 'action jackson',
     teamMemberNames: 'Luna, Edger, George',
@@ -83,6 +84,7 @@ const mockData = new GameData({
     words: ['swim', 'fly', 'walk', 'run'],
   },
   blackTeam: {
+    uids: ['4444', '5555', '6666'],
     teamColor: TeamColor.BLACK,
     teamName: 'flounder finder',
     teamMemberNames: 'Jerry, Gerry, Eggbert',

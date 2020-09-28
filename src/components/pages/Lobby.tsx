@@ -4,6 +4,7 @@ import { Button, Card, PageHeader, Row, Col } from 'antd';
 import { LoginOutlined } from '@ant-design/icons';
 
 import { useSession } from '../../auth';
+import { UserData } from '../../logic/userData';
 
 import ListPendingGames from '../../components/lobby/ListPendingGames';
 import JoinPendingGameForm from '../../components/lobby/JoinPendingGameForm';
@@ -12,7 +13,7 @@ import JoinPendingGameForm from '../../components/lobby/JoinPendingGameForm';
 // Lobby if anon
 
 interface LobbyProps {
-  user?: firebase.User;
+  user?: UserData;
 }
 
 const LobbyAuthenticated: React.FC<LobbyProps> = ({ user }) => {

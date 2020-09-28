@@ -2,27 +2,43 @@ import React from 'react';
 
 import './Game.css';
 
+import { Tooltip } from 'antd';
+
 import GameTeamName from './GameTeamName';
 import GameTurnBlocks from './GameTurnBlocks';
 import Words from './Words';
 
-import { getTeamData } from '../../logic/gameEngine';
+import { getMyTeam, getTeamData } from '../../logic/gameEngine';
 
 import { GameData } from '../../logic/gameData';
 import { UserData } from '../../logic/userData';
 
-interface GameProps {
+interface GameUIProps {
   // after fetching the game data...
   game: GameData;
   user: UserData;
 }
-const Game: React.FC<GameProps> = ({ game, user }) => {
+const GameUI: React.FC<GameUIProps> = ({ game, user }) => {
+  const myTeam = getMyTeam(game, user);
+  if (!myTeam) {
+    return <Tooltip title="Unable to determine team assignment">?</Tooltip>;
+  }
+  const showTeam = myTeam;
   const teamData = getTeamData({ game, user });
+  if (!teamData) {
+    return <Tooltip title="Unable to determine team data">?</Tooltip>;
+  }
+
   return (
     <div className={`Game ${teamData.teamColor}Team`}>
-      <GameTeamName game={game} user={user} />
-      <Words game={game} user={user} />
-      <GameTurnBlocks game={game} user={user} />
+      <GameTeamName teamData={teamData} />
+      <Words teamData={teamData} />
+      <GameTurnBlocks
+        game={game}
+        user={user}
+        myTeam={myTeam}
+        showTeam={showTeam}
+      />
       <h4>TODO: build this out</h4>
       <pre>
         - GameClues (unrevieled, editable, revieled) - OrderGuess (unrevieled,
@@ -32,4 +48,4 @@ const Game: React.FC<GameProps> = ({ game, user }) => {
   );
 };
 
-export default Game;
+export default GameUI;

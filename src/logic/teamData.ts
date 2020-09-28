@@ -20,16 +20,20 @@ export interface TeamMember {
 }
 
 interface TeamDataInput {
+  uids?: string[];
   // team data storage block
   teamColor: TeamColor;
   teamName?: string;
   // TODO, omit in favor of CSV stringify from teamMembers
   teamMemberNames?: string;
   teamMembers?: TeamMember[];
+  // TODO(alanblount): should deprecate this in favor of a secure sub-collection for words
   words?: string[]; // should be exactly 4
 }
 
 export class TeamData {
+  // user ids in this team
+  public uids: string[];
   @IsEnum(TeamColor)
   public teamColor: TeamColor;
   public teamName: string;
@@ -50,6 +54,7 @@ export class TeamData {
   public words: string[]; // should be exactly 4
 
   constructor(data: TeamDataInput) {
+    this.uids = data.uids || [];
     this.teamColor = data.teamColor || 'WHITE';
     this.teamName = data.teamName || '';
     this.teamMemberNames = data.teamMemberNames || '';

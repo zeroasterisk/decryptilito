@@ -22,8 +22,9 @@
 - [ ] Games / Lobby
   - [x] Add new game (pending join)
   - [ ] Start game
-- [ ] Find Games based on details: location, interests, etc
-- [ ] Game Details
+- [ ] Change to teamA/teamB, allow color picker (move away from white/black)
+- [ ] Secure the "words" on server, so they are not sniffable in browser (subcollection rules)
 - [ ] Robust word picker, low repeats, etc. (functions)
+- [ ] Find Games based on details: location, interests, etc
 - [ ] Integrate with Video Calls
 - [ ] Anonymous Join Game by Code

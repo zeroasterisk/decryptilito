@@ -2,26 +2,32 @@
  * My Data is the user-specific data object
  * This is not a part of the game data
  * But instead it is composed of the logged in user
+ *
+ * Need to be able to turn a firebase.User into this
+ *
  */
 import {
   // Contains,
   // IsDate,
-  IsEnum,
   Length,
   validateSync,
   ValidationError,
 } from 'class-validator';
 
-import { TeamKey } from './enums';
+import firebase, { updateUserProfile } from '../firebase';
 
 interface UserDataInput {
   // from firebase
-  uid: string;
+  uid?: string;
   email?: string;
+  emailVerified?: boolean;
   displayName?: string;
+  phoneNumber?: string;
   photoURL?: string;
-  // TODO change to current team / current game
-  myTeam?: TeamKey;
+  isAnonymous?: boolean;
+  // metadata.creationTime...
+  // metadata.lastSignInTime...
+  // orivuderData[0].providerId (google)
   errors?: ValidationError[];
 }
 
@@ -32,26 +38,14 @@ class UserData {
   public displayName: string;
   public photoURL?: string;
   public email?: string;
-  // TODO should this be on the game?
-  @IsEnum(TeamKey)
-  public myTeam: TeamKey;
   public errors?: ValidationError[];
 
-  constructor(data: UserDataInput) {
+  constructor(data: UserDataInput | firebase.User) {
     this.uid = data.uid || this.makeId();
     this.displayName = data.displayName || 'Unnamed';
-    this.photoURL = data.photoURL;
-    this.email = data.email;
-    this.myTeam = data.myTeam || this.assignTeam();
+    this.photoURL = data.photoURL || undefined;
+    this.email = data.email || undefined;
     this.errors = [];
-  }
-
-  public assignTeam() {
-    if (Math.random() % 1) {
-      return TeamKey.blackTeam;
-    } else {
-      return TeamKey.whiteTeam;
-    }
   }
 
   public makeId() {
@@ -70,7 +64,14 @@ class UserData {
     return this.errors.length === 0;
   }
 
-  // public myMethod(opts: UserData.MyClassMethodOptions): number;
+  // this replicates a method on the firebase auth currentUser
+  //   should only be used to update displayName
+  public updateProfile(newData: object) {
+    throw new Error('need to re-implement firebase.auth...updateProfile()');
+  }
+  public update() {
+    return updateUserProfile(this);
+  }
 }
 
 export { UserData };

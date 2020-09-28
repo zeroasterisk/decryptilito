@@ -1,3 +1,4 @@
+import { classToPlain } from 'class-transformer';
 import React from 'react';
 
 import 'antd/dist/antd.css';
@@ -15,6 +16,8 @@ import UserAuthAvatar from './UserAuthAvatar';
 
 import firebase from '../../firebase';
 import '../../firebase/initialize';
+
+import { UserData } from '../../logic/userData';
 
 const { Header, Footer, Content } = Layout;
 
@@ -47,8 +50,8 @@ function App() {
   if (window && !(window.name && window.name === 'nodejs')) {
     console.log('firebase', firebase);
   }
-  const [user, initialising, error] = useAuthState(firebase.auth());
-  // console.log('user', user, 'initialising', initialising, 'error', error);
+  const [fuser, initialising, error] = useAuthState(firebase.auth());
+  // console.log('fuser', fuser, 'initialising', initialising, 'error', error);
 
   if (initialising) {
     return (
@@ -66,10 +69,16 @@ function App() {
     );
   }
 
+  // const user = new UserData(classToPlain(fuser));
+  const user = fuser
+    ? new UserData(fuser)
+    : new UserData({ isAnonymous: true });
+
   return (
     <userContext.Provider
       value={{
         user,
+        fuser,
         initialising,
       }}
     >

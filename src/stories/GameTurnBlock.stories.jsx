@@ -37,10 +37,11 @@ export default {
 export const past = () => {
   return (
     <GameTurnBlockPast
-      team={TeamKey.blackTeam}
       turn_number={1}
       user={mockUserData}
       game={mockGameData}
+      myTeam={TeamKey.blackTeam}
+      showTeam={TeamKey.blackTeam}
     />
   );
 };
@@ -52,10 +53,11 @@ past.story = {
 export const future = () => {
   return (
     <GameTurnBlockFuture
-      team={TeamKey.blackTeam}
       turn_number={3}
       user={mockUserData}
       game={mockGameData}
+      myTeam={TeamKey.blackTeam}
+      showTeam={TeamKey.blackTeam}
     />
   );
 };
@@ -70,6 +72,8 @@ export const activePrepareBeforeOderGivenToEncryptor = () => {
       turn_number={2}
       user={mockUserData}
       game={mockGameData}
+      myTeam={TeamKey.blackTeam}
+      showTeam={TeamKey.blackTeam}
     />
   );
 };
@@ -87,6 +91,8 @@ export const activeEncryptOrderGivenToEncryptor = () => {
       turn_number={2}
       user={mockUserData}
       game={thisData}
+      myTeam={TeamKey.blackTeam}
+      showTeam={TeamKey.blackTeam}
     />
   );
 };
@@ -104,6 +110,8 @@ export const activeEncryptNeedToSubmit = () => {
       turn_number={2}
       user={mockUserData}
       game={thisData}
+      myTeam={TeamKey.blackTeam}
+      showTeam={TeamKey.blackTeam}
     />
   );
 };
@@ -123,6 +131,8 @@ export const activeEncryptHiddenOrder = () => {
       turn_number={2}
       user={mockUserData}
       game={thisData}
+      myTeam={TeamKey.blackTeam}
+      showTeam={TeamKey.blackTeam}
     />
   );
 };
@@ -141,6 +151,8 @@ export const activeEncryptPartial28SecLeft = () => {
       turn_number={2}
       user={mockUserData}
       game={thisData}
+      myTeam={TeamKey.blackTeam}
+      showTeam={TeamKey.blackTeam}
     />
   );
 };
@@ -159,6 +171,8 @@ export const activeEncryptPartial18SecLeft = () => {
       turn_number={2}
       user={mockUserData}
       game={thisData}
+      myTeam={TeamKey.blackTeam}
+      showTeam={TeamKey.blackTeam}
     />
   );
 };
@@ -177,6 +191,8 @@ export const activeEncryptPartial8SecLeft = () => {
       turn_number={2}
       user={mockUserData}
       game={thisData}
+      myTeam={TeamKey.blackTeam}
+      showTeam={TeamKey.blackTeam}
     />
   );
 };
@@ -195,6 +211,8 @@ export const activeEncryptPartialWaitingOnOtherTeam8SecLeft = () => {
       turn_number={2}
       user={mockUserData}
       game={thisData}
+      myTeam={TeamKey.blackTeam}
+      showTeam={TeamKey.blackTeam}
     />
   );
 };
@@ -211,6 +229,8 @@ export const activeDecryptWhiteClues = () => {
       turn_number={2}
       user={mockUserData}
       game={thisData}
+      myTeam={TeamKey.blackTeam}
+      showTeam={TeamKey.blackTeam}
     />
   );
 };
@@ -229,6 +249,8 @@ export const activeDecryptWhiteCluesPartialWhiteTeamHasGuessedAlready = () => {
       turn_number={2}
       user={mockUserData}
       game={thisData}
+      myTeam={TeamKey.blackTeam}
+      showTeam={TeamKey.blackTeam}
     />
   );
 };
@@ -247,6 +269,8 @@ export const activeDecryptWhiteCluesPartialBlackTeamHasGuessedAlready = () => {
       turn_number={2}
       user={mockUserData}
       game={thisData}
+      myTeam={TeamKey.blackTeam}
+      showTeam={TeamKey.blackTeam}
     />
   );
 };
@@ -267,6 +291,8 @@ export const activeDecryptBlackClues = () => {
       turn_number={2}
       user={mockUserData}
       game={thisData}
+      myTeam={TeamKey.blackTeam}
+      showTeam={TeamKey.blackTeam}
     />
   );
 };
@@ -289,6 +315,8 @@ export const activeDecryptBlackCluesPartialWhiteTeamHasGuessedAlready = () => {
       turn_number={2}
       user={mockUserData}
       game={thisData}
+      myTeam={TeamKey.blackTeam}
+      showTeam={TeamKey.blackTeam}
     />
   );
 };
@@ -311,6 +339,8 @@ export const activeDecryptBlackCluesPartialBlackTeamHasGuessedAlready = () => {
       turn_number={2}
       user={mockUserData}
       game={thisData}
+      myTeam={TeamKey.blackTeam}
+      showTeam={TeamKey.blackTeam}
     />
   );
 };

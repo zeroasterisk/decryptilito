@@ -5,18 +5,18 @@ import { cloneDeep } from 'lodash';
 // import { action } from '@storybook/addon-actions';
 // import { linkTo } from '@storybook/addon-links';
 
-import Game from '../components/game/Game';
+import GameUI from '../components/game/GameUI';
 import { TurnStatus } from '../logic/gameData';
 
 import mockGameData from '../mock/mockGameData';
 import mockUserData from '../mock/mockUserData';
 
 export default {
-  title: 'Game',
+  title: 'GameUI',
 };
 
 export const turn2BlackTeamPrepare = () => {
-  return <Game user={mockUserData} game={mockGameData} />;
+  return <GameUI user={mockUserData} game={mockGameData} />;
 };
 
 turn2BlackTeamPrepare.story = {
@@ -26,7 +26,7 @@ turn2BlackTeamPrepare.story = {
 export const turn2Encrypt = () => {
   const thisData = cloneDeep(mockGameData);
   thisData.turns[1].status = TurnStatus.ENCRYPT;
-  return <Game user={mockUserData} game={thisData} />;
+  return <GameUI user={mockUserData} game={thisData} />;
 };
 
 turn2Encrypt.story = {

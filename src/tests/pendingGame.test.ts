@@ -143,9 +143,11 @@ describe('PendingGameData utilities', () => {
       data.whiteTeam = [];
       data.blackTeam = [agent, agent, agent, agent];
       const out = buildGame(data);
-      expect(out.id).to.not.equal(data.id);
+      expect(out.id).to.equal(data.id);
       expect(out.shortCode).to.equal(data.shortCode);
       expect(out.uids).to.deep.equal(data.uids);
+      expect(out.whiteTeam.uids.length).to.equal(3);
+      expect(out.blackTeam.uids.length).to.equal(4);
       expect(out.whiteTeam.teamMembers.length).to.equal(3);
       expect(out.blackTeam.teamMembers.length).to.equal(4);
       expect(out.whiteTeam.teamName).to.equal(data.whiteTeamName);

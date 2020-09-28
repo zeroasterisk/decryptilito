@@ -21,6 +21,7 @@ import {
 } from './enums';
 
 import { GameDataInput } from './gameData';
+import { UserData } from './userData';
 
 export interface PendingGameUser {
   // public details about each team member
@@ -136,12 +137,12 @@ export const pendingGameDataConverter = {
 // add a user to the PendingGame
 export type addUserToTeamType = (
   team: string,
-  user: firebase.User,
+  user: UserData,
   data: PendingGameData,
 ) => PendingGameData;
 export const addUserToTeam: addUserToTeamType = (
   team: string,
-  user: firebase.User,
+  user: UserData,
   data: PendingGameData,
 ) => {
   const withoutUser = ({ id }: { id: string }) => id !== user.uid;
@@ -206,7 +207,7 @@ export const buildGame: buildGameType = (data: PendingGameData) => {
     }
   }
   const gameData = {
-    id: makeId(16),
+    id: data.id, // must match the pendingGame.id
     shortCode: data.shortCode,
     status: GameStatus.ENTRY,
     uids: data.uids,
@@ -214,6 +215,7 @@ export const buildGame: buildGameType = (data: PendingGameData) => {
     turns: [],
     // team data
     whiteTeam: {
+      uids: whiteTeam.map(({ id }) => id),
       teamColor: TeamColor.WHITE,
       teamName: data.whiteTeamName,
       teamMemberNames: whiteTeam.map(({ name }) => name).join(', '),
@@ -221,6 +223,7 @@ export const buildGame: buildGameType = (data: PendingGameData) => {
       words: [],
     },
     blackTeam: {
+      uids: blackTeam.map(({ id }) => id),
       teamColor: TeamColor.BLACK,
       teamName: data.blackTeamName,
       teamMemberNames: blackTeam.map(({ name }) => name).join(', '),

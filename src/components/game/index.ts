@@ -1,11 +1,11 @@
-import Game from './Game';
+import GameUI from './GameUI';
 // import GameClue from './GameClue';
 import GameTeamName from './GameTeamName';
 import GameTurnBlock from './GameTurnBlock';
 import GameTurnBlocks from './GameTurnBlocks';
 
 export {
-  Game,
+  GameUI,
   // GameClue,
   GameTeamName,
   GameTurnBlock,

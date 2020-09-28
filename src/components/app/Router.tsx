@@ -2,8 +2,7 @@ import { HookRouter, useRoutes } from 'hookrouter';
 import React from 'react';
 
 import About from '../pages/About';
-import GameLoader from '../pages/GameLoader';
-import GameEntry from '../pages/GameEntry';
+import Game from '../pages/Game';
 import Home from '../pages/Home';
 import Lobby from '../pages/Lobby';
 import PendingGame from '../pages/PendingGame';
@@ -15,20 +14,17 @@ import NotFoundPage from '../pages/NotFoundPage';
 const routes = {
   '/': () => <Home />,
   '/about*': () => <About />,
-  '/game/:game_id': ({ game_id }: HookRouter.QueryParams) => (
-    <GameEntry game_id={game_id} />
-  ),
-  '/game/:game_id/:team_id': ({ game_id, team_id }: HookRouter.QueryParams) => (
-    <GameLoader game_id={game_id} team_id={team_id} />
-  ),
   '/auth': () => <Auth />,
   '/account': () => <Account />,
-  // gotcha - storybook routes to this url :/
-  '/iframe.html': () => <Home />,
+  // pending game
   '/lobby': () => <Lobby />,
   '/join/:id': ({ id }: HookRouter.QueryParams) => (
     <PendingGame short_code={id} />
   ),
+  // active game
+  '/game/:id': ({ id }: HookRouter.QueryParams) => <Game id={id} />,
+  // gotcha - storybook routes to this url :/
+  '/iframe.html': () => <Home />,
 };
 
 const Router: React.FC = () => {

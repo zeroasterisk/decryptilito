@@ -3,8 +3,10 @@ import { navigate } from 'hookrouter';
 import { Button, Result } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 
+import { UserData } from '../../logic/userData';
+
 interface PendingGameNotFoundProps {
-  user?: firebase.User;
+  user?: UserData;
 }
 
 const PendingGameNotFound: React.FC<PendingGameNotFoundProps> = () => {

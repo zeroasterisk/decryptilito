@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Menu, Dropdown } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 
+import { UserData } from '../../logic/userData';
 import { PendingGameData, PendingGameUser } from '../../logic/pendingGameData';
 import { PendingGameStatus } from '../../logic/enums';
 
@@ -9,7 +10,7 @@ export type basicFunctionType = () => void;
 
 // ADMIN only functionality for a pending game
 interface PendingGameAdminMenuProps {
-  user: firebase.User;
+  user: UserData;
   pendingGame: PendingGameData;
 }
 const PendingGameAdminMenu: React.FC<PendingGameAdminMenuProps> = ({

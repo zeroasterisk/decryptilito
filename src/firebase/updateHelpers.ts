@@ -36,3 +36,23 @@ export const updateGame: updateGameType = (game: GameData) => {
     // .then(() => console.log('updated', game))
     .catch((error: any) => console.error('update failed', error, game));
 };
+
+// helper to update a firebase auth currentUser profile, saving up to firebase
+export interface UserProfileInput {
+  displayName?: string;
+}
+export type updateUserProfileType = (profile: UserProfileInput) => void;
+export const updateUserProfile: updateUserProfileType = (
+  profile: UserProfileInput,
+) => {
+  console.dir(profile);
+  const auth = firebase.auth();
+  if (!auth)
+    throw new Error('Unable to updateUserProfileType, no auth() object');
+  const currentUser = auth.currentUser;
+  if (!currentUser)
+    throw new Error('Unable to updateUserProfileType, no currentUser() object');
+  currentUser
+    .updateProfile(profile)
+    .catch((error: any) => console.error('update failed', error, profile));
+};
