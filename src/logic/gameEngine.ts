@@ -16,7 +16,7 @@ const teamOppositeName = (name: TeamKey) => teamName(teamOpposite(name));
 const getMyTeam = (game: GameData, user: UserData) => {
   if (!(user && user.uid)) return null;
   const uid = user.uid;
-  if (!(game && game.uids && game.uids.indexOf(uid))) return null;
+  if (!(game && game.uids && game.uids.indexOf(uid) !== -1)) return null;
   // should be in the data of the uids
   if (
     game.whiteTeam &&

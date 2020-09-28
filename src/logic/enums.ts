@@ -7,8 +7,11 @@ export enum TeamColor {
   WHITE = 'WHITE',
 }
 export enum GameStatus {
+  // until we have verified all requirements are met
   ENTRY = 'ENTRY',
+  // game in progress
   ACTIVE = 'ACTIVE',
+  // game over
   COMPLETE = 'COMPLETE',
 }
 // active_turn_phase: "prepare", // prepare, encrypt, guess_order_white_team, guess_order_black_team
@@ -33,9 +36,13 @@ export enum TurnStatus {
 }
 
 export enum PendingGameStatus {
+  // until we have verified all requirements are met
   ENTRY = 'ENTRY',
+  // all requirements are met, ready to launch
   READY = 'READY',
+  // pending game is being converted into an actual game
   LAUNCHING = 'LAUNCHING',
+  // trash
   EXPIRED = 'EXPIRED',
 }
 

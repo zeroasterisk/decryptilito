@@ -2,14 +2,16 @@ import React from 'react';
 
 import './Game.css';
 
-import { Tooltip } from 'antd';
+import { Result } from 'antd';
 
+import GameUIPending from './GameUIPending';
 import GameTeamName from './GameTeamName';
 import GameTurnBlocks from './GameTurnBlocks';
 import Words from './Words';
 
 import { getMyTeam, getTeamData } from '../../logic/gameEngine';
 
+import { GameStatus } from '../../logic/enums';
 import { GameData } from '../../logic/gameData';
 import { UserData } from '../../logic/userData';
 
@@ -19,14 +21,20 @@ interface GameUIProps {
   user: UserData;
 }
 const GameUI: React.FC<GameUIProps> = ({ game, user }) => {
+  if (game.status === GameStatus.ENTRY) {
+    return <GameUIPending game={game} user={user} />;
+  }
   const myTeam = getMyTeam(game, user);
   if (!myTeam) {
-    return <Tooltip title="Unable to determine team assignment">?</Tooltip>;
+    console.log(game, user, myTeam);
+    return (
+      <Result status="warning" title="Unable to determine team assignment" />
+    );
   }
   const showTeam = myTeam;
   const teamData = getTeamData({ game, user });
   if (!teamData) {
-    return <Tooltip title="Unable to determine team data">?</Tooltip>;
+    return <Result status="warning" title="Unable to determine team data" />;
   }
 
   return (

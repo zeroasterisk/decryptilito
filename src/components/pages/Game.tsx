@@ -71,12 +71,11 @@ const GameLoadDoc: React.FC<GameLoadDocProps> = ({ id }) => {
   }
   const gameData = value.data();
   if (!(gameData && gameData.shortCode)) {
-    return <GameLoading reason="Loading Pending Game x2" />;
+    return <GameLoading reason="Loading Game, still don't have valid data" />;
   }
   gameData.id = id;
-  // TODO instead of forcing the firebase data into the PendingGameData class,
-  //      should be able to rely on converter
-  const game = new GameData(classToPlain(gameData));
+  // const game = new GameData(classToPlain(gameData));
+  const game = new GameData(gameData);
   if (!(game && game.id)) {
     console.log('Unable to load GameData into Game class', gameData, id);
     return <GameNotFound />;
@@ -86,7 +85,8 @@ const GameLoadDoc: React.FC<GameLoadDocProps> = ({ id }) => {
       <PageHeader
         className="site-page-header"
         onBack={() => navigate('/lobby', true)}
-        title={`Preparing Game: ${gameData.shortCode}`}
+        title={`Game: ${gameData.shortCode}`}
+        // TODO(alanblount): consider changing based on status
       />
       <userContext.Consumer>
         {({ user }) =>
@@ -101,4 +101,20 @@ const GameLoadDoc: React.FC<GameLoadDocProps> = ({ id }) => {
   );
 };
 
-export default Game;
+// quick-fail if invalid id
+interface GamePageProps {
+  id: string;
+}
+const GamePage: React.FC<GamePageProps> = ({ id }) => {
+  if (
+    id &&
+    id.length > 4 &&
+    id.length < 20 &&
+    id.match(/^[a-zA-Z0-9]{4,20}$/)
+  ) {
+    return <GameLoadDoc id={id} />;
+  }
+  return <GameNotFound />;
+};
+
+export default GamePage;
