@@ -5,19 +5,15 @@
  *
  */
 import React from 'react';
+import shuffle from 'lodash.shuffle';
 
 import './Game.css';
 
-import { Card, Carousel, Typography } from 'antd';
+import { Card, Carousel } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
-import GameTeamName from './GameTeamName';
-
-import { getMyTeam, getTeamData } from '../../logic/gameEngine';
 
 import { GameData } from '../../logic/gameData';
 import { UserData } from '../../logic/userData';
-
-const { Title } = Typography;
 
 const contentStyle = {
   height: '160px',
@@ -69,33 +65,25 @@ const funnies = [
   },
 ];
 
-// mutate, shuffle an array in place
-const shuffle = (array: Funny[]) => {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-};
-
 interface GameUIProps {
   // after fetching the game data...
   game: GameData;
   user: UserData;
 }
-const GameUIPending: React.FC<GameUIProps> = ({ game, user }) => {
-  shuffle(funnies);
-  return (
-    <div className={`Game GamePending`}>
-      <Card
-        title={
-          <span>
-            <LoadingOutlined /> Preparing to launch game...{' '}
-            <small>sit tight</small>
-          </span>
-        }
-      >
-        <Carousel autoplay>
-          {funnies.map(({ title, sub }, i) => (
+const GameUIPending: React.FC<GameUIProps> = ({ game, user }) => (
+  <div className={`Game GamePending`}>
+    <Card
+      title={
+        <span>
+          <LoadingOutlined /> Preparing to launch game...{' '}
+          <small>sit tight</small>
+        </span>
+      }
+    >
+      <Carousel autoplay>
+        {shuffle(funnies)
+          .slice(0, 4)
+          .map(({ title, sub }: { title: string; sub: string }, i: number) => (
             <div key={`pane${i}`}>
               <div style={contentStyle}>
                 <h3>{title}</h3>
@@ -103,10 +91,9 @@ const GameUIPending: React.FC<GameUIProps> = ({ game, user }) => {
               </div>
             </div>
           ))}
-        </Carousel>
-      </Card>
-    </div>
-  );
-};
+      </Carousel>
+    </Card>
+  </div>
+);
 
 export default GameUIPending;

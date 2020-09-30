@@ -2,20 +2,21 @@ import { HookRouter, useRoutes } from 'hookrouter';
 import React from 'react';
 
 import About from '../pages/About';
+import Account from '../pages/Account';
+import Admin from '../pages/Admin';
+import Auth from '../pages/Auth';
 import Game from '../pages/Game';
 import Home from '../pages/Home';
 import Lobby from '../pages/Lobby';
-import PendingGame from '../pages/PendingGame';
-import Auth from '../pages/Auth';
-import Account from '../pages/Account';
-// import MustLogin from '../pages/MustLogin';
 import NotFoundPage from '../pages/NotFoundPage';
+import PendingGame from '../pages/PendingGame';
 
 const routes = {
   '/': () => <Home />,
   '/about*': () => <About />,
   '/auth': () => <Auth />,
   '/account': () => <Account />,
+  '/admin*': () => <Admin />,
   // pending game
   '/lobby': () => <Lobby />,
   '/join/:id': ({ id }: HookRouter.QueryParams) => (
