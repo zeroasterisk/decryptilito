@@ -1,6 +1,11 @@
 {
   "compilerOptions": {
+    "target": "es2019",
+    "types": ["node"],
     "module": "commonjs",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "outDir": "lib",
@@ -9,5 +14,5 @@
     "target": "es2017"
   },
   "compileOnSave": true,
-  "include": ["src"]
+  "include": ["src/*.ts"]
 }
