@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions';
 
 import cors from 'cors';
 
-import { addWords } from './word';
+import { addWords, updateAllWords } from './word';
 import { activateGames } from './game';
 
 // initalize firebase connection, etc
@@ -74,7 +74,7 @@ export const addWordsPubSub = functions.pubsub
 //   }
 // );
 
-export const activeGamesHttps = functions.https.onRequest(
+export const activateGamesHttps = functions.https.onRequest(
   async (request, response) => {
     corsHandler(request, response, async () => {
       console.log('Activate Games (search for ENTRY games)');
@@ -84,10 +84,33 @@ export const activeGamesHttps = functions.https.onRequest(
   },
 );
 
-export const activeGamesPubSub = functions.pubsub
+export const activateGamesPubSub = functions.pubsub
   .topic('activate-games')
   .onPublish(async (message) => {
     console.log('Activate Games (search for ENTRY games)');
     const result = await activateGames();
     console.log(result);
+  });
+
+export const updateAllWordsHttps = functions.https.onRequest(
+  async (request, response) => {
+    corsHandler(request, response, async () => {
+      console.log(
+        'Update all Words (review all words and cleanup details, rand refresh)',
+      );
+      const result = await updateAllWords();
+      console.log(`Update all Words done [${result.length}]`);
+      response.send(`Update all Words done [${result.length}]`);
+    });
+  },
+);
+
+export const updateAllWordsPubSub = functions.pubsub
+  .topic('update-all-words')
+  .onPublish(async (message) => {
+    console.log(
+      'Update all Words (review all words and cleanup details, rand refresh)',
+    );
+    const result = await updateAllWords();
+    console.log(`Update all Words done [${result.length}]`);
   });

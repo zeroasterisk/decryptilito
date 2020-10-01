@@ -88,7 +88,7 @@ export const activateGames = async () => {
   const output: any = [];
   await db
     .collection('Games')
-    // .where('status', '==', 'ENTRY') // TODO MUST UNCOMMENT
+    .where('status', '==', 'ENTRY')
     .limit(10)
     .get()
     .then((snap: any /*QuerySnapshot*/) =>
@@ -126,5 +126,7 @@ export const activateGames = async () => {
       }),
     );
   await Promise.all(updates);
-  return output.join('\n');
+  const message = `Activated ${updates.length} games. ${output.join('\n')}`;
+  console.log(message);
+  return message;
 };

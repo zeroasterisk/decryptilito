@@ -66,6 +66,46 @@ export const getWords = async (limit: number) => {
     .filter((w: string) => w && w.length > 2);
 };
 
+// review and update all words
+export const updateAllWords = async () => {
+  const updates: any = [];
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // simplify to just the date
+  await db
+    .collection('Words')
+    .orderBy('word', 'asc')
+    .get()
+    .then((snap: any /*QuerySnapshot*/) =>
+      snap.forEach((docSnap: any) => {
+        // get a document reference with-which we can make changes
+        const docRef = db.doc(docSnap.ref.path);
+        // read details from the word
+        const docData = docSnap.data();
+        if (!(docData.word && docData.word.length > 2)) {
+          console.error(`Deleting word which is too small ${docSnap.ref.path}`);
+          return updates.push(docRef.delete());
+        }
+        // how many times has this word ever been used?
+        const usageCount = docData.usageCount || 0;
+        // random number, for tie-breaker in sorting
+        const rand = Math.round(Math.random() * (9999 - 0 + 1));
+        // last used date
+        const last = docData.last || today;
+        const docUpdate = {
+          last,
+          usageCount,
+          rand,
+        };
+        console.error(
+          `Updating ${docData.word} {rand: ${docUpdate.rand}, usageCount: ${docUpdate.usageCount}, last: ${docUpdate.last}`,
+        );
+        return updates.push(docRef.update(docUpdate));
+      }),
+    );
+  await Promise.all(updates);
+  return `Completed updating ${updates.length} words`;
+};
+
 // add N words to the repo
 // TODO(alanblount): secure this
 export const addWords = async (wordCSV: string) => {
