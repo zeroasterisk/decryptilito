@@ -13,8 +13,9 @@ import { TeamMember } from './teamData';
 
 export interface TurnTeamData {
   encryptor: TeamMember;
+  encryptorReady?: boolean; // Is ready to show words?
   correctOrder: number[];
-  correctOrderHidden?: boolean; // only matter while encrypting
+  correctOrderHidden?: boolean; // UI controls while encrypting
   clues: string[];
   cluesSubmitted?: boolean;
   guessedOrderOpponent: number[];

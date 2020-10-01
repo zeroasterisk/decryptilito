@@ -4,7 +4,7 @@
  */
 import React from 'react';
 
-import { Button, Card, Typography } from 'antd';
+import { Button, Card, Tag, Tooltip, Typography, message } from 'antd';
 import {
   LoadingOutlined,
   LockOutlined,
@@ -142,6 +142,11 @@ const GameTurnBlockActivePrepare: React.FC<GameTurnBlockProps> = ({
   myTeam,
   showTeam,
 }) => {
+  const onChangeMarkReady = () => {
+    game.turns[turn_number - 1][showTeam].encryptorReady = true;
+    game.update();
+    message.success('Marked as ready...');
+  };
   const turnData = getTurnData(game, turn_number);
   const turnTeamData = turnData[showTeam];
   return (
@@ -150,17 +155,23 @@ const GameTurnBlockActivePrepare: React.FC<GameTurnBlockProps> = ({
       title={
         <div>
           Encryption&nbsp;
-          <strong>(rest of team avert eyes)</strong>
-          <LockOutlined />
-          <br />
-          Encryptor: {turnTeamData.encryptor.name}
+          <WarningAvertYourEyes />
+          <div>Encryptor: {turnTeamData.encryptor.name}</div>
         </div>
       }
       actions={[
-        <Button key="ready" type="primary">
-          Show the Correct Order
-          <RightOutlined />
-        </Button>,
+        turnTeamData.encryptorReady ? (
+          <Tooltip title="You are ready... waiting on other team">
+            <Tag>
+              Waiting on other team <LoadingOutlined />
+            </Tag>
+          </Tooltip>
+        ) : (
+          <Button key="ready" type="primary" onClick={onChangeMarkReady}>
+            Show the Correct Order
+            <RightOutlined />
+          </Button>
+        ),
       ]}
       loading
       className="PrepareEncryptor"
@@ -190,8 +201,7 @@ const GameTurnBlockActiveEncryptor: React.FC<GameTurnBlockProps> = ({
       title={
         <div>
           Encryption&nbsp;
-          <strong>(rest of team avert eyes)</strong>
-          <LockOutlined />
+          <WarningAvertYourEyes />
           <br />
           Encryptor: {turnTeamData.encryptor.name}
         </div>
@@ -249,8 +259,7 @@ const GameTurnBlockActiveEncryptedWaiting: React.FC<GameTurnBlockProps> = ({
       title={
         <div>
           Encryption&nbsp;
-          <strong>(rest of team avert eyes)</strong>
-          <LockOutlined />
+          <WarningAvertYourEyes />
           <br />
           Encryptor: {turnTeamData.encryptor.name}
         </div>
@@ -434,6 +443,13 @@ const GameTurnBlockActiveDecryptors: React.FC<GameTurnBlockProps> = ({
     </Card>
   );
 };
+
+const WarningAvertYourEyes: React.FC = () => (
+  <Text type="warning" strong>
+    (rest of team avert eyes)
+    <LockOutlined />
+  </Text>
+);
 
 export default GameTurnBlock;
 

@@ -27,6 +27,8 @@ import { TurnData } from './turnData';
 
 import { updateGame } from '../firebase';
 
+import { tick } from './gameEngine';
+
 export interface GameDataInput {
   id?: string;
   shortCode?: string;
@@ -108,8 +110,16 @@ export class GameData {
     return this.errors.length === 0;
   }
 
+  // updates the record in firebase to match "this" insteance of the game
   public update() {
     return updateGame(this);
+  }
+
+  // tick, check the game to see if there should be any changes
+  // progresses the game through turns and scoring
+  // updates the game if needed
+  public tick() {
+    return tick(this);
   }
 }
 

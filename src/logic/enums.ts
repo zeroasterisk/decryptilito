@@ -33,6 +33,8 @@ export enum TurnStatus {
   SCORING_BLACK = 'SCORING_BLACK',
   // done
   DONE = 'DONE',
+  // done
+  UNKNOWN = 'UNKNOWN',
 }
 
 export enum PendingGameStatus {

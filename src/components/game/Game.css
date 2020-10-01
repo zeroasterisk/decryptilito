@@ -43,6 +43,11 @@
   background-color: #333;
   color: #eee;
 }
+.BLACKTeam .ant-typography-warning,
+.WHITETeam .teamOpposite .ant-typography-warning {
+  background-color: #333;
+  color: #faad14;
+}
 .BLACKTeam .ant-card-actions,
 .BLACKTeam .ant-list-header,
 .BLACKTeam .ant-list-footer {

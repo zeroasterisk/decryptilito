@@ -30,7 +30,9 @@ const createNextTurn = (game: GameData) => {
     timeoutSecondsRemaining: 0,
     whiteTeam: {
       encryptor: getNextEncryptor(TeamKey.whiteTeam, game),
+      encryptorReady: false,
       correctOrder: getRandomOrder(),
+      correctOrderHidden: true,
       clues: ['', '', ''],
       cluesSubmitted: false,
       guessedOrderSelf: [],
@@ -42,7 +44,9 @@ const createNextTurn = (game: GameData) => {
     },
     blackTeam: {
       encryptor: getNextEncryptor(TeamKey.blackTeam, game),
+      encryptorReady: false,
       correctOrder: getRandomOrder(),
+      correctOrderHidden: true,
       clues: ['', '', ''],
       cluesSubmitted: false,
       guessedOrderSelf: [],
@@ -72,7 +76,14 @@ const getRandomOrder = () => {
 interface StringNumberMap {
   [s: string]: number;
 }
-const getNextEncryptor = (myTeam: TeamKey, game: GameData) => {
+export type getNextEncryptorType = (
+  myTeam: TeamKey,
+  game: GameData,
+) => TeamMember;
+const getNextEncryptor: getNextEncryptorType = (
+  myTeam: TeamKey,
+  game: GameData,
+) => {
   const { turns } = game;
   if (!(myTeam && game[myTeam])) throw Error(`Invalid team data [${myTeam}]`);
   const teamMembers = game[myTeam].teamMembers;
@@ -95,17 +106,19 @@ const getNextEncryptor = (myTeam: TeamKey, game: GameData) => {
       !Object.keys(turnMemberIdFreqCount).includes(member.id),
   );
   if (missingTeamMembers.length > 0) {
-    return missingTeamMembers.shift();
+    return missingTeamMembers[0];
   }
   // finally, return the least found name
-  const encryptorId = Object.keys(turnMemberIdFreqCount)
-    .sort((a: string, b: string) => {
-      return turnMemberIdFreqCount[a] - turnMemberIdFreqCount[b];
-    })
-    .shift();
-  return teamMembers
-    .filter((member: TeamMember) => member.id === encryptorId)
-    .shift();
+  const rankedTeamMembers = teamMembers.sort((a: TeamMember, b: TeamMember) => {
+    const aRank = turnMemberIdFreqCount[a.id] || 0;
+    const bRank = turnMemberIdFreqCount[b.id] || 0;
+    return aRank - bRank;
+  });
+  if (rankedTeamMembers.length > 0) {
+    return rankedTeamMembers[0];
+  }
+  // well... a member at random then?
+  return teamMembers[0];
 };
 
 const scoreTurn = (turn: TurnData) => {
@@ -126,7 +139,8 @@ const scoreTurn = (turn: TurnData) => {
   return turn;
 };
 
-const calculateTurnStatus = (turn: TurnData) => {
+export type calculateTurnStatusType = (turn: TurnData) => TurnStatus;
+const calculateTurnStatus: calculateTurnStatusType = (turn: TurnData) => {
   // all submitted = DONE
   if (
     turn.whiteTeam.guessedOrderSelfSubmitted &&
@@ -136,6 +150,10 @@ const calculateTurnStatus = (turn: TurnData) => {
   ) {
     return TurnStatus.DONE;
   }
+  if (!(turn.whiteTeam.encryptorReady && turn.blackTeam.encryptorReady)) {
+    // both team's encryptors need to indicate they are ready to start...
+    return TurnStatus.PREPARE;
+  }
   const enteredCluesBothTeams = [
     ...turn.whiteTeam.clues,
     ...turn.blackTeam.clues,
@@ -144,10 +162,6 @@ const calculateTurnStatus = (turn: TurnData) => {
     turn.whiteTeam.cluesSubmitted,
     turn.blackTeam.cluesSubmitted,
   ].filter((x) => x);
-  // no clues, we are in PREPARE -- or ENcryptor have not yet started :/
-  if (enteredCluesBothTeams.length === 0) {
-    return TurnStatus.PREPARE;
-  }
   // some clues entered, we are in ENCRYPT_PARTIAL
   if (enteredCluesBothTeams.length > 0 && submittedClues.length === 1) {
     return TurnStatus.ENCRYPT_PARTIAL;
@@ -155,6 +169,7 @@ const calculateTurnStatus = (turn: TurnData) => {
   if (enteredCluesBothTeams.length > 0 && submittedClues.length === 0) {
     return TurnStatus.ENCRYPT;
   }
+  // TODO do we need to validate the submittedClues more?
 
   // whiteTeam decrypt
   const submittedGuessWhite = [
@@ -193,7 +208,7 @@ const calculateTurnStatus = (turn: TurnData) => {
   ) {
     return TurnStatus.SCORING_BLACK;
   }
-  return 'NOPE';
+  return TurnStatus.UNKNOWN;
 };
 
 // get clue details, re-organized into more human-useful form

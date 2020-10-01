@@ -1,6 +1,37 @@
 import { TeamColor, TeamKey } from './enums';
 import { GameData } from './gameData';
 import { UserData } from './userData';
+import { calculateTurnStatus, createNextTurn } from './turnEngine';
+
+// tick to see if there are any changes in the turn status
+// - progress through turns
+const tick = (game: GameData) => {
+  let changed = false;
+  console.log('tick', game);
+  if (!(game.turns && game.turns.length)) {
+    game.turns = [createNextTurn(game)];
+    changed = true;
+  }
+  const activeTurnNumber = game.turns.length;
+  if (game.activeTurnNumber < activeTurnNumber) {
+    game.activeTurnNumber = activeTurnNumber;
+    changed = true;
+  }
+  const turn = game.turns[activeTurnNumber - 1];
+  const turnStatus = calculateTurnStatus(turn);
+  console.log(`turn#${activeTurnNumber} = ${turnStatus}`);
+  if (turn.status !== turnStatus) {
+    turn.status = turnStatus;
+    changed = true;
+  }
+  // TODO score turn
+  // TODO score game
+  // TODO end game
+  if (changed) {
+    console.log('game changed... updating');
+    game.update();
+  }
+};
 
 const teamName = (name: TeamKey | TeamColor) => {
   if (name === TeamKey.whiteTeam) return 'White Team';
@@ -55,4 +86,11 @@ const getTeamData = ({ game, user }: { game: GameData; user: UserData }) => {
   return null;
 };
 
-export { teamName, teamOpposite, teamOppositeName, getMyTeam, getTeamData };
+export {
+  tick,
+  teamName,
+  teamOpposite,
+  teamOppositeName,
+  getMyTeam,
+  getTeamData,
+};
