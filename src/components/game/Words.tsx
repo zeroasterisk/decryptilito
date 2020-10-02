@@ -1,10 +1,8 @@
 import React from 'react';
 
-import { Card, List, Tooltip } from 'antd';
+import { Card, List, Tooltip, Tag } from 'antd';
 
 import { TeamData } from '../../logic/teamData';
-
-import { getTeamData } from '../../logic/gameEngine';
 
 interface GameProps {
   teamData: TeamData;
@@ -22,9 +20,21 @@ const Words: React.FC<GameProps> = ({ teamData }) => {
       <List
         grid={{ gutter: 16, column: 4 }}
         dataSource={words}
-        renderItem={(item: { title: string }) => (
+        renderItem={(item: { title: string }, index: number) => (
           <List.Item>
-            <Card className="Word">{item.title}</Card>
+            <Card
+              className="Word"
+              actions={[
+                <div
+                  key="wordNum"
+                  style={{ textAlign: 'right', paddingRight: 5 }}
+                >
+                  <Tag>{index + 1}</Tag>
+                </div>,
+              ]}
+            >
+              {item.title}
+            </Card>
           </List.Item>
         )}
       />

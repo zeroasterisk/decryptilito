@@ -1,6 +1,15 @@
 import React from 'react';
 
-import { Col, Input, Row, Select, Skeleton, Tooltip, Typography } from 'antd';
+import {
+  Col,
+  Input,
+  Row,
+  Select,
+  Skeleton,
+  Tag,
+  Tooltip,
+  Typography,
+} from 'antd';
 import {
   ClockCircleOutlined,
   CheckCircleOutlined,
@@ -43,7 +52,11 @@ const ColOpponentGuess: React.FC<ColOpponentGuessProps> = ({
     <Col xs={3} className="Order teamOwn">
       {future || lock ? (
         <Text disabled>
-          {lock ? <LockOutlined /> : <ClockCircleOutlined />}
+          {lock ? (
+            <LockOutlined style={{ opacity: 0.2 }} />
+          ) : (
+            <ClockCircleOutlined style={{ opacity: 0.4 }} />
+          )}
         </Text>
       ) : (
         children
@@ -65,7 +78,7 @@ const ColOwnGuess: React.FC<ColOwnGuessProps> = ({
     <Col xs={3} className="Order teamOpposite">
       {future ? (
         <Text disabled>
-          <ClockCircleOutlined />
+          <ClockCircleOutlined style={{ opacity: 0.2 }} />
         </Text>
       ) : (
         children
@@ -148,23 +161,24 @@ const GameClueHeader: React.FC<GameClueHeaderProps> = ({
     <Col xs={15}>{children}</Col>
     <Tooltip title={`Guessed Order for ${teamName(showTeam)}`}>
       <Col xs={3} className="Order">
-        <QuestionCircleOutlined />
+        <QuestionCircleOutlined style={{ opacity: 0.4 }} />
       </Col>
     </Tooltip>
     <Tooltip title={`Guessed Order for ${teamOppositeName(showTeam)}`}>
       <Col xs={3} className="Order teamOpposite">
-        <QuestionCircleOutlined />
+        <QuestionCircleOutlined style={{ opacity: 0.4 }} />
       </Col>
     </Tooltip>
     <Tooltip title={`Correct Order for ${teamName(showTeam)}`}>
       <Col xs={3} className="Order">
-        <CheckCircleOutlined />
+        <CheckCircleOutlined style={{ opacity: 0.4 }} />
       </Col>
     </Tooltip>
   </Row>
 );
 
 type GameClueProps = {
+  words?: string[];
   showTeam: TeamKey;
   clue_number: number;
   turnTeamData: TurnTeamData;
@@ -212,21 +226,27 @@ const GameClueReveiled: React.FC<GameClueProps> = ({
   );
 };
 const GameClueEditClue: React.FC<GameClueProps> = ({
+  words = [],
   clue_number,
   showTeam,
   turnTeamData: { clues = [], correctOrder = [], correctOrderHidden = false },
 }) => {
   const valueOrderCorrect = correctOrder[clue_number - 1] || 0;
   const clue = clues[clue_number - 1];
+  const word = words[valueOrderCorrect - 1];
   return (
     <Row gutter={8} className="GameTurnClues">
       <ColClue>
-        <Input style={{ width: '100%' }} value={clue} />
+        <Input
+          style={{ width: '100%' }}
+          value={clue}
+          placeholder={`clue: ${word}`}
+        />
       </ColClue>
       <ColOpponentGuess showTeam={showTeam} future />
       <ColOwnGuess showTeam={showTeam} future />
       <ColCorrect showTeam={showTeam} lock={correctOrderHidden}>
-        <Text strong>{valueOrderCorrect}</Text>
+        <Tag style={{ marginRight: 0 }}>{valueOrderCorrect}</Tag>
       </ColCorrect>
     </Row>
   );

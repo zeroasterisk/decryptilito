@@ -23,7 +23,7 @@ import { GameStatus, TeamColor } from './enums';
 
 import { TeamData } from './teamData';
 
-import { TurnData } from './turnData';
+import { TurnData, TurnTeamData } from './turnData';
 
 import { updateGame } from '../firebase';
 

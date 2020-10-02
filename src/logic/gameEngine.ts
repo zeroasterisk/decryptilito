@@ -78,13 +78,28 @@ const getMyTeam = (game: GameData, user: UserData) => {
   }
   return null;
 };
-const getTeamData = ({ game, user }: { game: GameData; user: UserData }) => {
-  const myTeam = getMyTeam(game, user);
-  if (myTeam && game[myTeam]) {
-    return game[myTeam];
+const getTeamData = (
+  game: GameData,
+  user: UserData,
+  showTeam: TeamKey | null = null,
+) => {
+  const teamKey = showTeam || getMyTeam(game, user);
+  if (teamKey && game[teamKey]) {
+    return game[teamKey];
   }
-  console.error(`getTeamData not found for team: ${myTeam}`);
+  console.error(`getTeamData not found for team: ${teamKey}`);
   console.dir(game);
+  return null;
+};
+const getWords = (
+  game: GameData,
+  user: UserData,
+  showTeam: TeamKey | null = null,
+) => {
+  const teamData = getTeamData(game, user, showTeam);
+  if (teamData && teamData.words) {
+    return teamData.words;
+  }
   return null;
 };
 
@@ -95,4 +110,5 @@ export {
   teamOppositeName,
   getMyTeam,
   getTeamData,
+  getWords,
 };

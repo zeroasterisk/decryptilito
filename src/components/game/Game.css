@@ -29,8 +29,8 @@
 .WHITETeam,
 .BLACKTeam .teamOpposite,
 .BLACKTeam .teamOpposite .ant-typography {
-  background-color: #eee;
-  color: #333;
+  background-color: #555;
+  color: #fff;
 }
 
 .BLACKTeam,
@@ -51,7 +51,7 @@
 .BLACKTeam .ant-card-actions,
 .BLACKTeam .ant-list-header,
 .BLACKTeam .ant-list-footer {
-  background-color: #444;
+  background-color: #222;
   color: #eee;
 }
 .BLACKTeam .ant-skeleton-content .ant-skeleton-paragraph > li {

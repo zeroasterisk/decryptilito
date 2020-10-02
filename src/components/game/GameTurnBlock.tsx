@@ -21,13 +21,16 @@ import {
   GameClueUnreveiled,
 } from './GameClue';
 
+import GameTurnBlockActiveEncryptor from './GameTurnBlockActiveEncryptor';
+
 import TimeoutClock from '../timeout/TimeoutClock';
 
 import { TeamKey, TurnStatus } from '../../logic/enums';
 import { GameData } from '../../logic/gameData';
+import { TurnTeamData } from '../../logic/turnData';
 import { UserData } from '../../logic/userData';
 
-import { teamName, teamOppositeName } from '../../logic/gameEngine';
+import { teamName, teamOppositeName, getWords } from '../../logic/gameEngine';
 import { getTurnData } from '../../logic/turnEngine';
 
 const { Text } = Typography;
@@ -36,13 +39,19 @@ const { Text } = Typography;
  * The GameTurnBlocks is our main component.
  * It is really a status-router for the variations which are setup as their own sub-components.
  */
-interface GameTurnBlockProps {
+export interface GameTurnBlockProps {
   game: GameData;
   turn_number: number;
   user: UserData;
   myTeam: TeamKey;
   showTeam: TeamKey;
+  // if read only, and we already have it, this is a shortcut
+  turnTeamData?: TurnTeamData;
 }
+export interface GameTurnBlockReadonlyProps {
+  turnTeamData: TurnTeamData;
+}
+
 const GameTurnBlock: React.FC<GameTurnBlockProps> = ({
   turn_number,
   game,
@@ -64,6 +73,7 @@ const GameTurnBlock: React.FC<GameTurnBlockProps> = ({
     return <GameTurnBlockActivePrepare {...props} />;
   }
   if (status === TurnStatus.ENCRYPT || status === TurnStatus.ENCRYPT_PARTIAL) {
+    // TODO only show editable for the current encryptor
     return <GameTurnBlockActiveEncryptor {...props} />;
   }
   if (
@@ -178,63 +188,6 @@ const GameTurnBlockActivePrepare: React.FC<GameTurnBlockProps> = ({
       style={{ maxWidth: 400 }}
     >
       ...
-    </Card>
-  );
-};
-
-const GameTurnBlockActiveEncryptor: React.FC<GameTurnBlockProps> = ({
-  turn_number,
-  game,
-  user,
-  myTeam,
-  showTeam,
-}) => {
-  const turnData = getTurnData(game, turn_number);
-  const turnTeamData = turnData[showTeam];
-  const clueProps = {
-    turnTeamData,
-    showTeam,
-  };
-  return (
-    <Card
-      size="small"
-      title={
-        <div>
-          Encryption&nbsp;
-          <WarningAvertYourEyes />
-          <br />
-          Encryptor: {turnTeamData.encryptor.name}
-        </div>
-      }
-      actions={[
-        <Button key="hide" type="dashed">
-          Hide Order
-          <LockOutlined />
-        </Button>,
-        <Button key="submit" type="primary">
-          Submit Clues
-          <RightOutlined />
-        </Button>,
-      ]}
-      style={{ maxWidth: 400 }}
-    >
-      <GameClueHeader showTeam={showTeam}>
-        <div>
-          #{turn_number}
-          &nbsp;
-          <Text disabled>(provide clues)</Text>
-        </div>
-      </GameClueHeader>
-      <GameClueEditClue clue_number={1} {...clueProps} />
-      <GameClueEditClue clue_number={2} {...clueProps} />
-      <GameClueEditClue clue_number={3} {...clueProps} />
-      {turnData.timeoutSecondsRemaining > 0 ? (
-        <TimeoutClock
-          timeoutSecondsRemaining={turnData.timeoutSecondsRemaining}
-        />
-      ) : (
-        ''
-      )}
     </Card>
   );
 };
@@ -456,9 +409,10 @@ export default GameTurnBlock;
 export {
   GameTurnBlock,
   GameTurnBlockActivePrepare,
-  GameTurnBlockActiveEncryptor,
+  GameTurnBlockActiveEncryptor, // other input file
   GameTurnBlockActiveEncryptedWaiting,
   GameTurnBlockActiveDecryptors,
   GameTurnBlockPast,
   GameTurnBlockFuture,
+  WarningAvertYourEyes,
 };

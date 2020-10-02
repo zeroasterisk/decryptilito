@@ -28,10 +28,14 @@ const GameUI: React.FC<GameUIProps> = ({ game, user }) => {
   // when the component unmountes, clear the interval
   useEffect(() => {
     const interval = setInterval(() => {
-      game.tick();
+      if (game) {
+        game.tick();
+      }
     }, 5000);
     return () => clearInterval(interval);
   }, []);
+  // ensure we have stuff
+  if (!(game && user)) return <p>Loading...</p>;
   // determine what to show based on game status
   if (game.status === GameStatus.ENTRY) {
     return <GameUIPending game={game} user={user} />;
@@ -44,7 +48,7 @@ const GameUI: React.FC<GameUIProps> = ({ game, user }) => {
     );
   }
   const showTeam = myTeam;
-  const teamData = getTeamData({ game, user });
+  const teamData = getTeamData(game, user, showTeam);
   if (!teamData) {
     return <Result status="warning" title="Unable to determine team data" />;
   }

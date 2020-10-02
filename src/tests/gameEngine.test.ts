@@ -6,10 +6,11 @@ import { GameData } from '../logic/gameData';
 import { UserData } from '../logic/userData';
 
 import {
-  getMyTeam,
-  getTeamData,
   teamName,
   teamOppositeName,
+  getMyTeam,
+  getTeamData,
+  getWords,
 } from '../logic/gameEngine';
 
 import mockGameData from '../mock/mockGameData';
@@ -65,9 +66,23 @@ describe('GameEngine turn utilities', () => {
     it('getTeamData gets the team data for whatever "myTeam" is', () => {
       const game = new GameData({ ...mockGameData });
       const user = new UserData({ ...mockUserData });
-      const team = getTeamData({ game, user });
+      const team = getTeamData(game, user);
       expect(team).to.be.a('object');
       expect(team).to.deep.equal(game.whiteTeam);
+    });
+  });
+  describe('getWords', () => {
+    it('getWords for the users team', () => {
+      const game = new GameData({ ...mockGameData });
+      const user = new UserData({ ...mockUserData });
+      const words = getWords(game, user);
+      expect(words).to.deep.equal(['swim', 'fly', 'walk', 'run']);
+    });
+    it('getWords for the a specified team', () => {
+      const game = new GameData({ ...mockGameData });
+      const user = new UserData({ ...mockUserData });
+      const words = getWords(game, user, 'blackTeam');
+      expect(words).to.deep.equal(['shoe', 'car', 'plane', 'boat']);
     });
   });
 });
