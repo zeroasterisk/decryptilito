@@ -1,6 +1,7 @@
 import { expect } from 'chai';
+import { cloneDeep } from 'lodash';
 
-import { TeamKey } from '../logic/enums';
+import { TeamKey, TurnStatus } from '../logic/enums';
 import { GameData } from '../logic/gameData';
 import { UserData } from '../logic/userData';
 
@@ -14,7 +15,31 @@ import {
 import mockGameData from '../mock/mockGameData';
 import mockUserData from '../mock/mockUserData';
 
+const SAVE_TO_FIREBASE = false;
+
 describe('GameEngine turn utilities', () => {
+  describe('tick', () => {
+    it('does nothing if no changes', () => {
+      const thisData = cloneDeep(mockGameData);
+      expect(thisData.tick(SAVE_TO_FIREBASE)).to.be.undefined;
+      expect(thisData).to.deep.equal(mockGameData);
+    });
+    it('updates the game with the new calculated status if changed', () => {
+      const thisData = cloneDeep(mockGameData);
+      thisData.turns[thisData.turns.length - 1].status = TurnStatus.DONE;
+      expect(thisData.tick(SAVE_TO_FIREBASE)).to.be.undefined;
+      expect(thisData).to.deep.equal(mockGameData);
+      expect(thisData.turns[thisData.turns.length - 1].status).to.equal(
+        TurnStatus.PREPARE,
+      );
+    });
+  });
+  describe('teamName', () => {
+    it('returns a friendly version of the team name', () => {
+      expect(teamName(TeamKey.whiteTeam)).to.equal('White Team');
+      expect(teamName(TeamKey.blackTeam)).to.equal('Black Team');
+    });
+  });
   describe('teamName', () => {
     it('returns a friendly version of the team name', () => {
       expect(teamName(TeamKey.whiteTeam)).to.equal('White Team');

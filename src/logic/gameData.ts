@@ -118,8 +118,8 @@ export class GameData {
   // tick, check the game to see if there should be any changes
   // progresses the game through turns and scoring
   // updates the game if needed
-  public tick() {
-    return tick(this);
+  public tick(saveAfterChange: boolean = true) {
+    return tick(this, saveAfterChange);
   }
 }
 

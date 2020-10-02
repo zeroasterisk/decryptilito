@@ -5,29 +5,31 @@ import { calculateTurnStatus, createNextTurn } from './turnEngine';
 
 // tick to see if there are any changes in the turn status
 // - progress through turns
-const tick = (game: GameData) => {
+const tick = (game: GameData, saveAfterChange: boolean = true) => {
   let changed = false;
-  console.log('tick', game);
+  // console.log('tick', game);
   if (!(game.turns && game.turns.length)) {
+    console.log(`tick: createTurn turn#1`);
     game.turns = [createNextTurn(game)];
     changed = true;
   }
   const activeTurnNumber = game.turns.length;
   if (game.activeTurnNumber < activeTurnNumber) {
+    console.log(`tick: activate turn#${activeTurnNumber}`);
     game.activeTurnNumber = activeTurnNumber;
     changed = true;
   }
   const turn = game.turns[activeTurnNumber - 1];
   const turnStatus = calculateTurnStatus(turn);
-  console.log(`turn#${activeTurnNumber} = ${turnStatus}`);
   if (turn.status !== turnStatus) {
+    console.log(`tick: turn#${activeTurnNumber} = ${turnStatus}`);
     turn.status = turnStatus;
     changed = true;
   }
   // TODO score turn
   // TODO score game
   // TODO end game
-  if (changed) {
+  if (changed && saveAfterChange) {
     console.log('game changed... updating');
     game.update();
   }

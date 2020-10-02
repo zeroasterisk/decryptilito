@@ -93,21 +93,45 @@ describe('TurnEngine turn phase calculation utilities', () => {
     turn.status = TurnStatus.PREPARE;
     expect(calculateTurnStatus(turn)).to.equal(TurnStatus.DONE);
   });
-  it('calculateTurnStatus returns turn status PREPARE if no clues', () => {
+  it('calculateTurnStatus returns turn status PREPARE if not ready', () => {
     const game = new GameData(cloneDeep(mockGameData));
     const turn = game.turns[1]; // turn 2, just setup
     expect(calculateTurnStatus(turn)).to.equal(TurnStatus.PREPARE);
   });
+  it('calculateTurnStatus returns turn status PREPARE only 1 encryptor is ready', () => {
+    const game = new GameData(cloneDeep(mockGameData));
+    const turn = game.turns[1]; // turn 2, just setup
+    turn.whiteTeam.encryptorReady = true;
+    expect(calculateTurnStatus(turn)).to.equal(TurnStatus.PREPARE);
+  });
+  it('calculateTurnStatus returns turn status ENCRYPT if both teams are READY, but no clues for either team', () => {
+    // this is kinda a failure of data, but I've seen it in development
+    const game = new GameData(cloneDeep(mockGameData));
+    const turn = game.turns[1]; // turn 2, just setup
+    turn.blackTeam.encryptorReady = true;
+    turn.whiteTeam.encryptorReady = true;
+    turn.blackTeam.clues = ['', '', ''];
+    turn.blackTeam.cluesSubmitted = false;
+    turn.whiteTeam.clues = ['', '', ''];
+    turn.whiteTeam.cluesSubmitted = false;
+    expect(calculateTurnStatus(turn)).to.equal(TurnStatus.ENCRYPT);
+  });
   it('calculateTurnStatus returns turn status ENCRYPT_PARTIAL if 1 of the clues are submitted', () => {
     const game = new GameData(cloneDeep(mockGameData));
     const turn = game.turns[1]; // turn 2, just setup
+    turn.blackTeam.encryptorReady = true;
+    turn.whiteTeam.encryptorReady = true;
     turn.blackTeam.clues = ['a', 'b', 'c'];
     turn.blackTeam.cluesSubmitted = true;
+    turn.whiteTeam.clues = ['', '', ''];
+    turn.whiteTeam.cluesSubmitted = false;
     expect(calculateTurnStatus(turn)).to.equal(TurnStatus.ENCRYPT_PARTIAL);
   });
   it('calculateTurnStatus returns turn status DECRYPT_WHITE_CLUES if both clues are submitted', () => {
     const game = new GameData(cloneDeep(mockGameData));
     const turn = game.turns[1]; // turn 2, just setup
+    turn.blackTeam.encryptorReady = true;
+    turn.whiteTeam.encryptorReady = true;
     turn.blackTeam.clues = ['a', 'b', 'c'];
     turn.blackTeam.cluesSubmitted = true;
     turn.whiteTeam.clues = ['a', 'b', 'c'];

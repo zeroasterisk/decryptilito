@@ -166,9 +166,12 @@ const calculateTurnStatus: calculateTurnStatusType = (turn: TurnData) => {
   if (enteredCluesBothTeams.length > 0 && submittedClues.length === 1) {
     return TurnStatus.ENCRYPT_PARTIAL;
   }
-  if (enteredCluesBothTeams.length > 0 && submittedClues.length === 0) {
+  if (enteredCluesBothTeams.length < 6 && submittedClues.length < 2) {
+    // we are needing to encrypt still
     return TurnStatus.ENCRYPT;
   }
+  console.log(turn, enteredCluesBothTeams, submittedClues);
+
   // TODO do we need to validate the submittedClues more?
 
   // whiteTeam decrypt

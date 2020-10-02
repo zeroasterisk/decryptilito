@@ -13,6 +13,7 @@ const turn2 = {
   timeoutSecondsRemaining: 0,
   whiteTeam: {
     encryptor: { name: 'Luna', id: '1111' },
+    encryptorReady: true,
     clues: ['joggers', 'loafers', 'flapers'],
     cluesSubmitted: true,
     correctOrder: [3, 2, 1],
@@ -25,6 +26,7 @@ const turn2 = {
   },
   blackTeam: {
     encryptor: { name: 'Jerry', id: '4444' },
+    encryptorReady: true,
     clues: ['trunk', 'sail', 'wing'],
     cluesSubmitted: true,
     correctOrder: [2, 4, 3],
@@ -44,6 +46,7 @@ const turn3 = {
   timeoutSecondsRemaining: 0,
   whiteTeam: {
     encryptor: { name: 'George', id: '3333' },
+    encryptorReady: true,
     clues: ['flapper', "save me i'm...", '... a simulation'],
     cluesSubmitted: true,
     correctOrder: [2, 1, 4],
@@ -56,6 +59,7 @@ const turn3 = {
   },
   blackTeam: {
     encryptor: { name: 'Eggbert', id: '6666' },
+    encryptorReady: true,
     clues: ['sail', 'tail', 'beemer'],
     cluesSubmitted: true,
     correctOrder: [4, 3, 2],
@@ -75,6 +79,7 @@ const turn4 = {
   timeoutSecondsRemaining: 0,
   whiteTeam: {
     encryptor: { name: 'Luna', id: '1111' },
+    encryptorReady: true,
     clues: ['loco', 'skipper', 'dance from the 70s'],
     cluesSubmitted: true,
     correctOrder: [3, 2, 1],
@@ -87,6 +92,7 @@ const turn4 = {
   },
   blackTeam: {
     encryptor: { name: 'Jerry', id: '4444' },
+    encryptorReady: true,
     clues: ['never with windows', 'windows wont open', 'windows optional'],
     cluesSubmitted: true,
     correctOrder: [1, 3, 4],
